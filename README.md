@@ -52,3 +52,19 @@ https://moyosoresaibu.com
 - Sound preference and playback position persist across same-session page navigation when browser policy allows it.
 - Versioned music asset prevents stale audio caching.
 - WebP avatar and About portrait reduce unnecessary image transfer.
+
+## V4.1 Sonic audio fix
+- Remastered ambient score to a stronger browser-friendly stereo MP3
+- Raised restrained playback target from 16% to 42%
+- Starts audio directly inside the tap/click gesture for stronger autoplay-policy compatibility
+- Adds explicit loading/error states and user-visible audio failure diagnostics
+- Cache-busted script and stylesheet to v4.1.0
+
+## V4.2 Auto Sonic
+- Removed the visible Sound control.
+- Attempts audible ambient playback immediately on every page visit.
+- If browser autoplay policy blocks it, the first tap/click/key interaction anywhere starts the soundtrack automatically.
+- Interface SFX activate automatically after audio permission/user activation.
+- Preserves playback position across same-session page navigation.
+- Uses a lighter 128 kbps mastered MP3 for faster loading.
+- Important: no website can force audible autoplay when the visitor's browser explicitly blocks it.

@@ -1,4 +1,4 @@
-/* Moyosore Saibu — Premium V3.1 Final | native motion, no external JS dependencies */
+/* Moyosore Saibu — Premium V4 Sonic Edition | native motion, no external JS dependencies */
 :root{
   color-scheme:dark;
   --bg:#090b0e;--bg-soft:#0d1014;--panel:#11151a;--panel-2:#151a20;
@@ -58,3 +58,50 @@ h1,h2,h3{line-height:.98;margin:0;letter-spacing:-.052em}h1{font-size:clamp(4rem
 @media (max-width:980px){
   .hero{align-items:stretch}
 }
+
+/* V3.2 MASTER — final composition and mobile precision */
+@media (min-width:981px){
+  .hero-grid{align-items:start}
+  .hero-grid>div:first-child{padding-top:118px}
+}
+.signal-rail{
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
+}
+@media (max-width:760px){
+  .hero{padding-top:112px}
+  .hero-grid{gap:36px}
+  .hero-title{font-size:clamp(3.45rem,15.7vw,5.35rem);line-height:.88}
+  .hero-copy{margin-top:24px;font-size:1.06rem;line-height:1.72}
+  .hero-status{margin-top:25px}
+  .cta-row{margin-top:28px}
+  .portrait-stage{margin-top:18px}
+  .hero .eyebrow{font-size:.67rem;letter-spacing:.15em}
+}
+
+
+/* V4 SONIC EDITION — sound, tactile surface, scroll choreography */
+body::before{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;background:url('/assets/grain.png');opacity:.032;mix-blend-mode:soft-light}
+.nav-actions{display:flex;align-items:center;gap:9px}
+
+.hero-status{flex-wrap:wrap}.status-sep{width:1px;height:14px;background:var(--line);margin:0 2px}.live-wat{display:inline-flex;align-items:center;gap:7px;color:#8f99a5;font-variant-numeric:tabular-nums}.live-pulse{width:5px;height:5px;border-radius:50%;background:#6ee7a3;box-shadow:0 0 0 4px rgba(110,231,163,.08);animation:livePulse 1.9s ease-in-out infinite}@keyframes livePulse{50%{box-shadow:0 0 0 8px rgba(110,231,163,0)}}
+/* Tactile card spotlight follows fine pointer, progressive enhancement */
+.card,.record,.case,.contact-box{--sx:50%;--sy:50%}.card::before,.record::before,.case::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(340px circle at var(--sx) var(--sy),rgba(217,255,63,.065),transparent 42%);opacity:0;transition:opacity .3s}.card:hover::before,.record:hover::before,.case:hover::before{opacity:1}.record,.case{position:relative;overflow:hidden}
+/* Refined hero movement without hiding LCP */
+.is-ready .portrait-frame{animation:portraitSettle .9s var(--ease) both}@keyframes portraitSettle{from{transform:translate3d(0,14px,0) scale(1.015);filter:saturate(.88)}to{filter:saturate(1)}}
+.float-proof.one{animation:proofFloatA 5.8s ease-in-out infinite alternate}.float-proof.two{animation:proofFloatB 6.7s .4s ease-in-out infinite alternate}@keyframes proofFloatA{to{transform:translateY(-8px)}}@keyframes proofFloatB{to{transform:translateY(7px)}}
+/* Premium section rhythm */
+.section::before{content:"";position:absolute;top:0;left:50%;width:min(calc(100% - 48px),var(--max));height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);pointer-events:none}.section.alt::before{opacity:.45}
+/* View-driven enhancement: safe fallback is the normal static layout */
+@supports (animation-timeline:view()){
+  .section .eyebrow::before{transform-origin:left;animation:eyebrowLine 1ms linear both;animation-timeline:view();animation-range:entry 8% cover 28%}@keyframes eyebrowLine{from{transform:scaleX(.18);opacity:.35}to{transform:scaleX(1);opacity:1}}
+  .quote{animation:quoteDrift 1ms linear both;animation-timeline:view();animation-range:entry 0% cover 45%}@keyframes quoteDrift{from{transform:translateY(18px)}to{transform:translateY(-4px)}}
+}
+.sound-toggle{width:44px;padding:0;justify-content:center;border-radius:14px}.nav-actions{gap:7px}.hero-status{gap:9px}.status-sep{display:none}.live-wat{width:100%;margin-top:2px}.sound-toast{left:15px;right:15px;bottom:15px;max-width:none}.is-ready .portrait-frame{animation-duration:.7s}}
+@media(prefers-reduced-motion:reduce){.sound-bars i,.live-pulse,.float-proof.one,.float-proof.two{animation:none!important}.is-ready .portrait-frame{animation:none!important}}
+
+.nav-right{display:flex;align-items:center;gap:22px}.nav-right .nav-links{order:1}.nav-right .nav-actions{order:2}.profile-panel picture{display:block}.profile-panel picture img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:30px;border:1px solid var(--line)}
+@media(max-width:760px){.nav-right{gap:7px}.nav-right .nav-links{order:2}.nav-right .nav-actions{order:1}.nav-links{z-index:90}}
+
+
+/* V4.2 Auto Sonic: no visible audio control; browser-policy fallback is handled in JS. */

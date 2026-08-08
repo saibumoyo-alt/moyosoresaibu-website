@@ -66,4 +66,173 @@
     // Magnetic CTA micro-interaction
     d.querySelectorAll('[data-magnetic]').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--tx',`${(e.clientX-r.left-r.width/2)*.08}px`);el.style.setProperty('--ty',`${(e.clientY-r.top-r.height/2)*.12}px`)});el.addEventListener('pointerleave',()=>{el.style.setProperty('--tx','0px');el.style.setProperty('--ty','0px')})});
   }
+
+
+  // Live West Africa Time (real-time, no external API or tracking)
+  const wat=d.querySelectorAll('[data-wat-time]');
+  if(wat.length){
+    const watFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false});
+    const updateWat=()=>wat.forEach(el=>el.textContent=`WAT ${watFmt.format(new Date())}`);
+    updateWat(); setInterval(updateWat,30000);
+  }
+
+  // V4.2 Auto Sonic — immediate audible autoplay attempt with first-gesture fallback.
+  // Modern browsers may block audible autoplay. When they do, playback starts on
+  // the visitor's first pointer/touch/key interaction anywhere on the document.
+  const ambient=d.getElementById('ambient-score');
+  let audioCtx=null,soundOn=false,fadeRaf=0,gestureArmed=false;
+  const timeKey='ms_sound_time_auto_v1';
+  const TARGET_VOLUME=.34;
+
+  const ensureAudio=()=>{
+    try{
+      if(!audioCtx){
+        const C=window.AudioContext||window.webkitAudioContext;
+        if(C)audioCtx=new C();
+      }
+      if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+    }catch(e){}
+  };
+
+  const restoreAudioTime=()=>{
+    if(!ambient)return;
+    try{
+      const saved=Number(sessionStorage.getItem(timeKey)||0);
+      if(Number.isFinite(saved)&&saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1){
+        ambient.currentTime=saved;
+      }
+    }catch(e){}
+  };
+
+  const fadeTo=(target,duration=750)=>{
+    if(!ambient)return;
+    cancelAnimationFrame(fadeRaf);
+    const from=ambient.volume,start=performance.now();
+    const tick=t=>{
+      const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);
+      ambient.volume=Math.max(0,Math.min(1,from+(target-from)*ease));
+      if(p<1)fadeRaf=requestAnimationFrame(tick);
+    };
+    fadeRaf=requestAnimationFrame(tick);
+  };
+
+  const blip=(kind='hover')=>{
+    if(!soundOn)return;
+    ensureAudio();
+    if(!audioCtx||audioCtx.state!=='running')return;
+    const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
+    filter.type='lowpass';
+    filter.frequency.value=kind==='click'?2300:3000;
+    osc.type=kind==='click'?'sine':'triangle';
+    osc.frequency.setValueAtTime(kind==='click'?510:740,now);
+    osc.frequency.exponentialRampToValueAtTime(kind==='click'?395:890,now+.052);
+    gain.gain.setValueAtTime(.0001,now);
+    gain.gain.exponentialRampToValueAtTime(kind==='click'?.018:.007,now+.008);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+    osc.start(now);osc.stop(now+.11);
+  };
+
+  const markPlaying=()=>{
+    soundOn=true;
+    body.classList.add('sound-on');
+    ambient.muted=false;
+    if(ambient.volume<.03)ambient.volume=.03;
+    fadeTo(TARGET_VOLUME,800);
+  };
+
+  const startAudio=()=>{
+    if(!ambient)return Promise.reject(new Error('Ambient audio element missing'));
+    ambient.preload='auto';
+    ambient.muted=false;
+    if(ambient.readyState>=1)restoreAudioTime();
+    else ambient.addEventListener('loadedmetadata',restoreAudioTime,{once:true});
+    ambient.volume=.03;
+    const p=ambient.play();
+    if(p&&typeof p.then==='function'){
+      return p.then(()=>{markPlaying();ensureAudio();return true});
+    }
+    markPlaying();ensureAudio();return Promise.resolve(true);
+  };
+
+  const removeGestureFallback=()=>{
+    if(!gestureArmed)return;
+    gestureArmed=false;
+    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
+      d.removeEventListener(type,gestureStart,true);
+    });
+  };
+
+  const gestureStart=()=>{
+    // This function runs synchronously inside a trusted user activation event.
+    ensureAudio();
+    startAudio().then(()=>{
+      removeGestureFallback();
+      setTimeout(()=>blip('click'),30);
+    }).catch(()=>{});
+  };
+
+  const armGestureFallback=()=>{
+    if(gestureArmed)return;
+    gestureArmed=true;
+    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
+      d.addEventListener(type,gestureStart,{capture:true,passive:true});
+    });
+  };
+
+  if(ambient){
+    // Attempt audible playback as soon as the document is ready.
+    // Browsers that allow autoplay will start here.
+    startAudio().then(removeGestureFallback).catch(err=>{
+      // Expected on browsers with autoplay blocking. No error UI is shown:
+      // the very first visitor gesture starts the soundtrack automatically.
+      armGestureFallback();
+      if(new URLSearchParams(location.search).get('debug')==='1'){
+        console.info('Audible autoplay blocked; armed first-gesture fallback.',err?.name||err);
+      }
+    });
+
+    ambient.addEventListener('error',()=>{
+      console.error('Ambient audio media error:',ambient.error);
+    });
+
+    addEventListener('pagehide',()=>{
+      if(!ambient.paused){
+        try{sessionStorage.setItem(timeKey,String(ambient.currentTime||0))}catch(e){}
+      }
+    },{passive:true});
+
+    // When returning to the tab, try to resume if the browser suspended media.
+    d.addEventListener('visibilitychange',()=>{
+      if(d.visibilityState==='visible'&&soundOn&&ambient.paused){
+        ambient.play().catch(()=>armGestureFallback());
+      }
+    });
+  }
+
+  // Interface SFX become active automatically once audio is permitted.
+  if(matchMedia('(pointer:fine)').matches){
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case').forEach(el=>{
+      el.addEventListener('pointerenter',()=>blip('hover'),{passive:true});
+      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
+    });
+  }else{
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case').forEach(el=>{
+      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
+    });
+  }
+
+  // Pointer spotlights for premium cards. CSS fallback remains static.
+  if(!reduce&&matchMedia('(pointer:fine)').matches){
+    d.querySelectorAll('.card,.record,.case').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--sx',`${e.clientX-r.left}px`);el.style.setProperty('--sy',`${e.clientY-r.top}px`)}));
+  }
+
+  // Lightweight live performance diagnostics. Add ?debug=1 to any page to expose it in console.
+  const perf={}; window.__MS_PERF=perf;
+  try{
+    new PerformanceObserver(list=>{const a=list.getEntries();if(a.length)perf.LCP=Math.round(a[a.length-1].startTime)}).observe({type:'largest-contentful-paint',buffered:true});
+    let cls=0;new PerformanceObserver(list=>{for(const e of list.getEntries())if(!e.hadRecentInput)cls+=e.value;perf.CLS=Number(cls.toFixed(4))}).observe({type:'layout-shift',buffered:true});
+  }catch(e){}
+  if(new URLSearchParams(location.search).get('debug')==='1') setInterval(()=>console.table({...perf,connection:navigator.connection?.effectiveType||'n/a',wat:wat[0]?.textContent||''}),5000);
+
 })();
