@@ -15,8 +15,29 @@
 
   // Mobile menu
   const menu=d.querySelector('.menu'), links=d.querySelector('.nav-links');
-  const closeMenu=()=>{if(!menu||!links)return;menu.setAttribute('aria-expanded','false');links.classList.remove('open');body.classList.remove('menu-open')};
-  if(menu&&links){menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));links.classList.toggle('open',!open);body.classList.toggle('menu-open',!open)});links.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()})}
+  let menuWasOpened=false;
+  const closeMenu=(restore=false)=>{if(!menu||!links)return;menu.setAttribute('aria-expanded','false');links.classList.remove('open');body.classList.remove('menu-open');if(restore&&menuWasOpened)menu.focus();menuWasOpened=false};
+  if(menu&&links){
+    menu.addEventListener('click',()=>{
+      const open=menu.getAttribute('aria-expanded')==='true';
+      menu.setAttribute('aria-expanded',String(!open));
+      links.classList.toggle('open',!open);
+      body.classList.toggle('menu-open',!open);
+      menuWasOpened=!open;
+      if(!open){const first=links.querySelector('a');if(first)setTimeout(()=>first.focus(),30)}
+    });
+    links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>closeMenu(false)));
+    addEventListener('keydown',e=>{
+      if(e.key==='Escape'&&menu.getAttribute('aria-expanded')==='true'){e.preventDefault();closeMenu(true)}
+      if(e.key==='Tab'&&menu.getAttribute('aria-expanded')==='true'){
+        const focusables=[...links.querySelectorAll('a')];
+        if(!focusables.length)return;
+        const first=focusables[0],last=focusables[focusables.length-1];
+        if(e.shiftKey&&d.activeElement===first){e.preventDefault();last.focus()}
+        else if(!e.shiftKey&&d.activeElement===last){e.preventDefault();first.focus()}
+      }
+    });
+  }
 
   // Scroll progress and nav state (single rAF)
   const progress=d.querySelector('.scroll-progress'), nav=d.querySelector('.site-nav');

@@ -1,4 +1,4 @@
-# Moyosore Saibu Website — Premium V3
+# Moyosore Saibu Website — Premium V3.1 Final
 
 Official personal website of Moyosore Saibu.
 
@@ -19,3 +19,12 @@ Cloudflare Pages / GitHub. Static HTML, CSS and vanilla JS. No build step requir
 
 ## Domain
 https://moyosoresaibu.com
+
+## V3.1 final polish
+- Tighter first-screen hero composition on tall desktop displays
+- WebP responsive portrait delivery for faster LCP
+- Exact career-role wording on homepage career signal
+- Improved mobile menu keyboard/focus behavior
+- Pause-on-hover/focus professional signal rail
+- Cloudflare Pages security and caching headers
+- Cache-busted CSS and JS (`v=3.1.0`)
