@@ -69,50 +69,282 @@
 
 
   // Live West Africa Time (real-time, no external API or tracking)
-  const wat=d.querySelectorAll('[data-wat-time]');
+  const wat=d.querySelectorAll('[data-wat-time]'),watDate=d.querySelectorAll('[data-wat-date]');
   if(wat.length){
     const watFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false});
-    const updateWat=()=>wat.forEach(el=>el.textContent=`WAT ${watFmt.format(new Date())}`);
-    updateWat(); setInterval(updateWat,30000);
+    const dateFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',weekday:'short',day:'2-digit',month:'short'});
+    const hourFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',hour12:false});
+    const fieldModeEls=d.querySelectorAll('[data-field-mode]');
+    const updateWat=()=>{
+      const now=new Date(),time=`WAT ${watFmt.format(now)}`,date=` · ${dateFmt.format(now)}`;
+      wat.forEach(el=>el.textContent=time);
+      watDate.forEach(el=>el.textContent=date);
+      if(fieldModeEls.length){
+        const hour=Number(hourFmt.format(now));
+        let mode='Planning mode · early prep';
+        if(hour>=7&&hour<16) mode='Field mode · active';
+        else if(hour>=16&&hour<21) mode='Review mode · follow-through';
+        else if(hour>=21||hour<7) mode='Planning mode · reset & prep';
+        fieldModeEls.forEach(el=>el.textContent=mode);
+      }
+    };
+    updateWat();setInterval(updateWat,30000);
   }
 
-  // Opt-in original ambient score + subtle synthesized interface SFX.
-  // Audio never autoplays; it starts only after a deliberate click/tap.
-  const soundBtn=d.querySelector('.sound-toggle'), ambient=d.getElementById('ambient-score'), toast=d.querySelector('.sound-toast');
-  let audioCtx=null,soundOn=false,toastTimer=0;
-  const soundKey='ms_sound_v1',timeKey='ms_sound_time_v1';
-  const saySound=msg=>{if(!toast)return;toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2600)};
-  const ensureAudio=()=>{if(!audioCtx){const C=window.AudioContext||window.webkitAudioContext;if(C)audioCtx=new C()} if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()};
-  const restoreAudioTime=()=>{if(!ambient)return;const apply=()=>{try{const saved=Number(sessionStorage.getItem(timeKey)||0);if(Number.isFinite(saved)&&saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1)ambient.currentTime=saved}catch(e){}};if(ambient.readyState>=1)apply();else ambient.addEventListener('loadedmetadata',apply,{once:true})};
+  // V4.2 Auto Sonic — immediate audible autoplay attempt with first-gesture fallback.
+  // Modern browsers may block audible autoplay. When they do, playback starts on
+  // the visitor's first pointer/touch/key interaction anywhere on the document.
+  const ambient=d.getElementById('ambient-score');
+  let audioCtx=null,soundOn=false,fadeRaf=0,gestureArmed=false;
+  const timeKey='ms_sound_time_auto_v1';
+  const TARGET_VOLUME=.14;
+
+  const ensureAudio=()=>{
+    try{
+      if(!audioCtx){
+        const C=window.AudioContext||window.webkitAudioContext;
+        if(C)audioCtx=new C();
+      }
+      if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+    }catch(e){}
+  };
+
+  const restoreAudioTime=()=>{
+    if(!ambient)return;
+    try{
+      const saved=Number(sessionStorage.getItem(timeKey)||0);
+      if(Number.isFinite(saved)&&saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1){
+        ambient.currentTime=saved;
+      }
+    }catch(e){}
+  };
+
+  const fadeTo=(target,duration=750)=>{
+    if(!ambient)return;
+    cancelAnimationFrame(fadeRaf);
+    const from=ambient.volume,start=performance.now();
+    const tick=t=>{
+      const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);
+      ambient.volume=Math.max(0,Math.min(1,from+(target-from)*ease));
+      if(p<1)fadeRaf=requestAnimationFrame(tick);
+    };
+    fadeRaf=requestAnimationFrame(tick);
+  };
+
   const blip=(kind='hover')=>{
-    if(!soundOn)return; ensureAudio(); if(!audioCtx)return;
+    if(!soundOn)return;
+    ensureAudio();
+    if(!audioCtx||audioCtx.state!=='running')return;
     const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
-    filter.type='lowpass';filter.frequency.value=kind==='click'?2400:3200;
+    filter.type='lowpass';
+    filter.frequency.value=kind==='click'?1750:2250;
     osc.type=kind==='click'?'sine':'triangle';
-    osc.frequency.setValueAtTime(kind==='click'?520:760,now);osc.frequency.exponentialRampToValueAtTime(kind==='click'?390:920,now+.055);
-    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(kind==='click'?.028:.012,now+.008);gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.09:.065));
-    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.12);
+    osc.frequency.setValueAtTime(kind==='click'?420:610,now);
+    osc.frequency.exponentialRampToValueAtTime(kind==='click'?340:710,now+.052);
+    gain.gain.setValueAtTime(.0001,now);
+    gain.gain.exponentialRampToValueAtTime(kind==='click'?.008:.003,now+.008);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+    osc.start(now);osc.stop(now+.11);
   };
-  const setSound=async on=>{
-    soundOn=on; if(soundBtn){soundBtn.setAttribute('aria-pressed',String(on));soundBtn.setAttribute('aria-label',on?'Disable ambient sound':'Enable ambient sound')}
-    body.classList.toggle('sound-on',on);
-    try{localStorage.setItem(soundKey,on?'on':'off')}catch(e){}
-    if(on){ensureAudio();try{if(ambient){ambient.volume=0;restoreAudioTime();await ambient.play();let v=0;const f=setInterval(()=>{v=Math.min(.16,v+.012);ambient.volume=v;if(v>=.16)clearInterval(f)},45)}saySound('Ambient sound on · original score + subtle interface SFX')}catch(e){soundOn=false;if(soundBtn)soundBtn.setAttribute('aria-pressed','false');saySound('Tap again to enable sound')}}
-    else{if(ambient&&!ambient.paused){let v=ambient.volume;const f=setInterval(()=>{v=Math.max(0,v-.02);ambient.volume=v;if(v<=0){clearInterval(f);ambient.pause()}},35)}saySound('Sound off')}
-  };
-  if(soundBtn)soundBtn.addEventListener('click',()=>setSound(!soundOn));
-  if(ambient){addEventListener('pagehide',()=>{if(soundOn)try{sessionStorage.setItem(timeKey,String(ambient.currentTime||0))}catch(e){}},{passive:true});
-    let remembered=false;try{remembered=localStorage.getItem(soundKey)==='on'}catch(e){}
-    if(remembered){setTimeout(async()=>{try{ambient.volume=.12;restoreAudioTime();await ambient.play();soundOn=true;body.classList.add('sound-on');if(soundBtn){soundBtn.setAttribute('aria-pressed','true');soundBtn.setAttribute('aria-label','Disable ambient sound')}}catch(e){soundOn=false;if(soundBtn)soundBtn.setAttribute('aria-pressed','false')}},120)}
-  }
-  if(matchMedia('(pointer:fine)').matches){
-    d.querySelectorAll('.btn,.nav-links a,.article,.card,.sound-toggle').forEach(el=>{el.addEventListener('pointerenter',()=>blip('hover'),{passive:true});el.addEventListener('pointerdown',()=>blip('click'),{passive:true})});
-  }else d.querySelectorAll('.btn,.nav-links a,.article,.sound-toggle').forEach(el=>el.addEventListener('click',()=>blip('click'),{passive:true}));
 
-  // Pointer spotlights for premium cards. CSS fallback remains static.
-  if(!reduce&&matchMedia('(pointer:fine)').matches){
-    d.querySelectorAll('.card,.record,.case').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--sx',`${e.clientX-r.left}px`);el.style.setProperty('--sy',`${e.clientY-r.top}px`)}));
+  const markPlaying=()=>{
+    soundOn=true;
+    body.classList.add('sound-on');
+    ambient.muted=false;
+    if(ambient.volume<.015)ambient.volume=.015;
+    fadeTo(TARGET_VOLUME,1250);
+  };
+
+  const startAudio=()=>{
+    if(!ambient)return Promise.reject(new Error('Ambient audio element missing'));
+    ambient.preload='auto';
+    ambient.muted=false;
+    if(ambient.readyState>=1)restoreAudioTime();
+    else ambient.addEventListener('loadedmetadata',restoreAudioTime,{once:true});
+    ambient.volume=.015;
+    const p=ambient.play();
+    if(p&&typeof p.then==='function'){
+      return p.then(()=>{markPlaying();ensureAudio();return true});
+    }
+    markPlaying();ensureAudio();return Promise.resolve(true);
+  };
+
+  const removeGestureFallback=()=>{
+    if(!gestureArmed)return;
+    gestureArmed=false;
+    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
+      d.removeEventListener(type,gestureStart,true);
+    });
+  };
+
+  const gestureStart=()=>{
+    // This function runs synchronously inside a trusted user activation event.
+    ensureAudio();
+    startAudio().then(()=>{
+      removeGestureFallback();
+      setTimeout(()=>blip('click'),30);
+    }).catch(()=>{});
+  };
+
+  const armGestureFallback=()=>{
+    if(gestureArmed)return;
+    gestureArmed=true;
+    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
+      d.addEventListener(type,gestureStart,{capture:true,passive:true});
+    });
+  };
+
+  if(ambient){
+    // Attempt audible playback as soon as the document is ready.
+    // Browsers that allow autoplay will start here.
+    startAudio().then(removeGestureFallback).catch(err=>{
+      // Expected on browsers with autoplay blocking. No error UI is shown:
+      // the very first visitor gesture starts the soundtrack automatically.
+      armGestureFallback();
+      if(new URLSearchParams(location.search).get('debug')==='1'){
+        console.info('Audible autoplay blocked; armed first-gesture fallback.',err?.name||err);
+      }
+    });
+
+    ambient.addEventListener('error',()=>{
+      console.error('Ambient audio media error:',ambient.error);
+    });
+
+    addEventListener('pagehide',()=>{
+      if(!ambient.paused){
+        try{sessionStorage.setItem(timeKey,String(ambient.currentTime||0))}catch(e){}
+      }
+    },{passive:true});
+
+    // When returning to the tab, try to resume if the browser suspended media.
+    d.addEventListener('visibilitychange',()=>{
+      if(d.visibilityState==='visible'&&soundOn&&ambient.paused){
+        ambient.play().catch(()=>armGestureFallback());
+      }
+    });
   }
+
+  // Interface SFX become active automatically once audio is permitted.
+  if(matchMedia('(pointer:fine)').matches){
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
+      el.addEventListener('pointerenter',()=>blip('hover'),{passive:true});
+      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
+    });
+  }else{
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
+      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
+    });
+  }
+
+  // V5 restrained 3D glass response. Fine-pointer only; touch and reduced-motion stay static.
+  if(!reduce&&!saveData&&matchMedia('(pointer:fine)').matches){
+    d.querySelectorAll('.card,.record,.case').forEach(el=>{
+      let tiltRaf=0,lastEvent=null;
+      const reset=()=>{
+        el.style.setProperty('--rx','0deg');
+        el.style.setProperty('--ry','0deg');
+        el.style.setProperty('--sx','50%');
+        el.style.setProperty('--sy','50%');
+      };
+      el.addEventListener('pointermove',e=>{
+        lastEvent=e;
+        if(tiltRaf)return;
+        tiltRaf=requestAnimationFrame(()=>{
+          const ev=lastEvent,r=el.getBoundingClientRect();
+          const x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;
+          el.style.setProperty('--sx',`${ev.clientX-r.left}px`);
+          el.style.setProperty('--sy',`${ev.clientY-r.top}px`);
+          el.style.setProperty('--rx',`${(-y*3.2).toFixed(2)}deg`);
+          el.style.setProperty('--ry',`${(x*4).toFixed(2)}deg`);
+          tiltRaf=0;
+        });
+      },{passive:true});
+      el.addEventListener('pointerleave',reset,{passive:true});
+    });
+    d.querySelectorAll('.contact-box,.career-line').forEach(el=>{
+      el.addEventListener('pointermove',e=>{
+        const r=el.getBoundingClientRect();
+        el.style.setProperty('--sx',`${e.clientX-r.left}px`);
+        el.style.setProperty('--sy',`${e.clientY-r.top}px`);
+      },{passive:true});
+    });
+  }
+
+  // Story graphs: draw on reveal and update narrative copy on hover/focus/tap.
+  if('IntersectionObserver' in window){
+    const drawObserver=new IntersectionObserver(entries=>entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('is-drawn');
+        drawObserver.unobserve(e.target);
+      }
+    }),{threshold:.3});
+    d.querySelectorAll('.premium-graph').forEach(el=>drawObserver.observe(el));
+  }else{
+    d.querySelectorAll('.premium-graph').forEach(el=>el.classList.add('is-drawn'));
+  }
+
+  d.querySelectorAll('[data-story-graph]').forEach(block=>{
+    const output=block.querySelector('[data-story-output]');
+    if(!output) return;
+    const defaultText=output.textContent.trim();
+    const activate=el=>{
+      const msg=el.dataset.note;
+      if(msg) output.textContent=msg;
+    };
+    block.querySelectorAll('[data-note]').forEach(el=>{
+      ['mouseenter','focus','click'].forEach(type=>el.addEventListener(type,()=>activate(el)));
+      const circle=el.querySelector('.chart-hotspot');
+      if(circle){
+        ['mouseenter','focus','click'].forEach(type=>circle.addEventListener(type,()=>activate(el)));
+      }
+    });
+    block.addEventListener('mouseleave',()=>output.textContent=defaultText);
+  });
+
+  // V7 conversion journey: lightweight, privacy-respecting event hooks.
+  // No third-party analytics is loaded. Events are exposed in window.__MS_CRO
+  // and also pushed to dataLayer only if a future analytics integration defines it.
+  const croEvents=[];
+  const recordConversion=(name,detail={})=>{
+    const event={name,detail,path:location.pathname,time:new Date().toISOString()};
+    croEvents.push(event);
+    try{sessionStorage.setItem('ms_last_conversion_event',JSON.stringify(event))}catch(e){}
+    window.dispatchEvent(new CustomEvent('ms:conversion',{detail:event}));
+    if(Array.isArray(window.dataLayer)) window.dataLayer.push({event:'ms_conversion',conversion_name:name,...detail});
+    if(new URLSearchParams(location.search).get('debug')==='1') console.info('Conversion event',event);
+  };
+  window.__MS_CRO={events:croEvents,record:recordConversion};
+
+  d.querySelectorAll('[data-conversion-cta]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      recordConversion(el.dataset.conversionCta||'cta_click',{
+        href:el.getAttribute('href')||'',
+        label:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120)
+      });
+    },{passive:true});
+  });
+
+  // Contact-page intent highlighting from URL parameters.
+  const params=new URLSearchParams(location.search);
+  const intent=params.get('intent');
+  if(intent){
+    const card=d.querySelector(`[data-contact-intent="${CSS.escape(intent)}"]`);
+    if(card){
+      card.classList.add('is-selected');
+      card.setAttribute('aria-label',`${card.querySelector('h3')?.textContent||intent} — selected from previous page`);
+    }
+  }
+
+  // Preserve source context when moving into Contact.
+  const sourceName=location.pathname==='/'?'home':location.pathname.replace(/^\/|\.html$/g,'').replace(/\//g,'-')||'home';
+  d.querySelectorAll('a[href^="/contact.html"]').forEach(a=>{
+    try{
+      const u=new URL(a.getAttribute('href'),location.origin);
+      if(!u.searchParams.has('from'))u.searchParams.set('from',sourceName);
+      a.setAttribute('href',u.pathname+u.search+u.hash);
+    }catch(e){}
+  });
 
   // Lightweight live performance diagnostics. Add ?debug=1 to any page to expose it in console.
   const perf={}; window.__MS_PERF=perf;
