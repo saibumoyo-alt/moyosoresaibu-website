@@ -69,11 +69,16 @@
 
 
   // Live West Africa Time (real-time, no external API or tracking)
-  const wat=d.querySelectorAll('[data-wat-time]');
+  const wat=d.querySelectorAll('[data-wat-time]'),watDate=d.querySelectorAll('[data-wat-date]');
   if(wat.length){
     const watFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false});
-    const updateWat=()=>wat.forEach(el=>el.textContent=`WAT ${watFmt.format(new Date())}`);
-    updateWat(); setInterval(updateWat,30000);
+    const dateFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',weekday:'short',day:'2-digit',month:'short'});
+    const updateWat=()=>{
+      const now=new Date(),time=`WAT ${watFmt.format(now)}`,date=` · ${dateFmt.format(now)}`;
+      wat.forEach(el=>el.textContent=time);
+      watDate.forEach(el=>el.textContent=date);
+    };
+    updateWat();setInterval(updateWat,30000);
   }
 
   // V4.2 Auto Sonic — immediate audible autoplay attempt with first-gesture fallback.
@@ -82,7 +87,7 @@
   const ambient=d.getElementById('ambient-score');
   let audioCtx=null,soundOn=false,fadeRaf=0,gestureArmed=false;
   const timeKey='ms_sound_time_auto_v1';
-  const TARGET_VOLUME=.34;
+  const TARGET_VOLUME=.16;
 
   const ensureAudio=()=>{
     try{
@@ -122,12 +127,12 @@
     if(!audioCtx||audioCtx.state!=='running')return;
     const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
     filter.type='lowpass';
-    filter.frequency.value=kind==='click'?2300:3000;
+    filter.frequency.value=kind==='click'?1850:2400;
     osc.type=kind==='click'?'sine':'triangle';
-    osc.frequency.setValueAtTime(kind==='click'?510:740,now);
-    osc.frequency.exponentialRampToValueAtTime(kind==='click'?395:890,now+.052);
+    osc.frequency.setValueAtTime(kind==='click'?430:650,now);
+    osc.frequency.exponentialRampToValueAtTime(kind==='click'?350:760,now+.052);
     gain.gain.setValueAtTime(.0001,now);
-    gain.gain.exponentialRampToValueAtTime(kind==='click'?.018:.007,now+.008);
+    gain.gain.exponentialRampToValueAtTime(kind==='click'?.009:.0035,now+.008);
     gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));
     osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
     osc.start(now);osc.stop(now+.11);
@@ -137,8 +142,8 @@
     soundOn=true;
     body.classList.add('sound-on');
     ambient.muted=false;
-    if(ambient.volume<.03)ambient.volume=.03;
-    fadeTo(TARGET_VOLUME,800);
+    if(ambient.volume<.015)ambient.volume=.015;
+    fadeTo(TARGET_VOLUME,1250);
   };
 
   const startAudio=()=>{
@@ -147,7 +152,7 @@
     ambient.muted=false;
     if(ambient.readyState>=1)restoreAudioTime();
     else ambient.addEventListener('loadedmetadata',restoreAudioTime,{once:true});
-    ambient.volume=.03;
+    ambient.volume=.015;
     const p=ambient.play();
     if(p&&typeof p.then==='function'){
       return p.then(()=>{markPlaying();ensureAudio();return true});
@@ -222,9 +227,38 @@
     });
   }
 
-  // Pointer spotlights for premium cards. CSS fallback remains static.
-  if(!reduce&&matchMedia('(pointer:fine)').matches){
-    d.querySelectorAll('.card,.record,.case').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--sx',`${e.clientX-r.left}px`);el.style.setProperty('--sy',`${e.clientY-r.top}px`)}));
+  // V5 restrained 3D glass response. Fine-pointer only; touch and reduced-motion stay static.
+  if(!reduce&&!saveData&&matchMedia('(pointer:fine)').matches){
+    d.querySelectorAll('.card,.record,.case').forEach(el=>{
+      let tiltRaf=0,lastEvent=null;
+      const reset=()=>{
+        el.style.setProperty('--rx','0deg');
+        el.style.setProperty('--ry','0deg');
+        el.style.setProperty('--sx','50%');
+        el.style.setProperty('--sy','50%');
+      };
+      el.addEventListener('pointermove',e=>{
+        lastEvent=e;
+        if(tiltRaf)return;
+        tiltRaf=requestAnimationFrame(()=>{
+          const ev=lastEvent,r=el.getBoundingClientRect();
+          const x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;
+          el.style.setProperty('--sx',`${ev.clientX-r.left}px`);
+          el.style.setProperty('--sy',`${ev.clientY-r.top}px`);
+          el.style.setProperty('--rx',`${(-y*3.2).toFixed(2)}deg`);
+          el.style.setProperty('--ry',`${(x*4).toFixed(2)}deg`);
+          tiltRaf=0;
+        });
+      },{passive:true});
+      el.addEventListener('pointerleave',reset,{passive:true});
+    });
+    d.querySelectorAll('.contact-box,.career-line').forEach(el=>{
+      el.addEventListener('pointermove',e=>{
+        const r=el.getBoundingClientRect();
+        el.style.setProperty('--sx',`${e.clientX-r.left}px`);
+        el.style.setProperty('--sy',`${e.clientY-r.top}px`);
+      },{passive:true});
+    });
   }
 
   // Lightweight live performance diagnostics. Add ?debug=1 to any page to expose it in console.

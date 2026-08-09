@@ -68,3 +68,25 @@ https://moyosoresaibu.com
 - Preserves playback position across same-session page navigation.
 - Uses a lighter 128 kbps mastered MP3 for faster loading.
 - Important: no website can force audible autoplay when the visitor's browser explicitly blocks it.
+
+## Premium V5 Glass Depth
+
+The V5 direction is intentionally restrained: 3D depth is used to clarify hierarchy,
+not to turn the site into a tech demo.
+
+### V5 upgrades
+- Moderate professional soundtrack mix (16% target volume with slower fade-in)
+- Softer interface SFX mix
+- Floating glass navigation
+- Layered 3D portrait treatment
+- True glassmorphic proof badges and CTA surfaces
+- Live West Africa Time + live calendar date
+- 3D pointer tilt on commercial, proof and project cards (desktop/fine pointer only)
+- Glass track-record mosaic instead of spreadsheet-style blocks
+- Glass career timeline console
+- Pointer-following light refraction on interactive surfaces
+- Native cross-document View Transition refinement
+- Progressive CSS scroll-driven ambient motion
+- Reduced-motion and Save-Data fallbacks preserved
+- `backdrop-filter` fallback for older browsers
+- CSS/JS cache busting at v5.0.0
