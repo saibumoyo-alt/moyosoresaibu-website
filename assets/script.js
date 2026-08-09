@@ -73,10 +73,20 @@
   if(wat.length){
     const watFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false});
     const dateFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',weekday:'short',day:'2-digit',month:'short'});
+    const hourFmt=new Intl.DateTimeFormat('en-NG',{timeZone:'Africa/Lagos',hour:'2-digit',hour12:false});
+    const fieldModeEls=d.querySelectorAll('[data-field-mode]');
     const updateWat=()=>{
       const now=new Date(),time=`WAT ${watFmt.format(now)}`,date=` · ${dateFmt.format(now)}`;
       wat.forEach(el=>el.textContent=time);
       watDate.forEach(el=>el.textContent=date);
+      if(fieldModeEls.length){
+        const hour=Number(hourFmt.format(now));
+        let mode='Planning mode · early prep';
+        if(hour>=7&&hour<16) mode='Field mode · active';
+        else if(hour>=16&&hour<21) mode='Review mode · follow-through';
+        else if(hour>=21||hour<7) mode='Planning mode · reset & prep';
+        fieldModeEls.forEach(el=>el.textContent=mode);
+      }
     };
     updateWat();setInterval(updateWat,30000);
   }
@@ -87,7 +97,7 @@
   const ambient=d.getElementById('ambient-score');
   let audioCtx=null,soundOn=false,fadeRaf=0,gestureArmed=false;
   const timeKey='ms_sound_time_auto_v1';
-  const TARGET_VOLUME=.16;
+  const TARGET_VOLUME=.14;
 
   const ensureAudio=()=>{
     try{
@@ -127,12 +137,12 @@
     if(!audioCtx||audioCtx.state!=='running')return;
     const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
     filter.type='lowpass';
-    filter.frequency.value=kind==='click'?1850:2400;
+    filter.frequency.value=kind==='click'?1750:2250;
     osc.type=kind==='click'?'sine':'triangle';
-    osc.frequency.setValueAtTime(kind==='click'?430:650,now);
-    osc.frequency.exponentialRampToValueAtTime(kind==='click'?350:760,now+.052);
+    osc.frequency.setValueAtTime(kind==='click'?420:610,now);
+    osc.frequency.exponentialRampToValueAtTime(kind==='click'?340:710,now+.052);
     gain.gain.setValueAtTime(.0001,now);
-    gain.gain.exponentialRampToValueAtTime(kind==='click'?.009:.0035,now+.008);
+    gain.gain.exponentialRampToValueAtTime(kind==='click'?.008:.003,now+.008);
     gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));
     osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
     osc.start(now);osc.stop(now+.11);
@@ -217,12 +227,12 @@
 
   // Interface SFX become active automatically once audio is permitted.
   if(matchMedia('(pointer:fine)').matches){
-    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case').forEach(el=>{
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
       el.addEventListener('pointerenter',()=>blip('hover'),{passive:true});
       el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
     });
   }else{
-    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case').forEach(el=>{
+    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
       el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
     });
   }
@@ -260,6 +270,37 @@
       },{passive:true});
     });
   }
+
+  // Story graphs: draw on reveal and update narrative copy on hover/focus/tap.
+  if('IntersectionObserver' in window){
+    const drawObserver=new IntersectionObserver(entries=>entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('is-drawn');
+        drawObserver.unobserve(e.target);
+      }
+    }),{threshold:.3});
+    d.querySelectorAll('.premium-graph').forEach(el=>drawObserver.observe(el));
+  }else{
+    d.querySelectorAll('.premium-graph').forEach(el=>el.classList.add('is-drawn'));
+  }
+
+  d.querySelectorAll('[data-story-graph]').forEach(block=>{
+    const output=block.querySelector('[data-story-output]');
+    if(!output) return;
+    const defaultText=output.textContent.trim();
+    const activate=el=>{
+      const msg=el.dataset.note;
+      if(msg) output.textContent=msg;
+    };
+    block.querySelectorAll('[data-note]').forEach(el=>{
+      ['mouseenter','focus','click'].forEach(type=>el.addEventListener(type,()=>activate(el)));
+      const circle=el.querySelector('.chart-hotspot');
+      if(circle){
+        ['mouseenter','focus','click'].forEach(type=>circle.addEventListener(type,()=>activate(el)));
+      }
+    });
+    block.addEventListener('mouseleave',()=>output.textContent=defaultText);
+  });
 
   // Lightweight live performance diagnostics. Add ?debug=1 to any page to expose it in console.
   const perf={}; window.__MS_PERF=perf;

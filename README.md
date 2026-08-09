@@ -90,3 +90,19 @@ not to turn the site into a tech demo.
 - Reduced-motion and Save-Data fallbacks preserved
 - `backdrop-filter` fallback for older browsers
 - CSS/JS cache busting at v5.0.0
+
+
+## Premium V6 Story Graphs
+
+This edition adds a stronger narrative layer without making the website feel cluttered.
+
+### New in V6
+- Professional story-driven graphs added to the homepage
+- Interactive retention signal chart
+- Interactive commercial system map
+- Human editorial layer: paper-note texture, hand-drawn arrow and scribble underline
+- Live field-mode status based on West Africa Time
+- More moderate soundtrack mix (14% target volume)
+- Softer premium interface SFX
+- Additional hover / focus interaction for graph nodes
+- Cache-busting updated to v6.0.0
