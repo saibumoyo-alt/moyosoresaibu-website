@@ -67,3 +67,15 @@ Production contact delivery is now wired to the independently tested Worker:
 - Privacy copy updated to reflect dedicated Worker delivery
 - V8.1 cache busting for CSS and JavaScript
 - Existing `/api/event` first-party analytics hook retained
+
+
+## Premium V8.2 — SEO Precision
+
+This is a non-visual structured-data patch.
+
+### Changes
+- Removed optional ProfilePage `dateCreated` and `dateModified` date-only values that Google Search Console flagged as invalid DateTime values
+- Normalized `Person.jobTitle` from `Territory Manager, Guinness Nigeria` to `Territory Manager`
+- Preserved `worksFor → Guinness Nigeria` as the employer relationship
+- No design, animation, audio, contact Worker, analytics, sitemap, or content changes
+- Cache-busting updated to `v=8.2.0`
