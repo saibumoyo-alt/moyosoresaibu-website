@@ -88,142 +88,26 @@
         fieldModeEls.forEach(el=>el.textContent=mode);
       }
     };
-    updateWat();setInterval(updateWat,30000);
+    updateWat();
   }
 
-  // V4.2 Auto Sonic — immediate audible autoplay attempt with first-gesture fallback.
-  // Modern browsers may block audible autoplay. When they do, playback starts on
-  // the visitor's first pointer/touch/key interaction anywhere on the document.
-  const ambient=d.getElementById('ambient-score');
-  let audioCtx=null,soundOn=false,fadeRaf=0,gestureArmed=false;
-  const timeKey='ms_sound_time_auto_v1';
-  const TARGET_VOLUME=.14;
+  // V8 accessible sound: off by default, starts only after explicit visitor choice.
+  const ambient=d.getElementById('ambient-score'),soundBtn=d.querySelector('.sound-control');
+  let audioCtx=null,soundOn=false,fadeRaf=0;
+  const TARGET_VOLUME=.14,timeKey='ms_sound_time_v8',prefKey='ms_sound_optin_v8';
+  const safeSessionGet=k=>{try{return sessionStorage.getItem(k)}catch(e){return null}};
+  const safeSessionSet=(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}};
+  const ensureAudio=()=>{try{if(!audioCtx){const C=window.AudioContext||window.webkitAudioContext;if(C)audioCtx=new C()}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{})}catch(e){}};
+  const fadeTo=(target,duration=650)=>{if(!ambient)return;cancelAnimationFrame(fadeRaf);const from=ambient.volume,start=performance.now();const tick=t=>{const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);ambient.volume=Math.max(0,Math.min(1,from+(target-from)*ease));if(p<1)fadeRaf=requestAnimationFrame(tick)};fadeRaf=requestAnimationFrame(tick)};
+  const updateSoundButton=()=>{if(!soundBtn)return;soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.setAttribute('aria-label',soundOn?'Pause ambient sound':'Play ambient sound');const label=soundBtn.querySelector('.sound-control-label');if(label)label.textContent=soundOn?'Sound on':'Sound'};
+  const startSound=async()=>{if(!ambient)return;ensureAudio();try{const saved=Number(safeSessionGet(timeKey)||0);if(saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1)ambient.currentTime=saved;ambient.volume=.01;await ambient.play();soundOn=true;safeSessionSet(prefKey,'1');fadeTo(TARGET_VOLUME,900);updateSoundButton()}catch(e){soundOn=false;updateSoundButton()}};
+  const stopSound=()=>{if(!ambient)return;fadeTo(0,220);setTimeout(()=>{if(ambient&&!ambient.paused){ambient.pause();safeSessionSet(timeKey,String(ambient.currentTime||0))}},230);soundOn=false;safeSessionSet(prefKey,'0');updateSoundButton()};
+  if(soundBtn)soundBtn.addEventListener('click',()=>soundOn?stopSound():startSound());
+  if(ambient&&safeSessionGet(prefKey)==='1')startSound();
+  addEventListener('pagehide',()=>{if(ambient&&!ambient.paused)safeSessionSet(timeKey,String(ambient.currentTime||0))},{passive:true});
+  updateSoundButton();
 
-  const ensureAudio=()=>{
-    try{
-      if(!audioCtx){
-        const C=window.AudioContext||window.webkitAudioContext;
-        if(C)audioCtx=new C();
-      }
-      if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
-    }catch(e){}
-  };
-
-  const restoreAudioTime=()=>{
-    if(!ambient)return;
-    try{
-      const saved=Number(sessionStorage.getItem(timeKey)||0);
-      if(Number.isFinite(saved)&&saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1){
-        ambient.currentTime=saved;
-      }
-    }catch(e){}
-  };
-
-  const fadeTo=(target,duration=750)=>{
-    if(!ambient)return;
-    cancelAnimationFrame(fadeRaf);
-    const from=ambient.volume,start=performance.now();
-    const tick=t=>{
-      const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);
-      ambient.volume=Math.max(0,Math.min(1,from+(target-from)*ease));
-      if(p<1)fadeRaf=requestAnimationFrame(tick);
-    };
-    fadeRaf=requestAnimationFrame(tick);
-  };
-
-  const blip=(kind='hover')=>{
-    if(!soundOn)return;
-    ensureAudio();
-    if(!audioCtx||audioCtx.state!=='running')return;
-    const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
-    filter.type='lowpass';
-    filter.frequency.value=kind==='click'?1750:2250;
-    osc.type=kind==='click'?'sine':'triangle';
-    osc.frequency.setValueAtTime(kind==='click'?420:610,now);
-    osc.frequency.exponentialRampToValueAtTime(kind==='click'?340:710,now+.052);
-    gain.gain.setValueAtTime(.0001,now);
-    gain.gain.exponentialRampToValueAtTime(kind==='click'?.008:.003,now+.008);
-    gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));
-    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
-    osc.start(now);osc.stop(now+.11);
-  };
-
-  const markPlaying=()=>{
-    soundOn=true;
-    body.classList.add('sound-on');
-    ambient.muted=false;
-    if(ambient.volume<.015)ambient.volume=.015;
-    fadeTo(TARGET_VOLUME,1250);
-  };
-
-  const startAudio=()=>{
-    if(!ambient)return Promise.reject(new Error('Ambient audio element missing'));
-    ambient.preload='auto';
-    ambient.muted=false;
-    if(ambient.readyState>=1)restoreAudioTime();
-    else ambient.addEventListener('loadedmetadata',restoreAudioTime,{once:true});
-    ambient.volume=.015;
-    const p=ambient.play();
-    if(p&&typeof p.then==='function'){
-      return p.then(()=>{markPlaying();ensureAudio();return true});
-    }
-    markPlaying();ensureAudio();return Promise.resolve(true);
-  };
-
-  const removeGestureFallback=()=>{
-    if(!gestureArmed)return;
-    gestureArmed=false;
-    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
-      d.removeEventListener(type,gestureStart,true);
-    });
-  };
-
-  const gestureStart=()=>{
-    // This function runs synchronously inside a trusted user activation event.
-    ensureAudio();
-    startAudio().then(()=>{
-      removeGestureFallback();
-      setTimeout(()=>blip('click'),30);
-    }).catch(()=>{});
-  };
-
-  const armGestureFallback=()=>{
-    if(gestureArmed)return;
-    gestureArmed=true;
-    ['pointerdown','touchstart','keydown','click'].forEach(type=>{
-      d.addEventListener(type,gestureStart,{capture:true,passive:true});
-    });
-  };
-
-  if(ambient){
-    // Attempt audible playback as soon as the document is ready.
-    // Browsers that allow autoplay will start here.
-    startAudio().then(removeGestureFallback).catch(err=>{
-      // Expected on browsers with autoplay blocking. No error UI is shown:
-      // the very first visitor gesture starts the soundtrack automatically.
-      armGestureFallback();
-      if(new URLSearchParams(location.search).get('debug')==='1'){
-        console.info('Audible autoplay blocked; armed first-gesture fallback.',err?.name||err);
-      }
-    });
-
-    ambient.addEventListener('error',()=>{
-      console.error('Ambient audio media error:',ambient.error);
-    });
-
-    addEventListener('pagehide',()=>{
-      if(!ambient.paused){
-        try{sessionStorage.setItem(timeKey,String(ambient.currentTime||0))}catch(e){}
-      }
-    },{passive:true});
-
-    // When returning to the tab, try to resume if the browser suspended media.
-    d.addEventListener('visibilitychange',()=>{
-      if(d.visibilityState==='visible'&&soundOn&&ambient.paused){
-        ambient.play().catch(()=>armGestureFallback());
-      }
-    });
-  }
+  const blip=(kind='hover')=>{if(!soundOn)return;ensureAudio();if(!audioCtx||audioCtx.state!=='running')return;const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=kind==='click'?1750:2250;osc.type=kind==='click'?'sine':'triangle';osc.frequency.setValueAtTime(kind==='click'?420:610,now);osc.frequency.exponentialRampToValueAtTime(kind==='click'?340:710,now+.052);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(kind==='click'?.008:.003,now+.008);gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.11)};
 
   // Interface SFX become active automatically once audio is permitted.
   if(matchMedia('(pointer:fine)').matches){
@@ -301,6 +185,148 @@
     });
     block.addEventListener('mouseleave',()=>output.textContent=defaultText);
   });
+
+  // V7 conversion journey: lightweight, privacy-respecting event hooks.
+  // No third-party analytics is loaded. Events are exposed in window.__MS_CRO
+  // and also pushed to dataLayer only if a future analytics integration defines it.
+  const croEvents=[];
+  const recordConversion=(name,detail={})=>{
+    const event={name,detail,path:location.pathname,time:new Date().toISOString()};
+    croEvents.push(event);
+    try{sessionStorage.setItem('ms_last_conversion_event',JSON.stringify(event))}catch(e){}
+    window.dispatchEvent(new CustomEvent('ms:conversion',{detail:event}));
+    if(navigator.doNotTrack!=='1'){
+      try{navigator.sendBeacon('/api/event',new Blob([JSON.stringify({name,path:location.pathname,href:detail.href||'',from:new URLSearchParams(location.search).get('from')||'',intent:new URLSearchParams(location.search).get('intent')||''})],{type:'application/json'}))}catch(e){}
+    }
+    if(Array.isArray(window.dataLayer)) window.dataLayer.push({event:'ms_conversion',conversion_name:name,...detail});
+    if(new URLSearchParams(location.search).get('debug')==='1') console.info('Conversion event',event);
+  };
+  window.__MS_CRO={events:croEvents,record:recordConversion};
+
+  d.querySelectorAll('[data-conversion-cta]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      recordConversion(el.dataset.conversionCta||'cta_click',{
+        href:el.getAttribute('href')||'',
+        label:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120)
+      });
+    },{passive:true});
+  });
+
+  // Contact-page intent highlighting from URL parameters.
+  const params=new URLSearchParams(location.search);
+  const intent=params.get('intent');
+  if(intent){
+    const card=d.querySelector(`[data-contact-intent="${CSS.escape(intent)}"]`);
+    if(card){
+      card.classList.add('is-selected');
+      card.setAttribute('aria-label',`${card.querySelector('h3')?.textContent||intent} — selected from previous page`);
+    }
+  }
+
+  // Preserve source context when moving into Contact.
+  const sourceName=location.pathname==='/'?'home':location.pathname.replace(/^\/|\.html$/g,'').replace(/\//g,'-')||'home';
+  d.querySelectorAll('a[href^="/contact.html"]').forEach(a=>{
+    try{
+      const u=new URL(a.getAttribute('href'),location.origin);
+      if(!u.searchParams.has('from'))u.searchParams.set('from',sourceName);
+      a.setAttribute('href',u.pathname+u.search+u.hash);
+    }catch(e){}
+  });
+
+  // V8.1 Worker-connected forms.
+  // The contact and Field Notes forms use the dedicated, tested Cloudflare Worker.
+  const CONTACT_WORKER='https://moyosore-contact-mailer.saibumoyo.workers.dev/contact';
+
+  const setupForm=(form,type)=>{
+    if(!form)return;
+    const started=form.querySelector('[name="started_at"]');
+    if(started)started.value=String(Date.now());
+    const status=form.querySelector('.form-status');
+
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const submit=form.querySelector('[type="submit"]');
+      if(!form.reportValidity())return;
+
+      const fd=new FormData(form);
+      const payload=Object.fromEntries(fd.entries());
+      payload.type=type;
+      payload.started_at=payload.started_at||String(Date.now()-2000);
+
+      // Preserve the journey that led to Contact.
+      const journey=new URLSearchParams(location.search);
+      if(type==='contact'){
+        payload.from=journey.get('from')||payload.from||'contact-page';
+      }
+
+      // The already-deployed Worker intentionally has one validation path.
+      // Supply meaningful fields for Field Notes so it can use that same secure path.
+      if(type==='field-notes'){
+        payload.name='Field Notes Subscriber';
+        payload.intent='field-notes';
+        payload.from='insights';
+        payload.message='Please add this email to the Moyosore Saibu Field Notes early list. The subscriber opted in from the Insights page.';
+      }
+
+      if(submit){
+        submit.disabled=true;
+        submit.setAttribute('aria-busy','true');
+      }
+      if(status)status.textContent=type==='field-notes'?'Joining…':'Sending securely…';
+
+      try{
+        const r=await fetch(CONTACT_WORKER,{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        const out=await r.json().catch(()=>({}));
+
+        if(r.ok&&out.ok){
+          if(status){
+            status.textContent=type==='field-notes'
+              ? 'You’re on the early Field Notes list. Thank you.'
+              : (out.message||'Message sent. Thank you.');
+          }
+          form.reset();
+          if(started)started.value=String(Date.now());
+          recordConversion(type==='field-notes'?'newsletter-submit':'contact-form-success',{delivery:'worker'});
+          return;
+        }
+
+        throw new Error(out.error||'send_failed');
+      }catch(err){
+        console.error('Form delivery failed',err);
+        if(status){
+          status.textContent=type==='contact'
+            ? 'Secure delivery could not complete. Please use the direct email link below.'
+            : 'Signup could not complete. Use the email fallback below.';
+        }
+        recordConversion(type==='field-notes'?'newsletter-delivery-failed':'contact-form-failed',{delivery:'worker'});
+      }finally{
+        if(submit){
+          submit.disabled=false;
+          submit.removeAttribute('aria-busy');
+        }
+      }
+    });
+  };
+
+  setupForm(d.querySelector('[data-contact-form]'),'contact');
+  setupForm(d.querySelector('[data-newsletter-form]'),'field-notes');
+
+  const intentParam=new URLSearchParams(location.search).get('intent'),
+        intentSelect=d.querySelector('[data-contact-form] select[name="intent"]');
+  if(intentParam&&intentSelect&&[...intentSelect.options].some(o=>o.value===intentParam)){
+    intentSelect.value=intentParam;
+  }
+
+  // Tracked insight sharing: copy a LinkedIn UTM link without loading a social SDK.
+  d.querySelectorAll('[data-copy-url]').forEach(btn=>btn.addEventListener('click',async()=>{const url=btn.dataset.copyUrl||location.href,status=btn.parentElement?.querySelector('.copy-status');try{await navigator.clipboard.writeText(url);if(status)status.textContent='Copied';recordConversion('article-copy-tracked-link',{href:url})}catch(e){if(status)status.textContent='Copy unavailable'}}));
+
+  // Insights filters.
+  const filterBtns=[...d.querySelectorAll('[data-filter]')],insightCards=[...d.querySelectorAll('[data-insight-card]')];
+  filterBtns.forEach(btn=>btn.addEventListener('click',()=>{const f=btn.dataset.filter;filterBtns.forEach(b=>{const active=b===btn;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active))});insightCards.forEach(card=>{const show=f==='All'||card.dataset.category===f;card.hidden=!show});recordConversion('insights-filter',{filter:f})}));
 
   // Lightweight live performance diagnostics. Add ?debug=1 to any page to expose it in console.
   const perf={}; window.__MS_PERF=perf;
