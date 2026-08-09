@@ -103,7 +103,7 @@ body::before{
   inset:0;
   z-index:9999;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.024;
   mix-blend-mode:soft-light
 }
@@ -713,7 +713,7 @@ body::after{
   position:absolute;
   inset:0;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.06;
   mix-blend-mode:screen;
 }
@@ -852,7 +852,7 @@ body::after{
   inset:0;
   border-radius:inherit;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.03;
 }
 .chart-frame svg{
@@ -937,7 +937,7 @@ body::after{
   content:"";
   position:absolute;
   inset:0;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.025;
   pointer-events:none;
 }

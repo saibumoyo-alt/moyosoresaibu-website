@@ -79,3 +79,17 @@ This is a non-visual structured-data patch.
 - Preserved `worksFor → Guinness Nigeria` as the employer relationship
 - No design, animation, audio, contact Worker, analytics, sitemap, or content changes
 - Cache-busting updated to `v=8.2.0`
+
+
+## Premium V8.3 — Performance & Accessibility Precision
+
+Non-visual precision release.
+
+- Hero responsive preload now matches the preferred AVIF source set
+- Above-the-fold portrait explicitly remains eager/high priority
+- Five custom SVG retention-chart buttons now have accessible names
+- Enter/Space keyboard support added to those SVG controls
+- Grain texture changed from ~23 KB PNG to ~3 KB WebP in V8.3 CSS
+- Original grain PNG retained only for compatibility with old cached CSS
+- Modest cache headers added for manifest, robots and sitemap
+- Visual design, animation, sound, conversion, Worker email, analytics and SEO architecture preserved

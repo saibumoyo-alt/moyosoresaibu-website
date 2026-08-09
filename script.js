@@ -181,6 +181,12 @@
       const circle=el.querySelector('.chart-hotspot');
       if(circle){
         ['mouseenter','focus','click'].forEach(type=>circle.addEventListener(type,()=>activate(el)));
+        circle.addEventListener('keydown',event=>{
+          if(event.key==='Enter'||event.key===' '){
+            event.preventDefault();
+            activate(el);
+          }
+        });
       }
     });
     block.addEventListener('mouseleave',()=>output.textContent=defaultText);
