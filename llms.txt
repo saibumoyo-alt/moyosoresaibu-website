@@ -1,15 +1,28 @@
 # Moyosore Saibu
 
 Official website: https://moyosoresaibu.com/
+Start page: https://moyosoresaibu.com/start/
 
-Moyosore Saibu is a Nigerian commercial professional focused on sales execution, trade activation, territory management, route-to-market strategy, customer development and digital communication.
+Moyosore Saibu is a Nigerian commercial professional focused on sales execution, trade activation, territory management, route-to-market strategy, customer development, commercial analytics and practical AI-assisted workflows.
+
+## Start here
+- Start / social entry: https://moyosoresaibu.com/start/
 
 ## Core pages
 - About: https://moyosoresaibu.com/about.html
 - Experience: https://moyosoresaibu.com/experience.html
 - Projects: https://moyosoresaibu.com/projects.html
+- Evidence & methodology: https://moyosoresaibu.com/evidence.html
 - Insights: https://moyosoresaibu.com/insights/
 - Contact: https://moyosoresaibu.com/contact.html
 
+## Current public field notes
+- Sales reviews should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision.html
+- Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour.html
+
 ## Public professional profile
 - LinkedIn: https://www.linkedin.com/in/moyosaibu
+- Instagram: https://www.instagram.com/moyosoresaibu/
+
+## Navigation intent
+The full website is the professional evidence and authority layer. The /start/ page is the fast social-entry layer for visitors who want to understand Moyosore through customers, work, money, life, proof and useful systems.

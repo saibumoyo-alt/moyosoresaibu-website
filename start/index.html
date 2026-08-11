@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f1eee6">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="description" content="Start here with Moyosore Saibu — customers, work, money and life, shaped by real sales, growth and route-to-market experience.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://moyosoresaibu.com/start/">
+  <link rel="preload" as="image" href="assets/moyosore-saibu-portrait-960.jpg" fetchpriority="high">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Start Here — Moyosore Saibu">
+  <meta property="og:description" content="Real customers. Real work. Real lessons. Choose where you want to start.">
+  <meta property="og:url" content="https://moyosoresaibu.com/start/">
+  <meta property="og:image" content="https://moyosoresaibu.com/assets/moyosore-saibu-portrait-960.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Start Here — Moyosore Saibu">
+  <meta name="twitter:description" content="Customers. Work. Money. Life. Start with what matters to you.">
+  <meta name="twitter:image" content="https://moyosoresaibu.com/assets/moyosore-saibu-portrait-960.jpg">
+
+  <title>Start Here — Moyosore Saibu</title>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"ProfilePage",
+    "name":"Start Here — Moyosore Saibu",
+    "url":"https://moyosoresaibu.com/start/",
+    "mainEntity":{
+      "@type":"Person",
+      "name":"Moyosore Saibu",
+      "url":"https://moyosoresaibu.com/",
+      "image":"https://moyosoresaibu.com/assets/moyosore-saibu-portrait-960.jpg",
+      "jobTitle":"Territory Manager",
+      "worksFor":{"@type":"Organization","name":"Guinness Nigeria"},
+      "sameAs":[
+        "https://www.linkedin.com/in/moyosaibu",
+        "https://www.instagram.com/moyosoresaibu/"
+      ],
+      "knowsAbout":["Sales execution","Route-to-market","Trade activation","Customer development","Territory growth","Commercial analytics"]
+    }
+  }
+  </script>
+
+  <style>
+    :root{
+      --paper:#f1eee6;
+      --paper-2:#e9e4d9;
+      --ink:#11110f;
+      --muted:#666257;
+      --line:rgba(17,17,15,.14);
+      --line-strong:rgba(17,17,15,.28);
+      --panel:rgba(255,255,255,.52);
+      --black:#0e0f0f;
+      --white:#fffef8;
+      --radius:24px;
+      --shadow:0 18px 60px rgba(28,26,20,.09);
+      --max:1180px;
+      --ease:cubic-bezier(.2,.75,.2,1);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--paper);color:var(--ink)}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 8% 10%,rgba(255,255,255,.82),transparent 30%),
+        radial-gradient(circle at 88% 32%,rgba(205,197,176,.25),transparent 28%),
+        var(--paper);
+      color:var(--ink);
+      line-height:1.45;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;inset:0;pointer-events:none;z-index:100;
+      opacity:.13;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+      mix-blend-mode:multiply;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    img{max-width:100%;display:block}
+    .skip{position:absolute;left:-9999px;top:8px;background:var(--ink);color:white;padding:10px 14px;border-radius:10px;z-index:999}
+    .skip:focus{left:8px}
+    :focus-visible{outline:3px solid #111;outline-offset:4px}
+    .shell{width:min(calc(100% - 32px),var(--max));margin-inline:auto}
+    .eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+    .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink);margin-right:8px;vertical-align:1px}
+
+    header{
+      position:sticky;top:0;z-index:80;
+      backdrop-filter:blur(18px) saturate(125%);
+      -webkit-backdrop-filter:blur(18px) saturate(125%);
+      background:rgba(241,238,230,.72);
+      border-bottom:1px solid transparent;
+      transition:border-color .25s ease,background .25s ease;
+    }
+    header.scrolled{border-bottom-color:var(--line);background:rgba(241,238,230,.9)}
+    .nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:840;letter-spacing:-.035em}
+    .brand-mark{width:31px;height:31px;border:1.5px solid var(--ink);display:grid;place-items:center;border-radius:50%;font-weight:900;font-size:.84rem;transform:rotate(-4deg)}
+    .nav-right{display:flex;align-items:center;gap:8px}
+    .nav-link,.sound-btn{min-height:44px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.26);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;cursor:pointer}
+    .nav-link:hover,.sound-btn:hover{background:white;border-color:var(--line-strong)}
+    .nav-link.strong{background:var(--ink);color:var(--white);border-color:var(--ink)}
+
+    main{overflow:hidden}
+    .hero{padding:clamp(42px,7vw,92px) 0 42px;min-height:calc(100svh - 72px);display:flex;align-items:center}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:clamp(32px,6vw,84px);align-items:center}
+    .hero-copy{position:relative;z-index:2}
+    .hero h1{font-size:clamp(3.5rem,9vw,8.9rem);line-height:.84;letter-spacing:-.075em;margin:14px 0 24px;max-width:850px;font-weight:900}
+    .hero h1 .soft{font-weight:500;font-style:italic;letter-spacing:-.06em}
+    .scribble-wrap{display:inline-block;position:relative;white-space:nowrap}
+    .scribble{position:absolute;left:-1%;right:-1%;height:14px;bottom:-3px;width:102%;overflow:visible}
+    .scribble path{stroke:currentColor;stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.25s var(--ease) .55s forwards}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    .hero-lead{font-size:clamp(1.08rem,2vw,1.42rem);max-width:680px;color:#35332d;line-height:1.5;letter-spacing:-.018em}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .btn{min-height:52px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 19px;font-weight:800;border:1px solid var(--ink);transition:transform .2s var(--ease),background .2s ease,color .2s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{background:var(--ink);color:var(--white)}
+    .btn.secondary{background:rgba(255,255,255,.38)}
+    .live-strip{display:flex;gap:9px;flex-wrap:wrap;margin-top:28px}
+    .signal{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:.78rem;background:rgba(255,255,255,.3);font-weight:720;color:#3f3c35}
+    .signal b{color:var(--ink)}
+
+    .portrait-wrap{position:relative;isolation:isolate}
+    .portrait-card{position:relative;border-radius:42% 42% 26px 26px/32% 32% 26px 26px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(17,17,15,.1);background:#c5c4c0;aspect-ratio:4/5;transform:rotate(1.15deg)}
+    .portrait-card img{width:100%;height:100%;object-fit:cover;object-position:center 28%;filter:saturate(.94) contrast(1.01)}
+    .portrait-wrap::before{content:"";position:absolute;width:70%;height:70%;border:1.5px solid var(--ink);border-radius:50%;top:-7%;right:-8%;z-index:-1;transform:rotate(-8deg);opacity:.45}
+    .portrait-note{position:absolute;left:-20px;bottom:24px;background:#161715;color:white;border-radius:18px;padding:13px 15px;box-shadow:0 12px 35px rgba(0,0,0,.18);transform:rotate(-3deg);font-size:.8rem;max-width:190px}
+    .portrait-note b{display:block;font-size:1.15rem;letter-spacing:-.03em;margin-bottom:2px}
+    .arrow-sketch{position:absolute;left:-60px;bottom:116px;width:72px;transform:rotate(14deg);opacity:.75}
+
+    .micro-nav{padding:28px 0 60px}
+    .micro-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .micro-row p{margin:0;color:var(--muted);font-size:.88rem}
+    .micro-row strong{color:var(--ink)}
+
+    section{padding:clamp(70px,10vw,132px) 0;content-visibility:auto;contain-intrinsic-size:800px}
+    .section-head{display:grid;grid-template-columns:.42fr 1fr;gap:24px;margin-bottom:42px;align-items:start}
+    .section-head h2{font-size:clamp(2.4rem,5.8vw,5.8rem);letter-spacing:-.065em;line-height:.92;margin:0;max-width:850px}
+    .section-head p{margin:0;max-width:650px;color:var(--muted);font-size:1rem}
+
+    .paths{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .path-card{position:relative;min-height:270px;border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:rgba(255,255,255,.28);overflow:hidden;transition:transform .28s var(--ease),background .28s ease,border-color .28s ease;display:flex;flex-direction:column;justify-content:space-between}
+    .path-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.62);border-color:var(--line-strong)}
+    .path-card:nth-child(1){grid-column:span 5}.path-card:nth-child(2){grid-column:span 4}.path-card:nth-child(3){grid-column:span 3}.path-card:nth-child(4){grid-column:span 4}.path-card:nth-child(5){grid-column:span 8}
+    .path-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .path-no{font-size:.72rem;letter-spacing:.13em;font-weight:900;color:var(--muted)}
+    .path-icon{width:42px;height:42px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;transform:rotate(-3deg)}
+    .path-card h3{margin:40px 0 7px;font-size:clamp(1.7rem,3.2vw,3.1rem);letter-spacing:-.055em;line-height:.96}
+    .path-card p{margin:0;color:var(--muted);max-width:440px}
+    .path-foot{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-top:24px;font-size:.8rem;font-weight:800}
+    .path-foot span:last-child{font-size:1.35rem;transition:transform .2s var(--ease)}
+    .path-card:hover .path-foot span:last-child{transform:translate(3px,-3px)}
+    .path-card.featured{background:var(--ink);color:var(--white)}
+    .path-card.featured p,.path-card.featured .path-no{color:#c8c4ba}.path-card.featured .path-icon{border-color:rgba(255,255,255,.28)}
+
+    .proof{background:var(--black);color:var(--white);position:relative}
+    .proof::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 12%,rgba(255,255,255,.09),transparent 25%);pointer-events:none}
+    .proof .section-head p,.proof .eyebrow{color:#aaa79e}.proof .section-head h2{color:white}
+    .proof-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
+    .proof-stat{padding:28px 18px 30px 0;border-right:1px solid rgba(255,255,255,.14);min-height:170px}
+    .proof-stat:not(:first-child){padding-left:20px}.proof-stat:last-child{border-right:0}
+    .proof-stat strong{display:block;font-size:clamp(2.6rem,5.8vw,5.6rem);letter-spacing:-.075em;line-height:.9;margin-bottom:11px}
+    .proof-stat p{margin:0;color:#b7b4ac;font-size:.84rem;max-width:210px}
+    .proof-note{margin-top:20px;color:#9c9990;font-size:.78rem;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+    .people{position:relative}
+    .people-canvas{margin-top:46px;min-height:560px;border:1px solid var(--line);border-radius:34px;background:rgba(255,255,255,.32);position:relative;overflow:hidden}
+    .orbit-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:190px;height:190px;border-radius:50%;background:var(--ink);color:white;display:grid;place-items:center;text-align:center;z-index:4;box-shadow:0 18px 50px rgba(0,0,0,.16)}
+    .orbit-center strong{font-size:2rem;letter-spacing:-.05em}
+    .orbit-center small{display:block;color:#c9c7c0;margin-top:3px}
+    .orbit-line{position:absolute;left:50%;top:50%;width:76%;height:1px;background:var(--line);transform-origin:left center;z-index:1}
+    .orbit-line.l1{transform:rotate(28deg)}.orbit-line.l2{transform:rotate(148deg)}.orbit-line.l3{transform:rotate(212deg)}.orbit-line.l4{transform:rotate(332deg)}
+    .orbit-node{position:absolute;z-index:3;min-width:150px;padding:15px 18px;border:1px solid var(--line-strong);border-radius:999px;background:var(--paper);font-weight:850;text-align:center;box-shadow:0 8px 24px rgba(20,18,14,.06);transition:transform .25s var(--ease)}
+    .orbit-node:hover{transform:scale(1.04) rotate(-1deg)}
+    .n1{left:10%;top:18%}.n2{right:9%;top:18%}.n3{left:10%;bottom:17%}.n4{right:9%;bottom:17%}
+    .people-caption{position:absolute;left:24px;bottom:20px;color:var(--muted);font-size:.76rem;max-width:260px}
+
+    .latest-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+    .latest-card{border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,4vw,38px);background:rgba(255,255,255,.3);min-height:360px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .latest-card h3{font-size:clamp(2rem,4.2vw,4.3rem);line-height:.95;letter-spacing:-.06em;margin:18px 0 18px;max-width:760px}
+    .latest-card p{color:var(--muted);max-width:680px;margin:0}
+    .latest-card .read{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:17px;margin-top:38px;font-weight:850}
+    .latest-card.dark{background:var(--ink);color:white}.latest-card.dark p,.latest-card.dark .eyebrow{color:#aaa79e}.latest-card.dark .read{border-color:rgba(255,255,255,.17)}
+    .latest-card .ghost-number{position:absolute;right:-13px;top:-40px;font-size:12rem;letter-spacing:-.08em;font-weight:950;opacity:.035;line-height:1}
+
+    .tool-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:34px}
+    .tool{border-top:1px solid var(--line-strong);padding:18px 0 28px}
+    .tool h3{font-size:1.22rem;letter-spacing:-.03em;margin:0 0 7px}.tool p{color:var(--muted);margin:0;font-size:.9rem}
+
+    .closing{padding-bottom:110px}
+    .closing-box{background:var(--ink);color:white;border-radius:36px;padding:clamp(28px,6vw,76px);position:relative;overflow:hidden}
+    .closing-box::after{content:"";width:360px;height:180px;border:1.5px solid rgba(255,255,255,.38);border-radius:50%;position:absolute;right:-100px;top:-70px;transform:rotate(-12deg)}
+    .closing-box h2{font-size:clamp(3rem,7vw,7.3rem);letter-spacing:-.075em;line-height:.86;margin:0 0 28px;max-width:900px}
+    .closing-box p{color:#b9b6ad;font-size:1.03rem;max-width:650px}
+    .closing-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+    .closing-box .btn.primary{background:var(--white);color:var(--ink);border-color:var(--white)}
+    .closing-box .btn.secondary{border-color:rgba(255,255,255,.35);color:white;background:transparent}
+
+    footer{padding:24px 0 34px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+    .footer-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.footer-links{display:flex;gap:16px;flex-wrap:wrap}.footer-links a:hover{color:var(--ink)}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+    .reveal.in{opacity:1;transform:none}
+
+    @media (max-width:880px){
+      .hero{min-height:auto;padding-top:38px}.hero-grid{grid-template-columns:1fr;gap:38px}.hero h1{font-size:clamp(4.1rem,17vw,7.2rem)}
+      .portrait-wrap{width:min(88%,520px);margin:0 auto}.portrait-note{left:-5px}.arrow-sketch{left:-36px}
+      .section-head{grid-template-columns:1fr;gap:10px}
+      .path-card:nth-child(n){grid-column:span 6}.path-card:nth-child(5){grid-column:span 12}
+      .proof-grid{grid-template-columns:1fr 1fr}.proof-stat:nth-child(2){border-right:0}.proof-stat:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.14)}
+      .latest-grid{grid-template-columns:1fr}.tool-row{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:580px){
+      .shell{width:min(calc(100% - 22px),var(--max))}.nav{min-height:64px}.brand span:last-child{display:none}.nav-link:not(.strong){display:none}.sound-btn{padding:0 11px}
+      .hero h1{font-size:clamp(3.65rem,20vw,5.8rem);margin-top:10px}.hero-lead{font-size:1.03rem}.hero-actions .btn{width:100%}.signal{font-size:.72rem}
+      .micro-row{align-items:flex-start;flex-direction:column}
+      section{padding:74px 0}.section-head h2{font-size:clamp(2.65rem,14vw,4.6rem)}
+      .paths{grid-template-columns:1fr}.path-card:nth-child(n){grid-column:1;min-height:230px}.path-card h3{font-size:2.35rem}
+      .proof-grid{grid-template-columns:1fr}.proof-stat{border-right:0!important;border-bottom:1px solid rgba(255,255,255,.14)!important;padding:24px 0!important}.proof-stat:last-child{border-bottom:0!important}
+      .people-canvas{min-height:590px}.orbit-center{width:150px;height:150px}.orbit-node{min-width:126px;padding:12px 13px;font-size:.84rem}.n1{left:5%;top:10%}.n2{right:5%;top:23%}.n3{left:5%;bottom:22%}.n4{right:5%;bottom:8%}.orbit-line{width:90%}.people-caption{font-size:.7rem;max-width:180px}
+      .tool-row{grid-template-columns:1fr}.closing-box{border-radius:26px}.closing-actions .btn{width:100%}
+      .footer-row{align-items:flex-start;flex-direction:column}
+    }
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.scribble path{animation:none;stroke-dashoffset:0}.btn,.path-card,.path-foot span,.orbit-node{transition:none}
+    }
+
+
+    /* V9 — current + evergreen direction layer */
+    .scroll-hint{display:flex;align-items:center;gap:9px;margin-top:16px;color:var(--muted);font-size:.72rem;font-weight:850;letter-spacing:.11em;text-transform:uppercase}
+    .scroll-hint::before{content:"";width:28px;height:1px;background:var(--ink);animation:hintPulse 1.7s ease-in-out infinite;transform-origin:left}
+    @keyframes hintPulse{0%,100%{transform:scaleX(.45);opacity:.35}50%{transform:scaleX(1);opacity:1}}
+    .route-sprint{padding:6px 0 42px}
+    .route-sprint-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .route-sprint article{min-height:152px;padding:20px 20px 22px 0;border-right:1px solid var(--line)}
+    .route-sprint article:not(:first-child){padding-left:20px}.route-sprint article:last-child{border-right:0}
+    .route-sprint b{display:block;color:var(--muted);font-size:.68rem;letter-spacing:.13em}.route-sprint h3{margin:28px 0 7px;font-size:1.32rem;letter-spacing:-.04em}.route-sprint p{margin:0;color:var(--muted);font-size:.85rem}
+
+    .freshness{background:var(--black);color:var(--white);position:relative;overflow:hidden}
+    .freshness::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 14%,rgba(255,255,255,.09),transparent 27%);pointer-events:none}
+    .freshness .section-head p,.freshness .eyebrow{color:#aaa79e}.freshness .section-head h2{color:white}
+    .fresh-shell{display:grid;grid-template-columns:.6fr 1.4fr;gap:42px;align-items:start;position:relative;z-index:1}
+    .fresh-tabs{display:inline-flex;gap:6px;padding:5px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.04);margin-top:24px}
+    .fresh-tab{border:0;background:transparent;color:#b7b4ac;border-radius:999px;padding:10px 14px;font-weight:850;cursor:pointer}
+    .fresh-tab[aria-selected="true"]{background:var(--white);color:var(--ink)}
+    .fresh-stage{min-height:480px;border:1px solid rgba(255,255,255,.13);border-radius:30px;padding:clamp(24px,4vw,38px);background:rgba(255,255,255,.035);box-shadow:0 30px 90px rgba(0,0,0,.2);position:relative;overflow:hidden}
+    .fresh-panel[hidden]{display:none}.fresh-kicker{font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:#aaa79e;font-weight:900}.fresh-panel h3{font-size:clamp(2.4rem,5vw,5rem);line-height:.92;letter-spacing:-.065em;margin:16px 0 18px;max-width:760px}.fresh-panel>p{color:#b8b5ad;max-width:690px;margin:0}
+    .fresh-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:30px}
+    .fresh-card{min-height:150px;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(255,255,255,.035)}
+    .fresh-card small{display:block;color:#96938c;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:850}.fresh-card strong{display:block;margin-top:14px;font-size:1.25rem;letter-spacing:-.035em}.fresh-card span{display:block;color:#aaa79e;font-size:.8rem;margin-top:7px;line-height:1.45}
+    .fresh-foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.11);color:#9c9990;font-size:.78rem}.fresh-foot a{color:white;font-weight:850;border-bottom:1px solid rgba(255,255,255,.35)}
+
+    .loop-board{margin-top:40px;border:1px solid var(--line);border-radius:32px;padding:clamp(22px,4vw,38px);background:rgba(255,255,255,.28)}
+    .loop-top{display:flex;align-items:end;justify-content:space-between;gap:24px;flex-wrap:wrap}.loop-top h3{font-size:clamp(2rem,4vw,4rem);line-height:.95;letter-spacing:-.06em;margin:0;max-width:9ch}.loop-top p{margin:0;color:var(--muted);max-width:520px}
+    .loop-steps{display:grid;grid-template-columns:repeat(5,1fr);margin-top:30px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .loop-step{position:relative;padding:20px 18px 22px 0;min-height:160px;border-right:1px solid var(--line)}.loop-step:not(:first-child){padding-left:18px}.loop-step:last-child{border-right:0}.loop-step b{font-size:.66rem;color:var(--muted);letter-spacing:.12em}.loop-step strong{display:block;font-size:1.17rem;margin-top:26px;letter-spacing:-.035em}.loop-step span{display:block;color:var(--muted);font-size:.78rem;margin-top:7px}
+    .loop-step::after{content:"→";position:absolute;right:12px;top:18px;color:var(--muted)}.loop-step:last-child::after{content:"↺"}
+
+    @media(max-width:880px){.fresh-shell{grid-template-columns:1fr}.loop-steps{grid-template-columns:1fr 1fr}.loop-step:nth-child(2n){border-right:0}.loop-step{border-bottom:1px solid var(--line)}.loop-step:last-child{grid-column:1/-1;border-bottom:0}}
+    @media(max-width:580px){.route-sprint-grid{grid-template-columns:1fr}.route-sprint article{border-right:0;border-bottom:1px solid var(--line);padding:18px 0!important;min-height:auto}.route-sprint article:last-child{border-bottom:0}.fresh-grid{grid-template-columns:1fr}.loop-steps{grid-template-columns:1fr}.loop-step{grid-column:auto!important;border-right:0!important;padding:18px 0!important}.scroll-hint{display:none}}
+    @media(prefers-reduced-motion:reduce){.scroll-hint::before{animation:none}}
+
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header id="siteHeader">
+    <div class="shell nav">
+      <a class="brand" href="/" aria-label="Moyosore Saibu home">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span>Moyosore Saibu</span>
+      </a>
+      <nav class="nav-right" aria-label="Quick navigation">
+        <a class="nav-link" href="/insights/">Insights</a>
+        <button class="sound-btn" type="button" id="soundToggle" aria-pressed="false" aria-label="Turn interface sound on">♪ Sound off</button>
+        <a class="nav-link strong tracked" href="/contact.html?from=start">Talk ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="dot"></span>Start here · not everywhere</div>
+          <h1 id="hero-title">Work with <span class="scribble-wrap">people<svg class="scribble" viewBox="0 0 420 24" preserveAspectRatio="none" aria-hidden="true"><path d="M4 17 C72 8, 122 23, 191 14 S312 6, 416 16"/></svg></span>?<br><span class="soft">You’re in.</span></h1>
+          <p class="hero-lead">I’m Moyosore Saibu. I work in sales, growth and route-to-market. This page is the shortest way into the ideas, proof and tools I share about <strong>customers, work, money and life.</strong></p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#choose">Choose your path <span aria-hidden="true">↓</span></a>
+            <a class="btn secondary tracked" href="https://www.instagram.com/moyosoresaibu/" rel="me">Follow on Instagram ↗</a>
+          </div>
+          <div class="live-strip" aria-label="Current professional signals">
+            <span class="signal"><b id="watClock">WAT --:--</b> · Nigeria</span>
+            <span class="signal">Current role · <b>Territory Manager, West Ekiti</b></span>
+            <span class="signal">Field notes · <b>2× / month</b></span>
+            <span class="signal">Public site · <b data-public-update>current</b></span>
+          </div>
+          <div class="scroll-hint" aria-hidden="true">Scroll for the route</div>
+        </div>
+
+        <div class="portrait-wrap reveal">
+          <div class="portrait-card">
+            <img src="assets/moyosore-saibu-portrait-960.jpg" width="960" height="1200" alt="Portrait of Moyosore Saibu" fetchpriority="high" decoding="async">
+          </div>
+          <svg class="arrow-sketch" viewBox="0 0 90 82" aria-hidden="true"><path d="M78 4C48 16 25 34 16 63" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M6 52l9 13 15-7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="portrait-note"><b>Real work.</b>Real lessons. No textbook noise.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell micro-nav">
+      <div class="micro-row reveal">
+        <p><strong>One page. Five doors.</strong> Start with what is useful to you now.</p>
+        <p id="arrivalContext">Built for people arriving from social, search or a shared link.</p>
+      </div>
+    </div>
+
+    <div class="shell route-sprint" aria-label="How to use this page">
+      <div class="route-sprint-grid reveal">
+        <article><b>01 · MEET</b><h3>Know who is speaking.</h3><p>Thirty seconds of context, not a biography.</p></article>
+        <article><b>02 · CHOOSE</b><h3>Pick the useful door.</h3><p>Work, wins, lessons, tools or life.</p></article>
+        <article><b>03 · MOVE</b><h3>Leave with something.</h3><p>An idea, proof, resource or conversation.</p></article>
+      </div>
+    </div>
+
+    <section id="choose" aria-labelledby="choose-title">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div class="eyebrow">01 · Choose your path</div>
+          <div>
+            <h2 id="choose-title">What would make this visit useful?</h2>
+            <p>You do not need to consume everything. Pick the door that matches the question in your head.</p>
+          </div>
+        </div>
+
+        <div class="paths">
+          <a class="path-card featured tracked reveal" href="/experience.html?from=start" data-tone="deep">
+            <div class="path-top"><span class="path-no">01 / WORK</span><span class="path-icon" aria-hidden="true">↗</span></div>
+            <div><h3>Work</h3><p>Field execution, customers, route-to-market, trade activation and the real systems behind commercial performance.</p></div>
+            <div class="path-foot"><span>See the work</span><span aria-hidden="true">↗</span></div>
+          </a>
+
+          <a class="path-card tracked reveal" href="/experience.html?from=start#proof">
+            <div class="path-top"><span class="path-no">02 / WINS</span><span class="path-icon" aria-hidden="true">◇</span></div>
+            <div><h3>Wins</h3><p>Results, milestones and case-study signals — with context before applause.</p></div>
+            <div class="path-foot"><span>Review proof</span><span aria-hidden="true">↗</span></div>
+          </a>
+
+          <a class="path-card tracked reveal" href="/insights/">
+            <div class="path-top"><span class="path-no">03 / LESSONS</span><span class="path-icon" aria-hidden="true">✎</span></div>
+            <div><h3>Lessons</h3><p>Short practical thinking from real commercial work.</p></div>
+            <div class="path-foot"><span>Read</span><span aria-hidden="true">↗</span></div>
+          </a>
+
+          <a class="path-card tracked reveal" href="/projects.html?from=start">
+            <div class="path-top"><span class="path-no">04 / TOOLS</span><span class="path-icon" aria-hidden="true">⌁</span></div>
+            <div><h3>Tools</h3><p>AI, automation, content systems and practical resources that make the work easier to execute.</p></div>
+            <div class="path-foot"><span>Explore systems</span><span aria-hidden="true">↗</span></div>
+          </a>
+
+          <a class="path-card tracked reveal" href="/about.html?from=start">
+            <div class="path-top"><span class="path-no">05 / LIFE</span><span class="path-icon" aria-hidden="true">○</span></div>
+            <div><h3>Life beyond the job title.</h3><p>Perspective, growth, personal operating principles and the human side behind the work. The career matters; the person carrying it matters too.</p></div>
+            <div class="path-foot"><span>Meet Moyosore</span><span aria-hidden="true">↗</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="freshness" aria-labelledby="fresh-title">
+      <div class="shell fresh-shell" data-fresh-group>
+        <div class="reveal">
+          <div class="eyebrow">02 · Current + evergreen</div>
+          <h2 id="fresh-title" style="font-size:clamp(2.8rem,6vw,5.8rem);letter-spacing:-.065em;line-height:.92;margin:16px 0 0">Fresh enough for now. Useful enough for later.</h2>
+          <div class="fresh-tabs" role="tablist" aria-label="Choose current or evergreen content">
+            <button class="fresh-tab" type="button" role="tab" aria-selected="true" data-fresh-tab="now">Now</button>
+            <button class="fresh-tab" type="button" role="tab" aria-selected="false" data-fresh-tab="evergreen" tabindex="-1">Evergreen</button>
+          </div>
+        </div>
+        <div class="fresh-stage reveal">
+          <div class="fresh-panel" role="tabpanel" data-fresh-panel="now">
+            <div class="fresh-kicker">NOW · LIVE PUBLIC SIGNALS</div>
+            <h3>What is current should earn its place.</h3>
+            <p>This page uses real freshness where it matters: local time, current role, newest public field notes and the latest public website update — without pretending every number needs to be live.</p>
+            <div class="fresh-grid">
+              <div class="fresh-card"><small>Current role</small><strong>Territory Manager · West Ekiti</strong><span>Field execution, customer development and route discipline.</span></div>
+              <div class="fresh-card"><small>Latest field note</small><strong>9 Aug 2026</strong><span>A Sales Review Should End With a Route Decision.</span></div>
+              <div class="fresh-card"><small>Public site pulse</small><strong data-public-update>Checking…</strong><span>Latest public GitHub commit when available.</span></div>
+              <div class="fresh-card"><small>Local context</small><strong id="freshWat">WAT --:--</strong><span>Nigeria time, updated on this device.</span></div>
+            </div>
+            <div class="fresh-foot"><span>Realtime is used for freshness — not decoration.</span><a href="/insights/">Read the latest thinking ↗</a></div>
+          </div>
+          <div class="fresh-panel" role="tabpanel" data-fresh-panel="evergreen" hidden>
+            <div class="fresh-kicker">EVERGREEN · PRINCIPLES THAT SURVIVE TRENDS</div>
+            <h3>The useful ideas should still work next year.</h3>
+            <p>The brand is built on durable principles: understand people, follow up, make the route clearer, protect availability and turn data into a decision.</p>
+            <div class="fresh-grid">
+              <div class="fresh-card"><small>Customers</small><strong>Context before assumption.</strong><span>Understand the person before pushing the answer.</span></div>
+              <div class="fresh-card"><small>Work</small><strong>Execution beats intention.</strong><span>A plan matters when behaviour changes.</span></div>
+              <div class="fresh-card"><small>Money</small><strong>Value creates leverage.</strong><span>Build usefulness before asking for attention.</span></div>
+              <div class="fresh-card"><small>Life</small><strong>Review, learn, repeat.</strong><span>Keep the lesson, not only the result.</span></div>
+            </div>
+            <div class="fresh-foot"><span>Evergreen is the foundation; current context is the edge.</span><a href="#people">See the people lens ↓</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div class="eyebrow">03 · Proof before promise</div>
+          <div>
+            <h2 id="proof-title">A signal should survive a closer look.</h2>
+            <p>Different kinds of proof tell different parts of the story: commercial outcomes, time in role, recognition and ideas that travelled.</p>
+          </div>
+        </div>
+        <div class="proof-grid reveal">
+          <article class="proof-stat"><strong data-count="22" data-suffix="%">22%</strong><p>customer-retention improvement shared from the Enugu chapter.</p></article>
+          <article class="proof-stat"><strong data-count="1095">1,095</strong><p>days in trade activation across Enugu market execution.</p></article>
+          <article class="proof-stat"><strong>#1</strong><p>area / division / regional status shared from the Enugu chapter.</p></article>
+          <article class="proof-stat"><strong>4.8M+</strong><p>views on a customer-focused Instagram Reel — creator proof from 2023.</p></article>
+        </div>
+        <div class="proof-note reveal"><span>Commercial evidence → full experience page.</span><span>Creator metric → Instagram Insights record.</span></div>
+      </div>
+    </section>
+
+    <section class="people" id="people" aria-labelledby="people-title">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div class="eyebrow">04 · Point of view</div>
+          <div>
+            <h2 id="people-title">Most things still come down to people.</h2>
+            <p>Customers, colleagues, managers, audiences, family — different contexts, same reality: trust, attention, value and follow-through shape what happens next.</p>
+          </div>
+        </div>
+        <div class="people-canvas reveal" role="img" aria-label="People at the center connecting customers, work, money and life">
+          <span class="orbit-line l1"></span><span class="orbit-line l2"></span><span class="orbit-line l3"></span><span class="orbit-line l4"></span>
+          <div class="orbit-center"><div><strong>People</strong><small>the common variable</small></div></div>
+          <div class="orbit-node n1">Customers</div><div class="orbit-node n2">Work</div><div class="orbit-node n3">Money</div><div class="orbit-node n4">Life</div>
+          <div class="people-caption">The categories change. Human behaviour keeps showing up.</div>
+        </div>
+        <div class="loop-board reveal">
+          <div class="loop-top"><h3>A simple operating loop.</h3><p>Different problem, same useful rhythm. This is the thinking pattern behind the page — and behind much of the work.</p></div>
+          <div class="loop-steps" aria-label="Notice ask decide do review loop">
+            <div class="loop-step"><b>01</b><strong>Notice</strong><span>See the signal.</span></div>
+            <div class="loop-step"><b>02</b><strong>Ask</strong><span>Get the context.</span></div>
+            <div class="loop-step"><b>03</b><strong>Decide</strong><span>Choose the move.</span></div>
+            <div class="loop-step"><b>04</b><strong>Do</strong><span>Make it real.</span></div>
+            <div class="loop-step"><b>05</b><strong>Review</strong><span>Keep the lesson.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="latest-title">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div class="eyebrow">05 · Latest thinking</div>
+          <div>
+            <h2 id="latest-title">Read what is current, keep what is evergreen.</h2>
+            <p>The site’s newest public field notes are built around decisions that survive trends: execution, behaviour, prioritisation and follow-through.</p>
+          </div>
+        </div>
+        <div class="latest-grid">
+          <a class="latest-card tracked reveal" href="/insights/sales-reviews-end-with-route-decision.html">
+            <div><span class="eyebrow">Latest · 9 Aug 2026 · 6 min</span><h3>A Sales Review Should End With a Route Decision</h3><p>Data is only useful when it changes a decision. A good review should make the next market action clearer than the last one.</p></div>
+            <div class="read"><span>Read field note</span><span aria-hidden="true">↗</span></div>
+            <div class="ghost-number" aria-hidden="true">01</div>
+          </a>
+          <a class="latest-card dark tracked reveal" href="/insights/trade-activation-must-change-behaviour.html">
+            <div><span class="eyebrow">9 Aug 2026 · Trade activation</span><h3>Decoration is not the outcome.</h3><p>Trade activation earns its value when it changes what customers notice, choose or repeat.</p></div>
+            <div class="read"><span>Read field note</span><span aria-hidden="true">↗</span></div>
+            <div class="ghost-number" aria-hidden="true">02</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="tools-title">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div class="eyebrow">06 · Useful systems</div>
+          <div><h2 id="tools-title">Tools should reduce friction, not create another hobby.</h2><p>The useful stack is the one that helps you think, decide, communicate or execute better.</p></div>
+        </div>
+        <div class="tool-row reveal">
+          <div class="tool"><h3>AI & automation</h3><p>Use AI to shorten repetitive work while keeping judgment with the human doing the job.</p></div>
+          <div class="tool"><h3>Sales systems</h3><p>Route discipline, follow-up, coverage, customer context and simple decision loops.</p></div>
+          <div class="tool"><h3>Content systems</h3><p>Turn lived experience into useful ideas people can understand, save and share.</p></div>
+          <div class="tool"><h3>Decision tools</h3><p>Use data to choose the next move — not only to explain the last one.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="shell">
+        <div class="closing-box reveal">
+          <div class="eyebrow" style="color:#aaa79e">One clear next step</div>
+          <h2 id="closing-title">If one idea here makes you better, stay.</h2>
+          <p>Follow for customers, work, money and life — or bring me the real context if there is something you are trying to move.</p>
+          <div class="closing-actions">
+            <a class="btn primary tracked" href="https://www.instagram.com/moyosoresaibu/" rel="me">Follow @moyosoresaibu ↗</a>
+            <a class="btn secondary tracked" href="/contact.html?from=start">Start a conversation ↗</a>
+            <a class="btn secondary" href="/">Explore full site</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-row">
+      <span>© <span id="year">2026</span> Moyosore Saibu · Start with what is useful.</span>
+      <div class="footer-links"><a href="/privacy.html">Privacy</a><a href="/sitemap.xml">Sitemap</a><a href="https://www.linkedin.com/in/moyosaibu" rel="me">LinkedIn ↗</a></div>
+    </div>
+  </footer>
+
+  <script>
+  (()=>{
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const header = document.getElementById('siteHeader');
+    const clock = document.getElementById('watClock');
+    const arrival = document.getElementById('arrivalContext');
+    const year = document.getElementById('year');
+    year.textContent = new Date().getFullYear();
+
+    const updateClock=()=>{
+      const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+      clock.textContent=`WAT ${parts}`;
+    };
+    updateClock(); setInterval(updateClock,30000);
+
+    addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>10),{passive:true});
+
+    const params=new URLSearchParams(location.search);
+    const source=(params.get('utm_source')||params.get('source')||'').toLowerCase();
+    if(source.includes('instagram')||document.referrer.includes('instagram.com')) arrival.textContent='You came from Instagram. This is the shortest path into the rest.';
+    else if(source.includes('linkedin')||document.referrer.includes('linkedin.com')) arrival.textContent='You came from LinkedIn. Start with the evidence or the thinking.';
+    else if(document.referrer && !document.referrer.includes(location.hostname)) arrival.textContent='You arrived through a shared link. Pick the part that is useful now.';
+
+    // Preserve useful attribution across internal navigation without loading an analytics library.
+    document.querySelectorAll('a.tracked').forEach(a=>{
+      a.addEventListener('click',()=>{
+        try{ sessionStorage.setItem('moyo_start_last_click', JSON.stringify({href:a.getAttribute('href'),at:Date.now(),source:source||'direct'})); }catch(e){}
+      });
+    });
+
+    if(!reduced && 'IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -40px'});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    }else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+
+    // Optional interface sound: off by default; only starts after an explicit user gesture.
+    let sound=false, ctx=null;
+    const soundBtn=document.getElementById('soundToggle');
+    const ping=(freq=520,dur=.04,vol=.025)=>{
+      if(!sound)return;
+      ctx ||= new (window.AudioContext||window.webkitAudioContext)();
+      const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=freq; g.gain.setValueAtTime(vol,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+dur); o.connect(g).connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur);
+    };
+    soundBtn.addEventListener('click',()=>{
+      sound=!sound; soundBtn.setAttribute('aria-pressed',String(sound)); soundBtn.textContent=sound?'♪ Sound on':'♪ Sound off'; soundBtn.setAttribute('aria-label',sound?'Turn interface sound off':'Turn interface sound on'); if(sound) ping(620,.06,.035);
+    });
+    document.querySelectorAll('a,button').forEach(el=>el.addEventListener('pointerdown',()=>ping(450,.03,.018),{passive:true}));
+
+
+    // V9: live public GitHub freshness signal. Falls back cleanly if the API is unavailable.
+    const publicUpdateEls=document.querySelectorAll('[data-public-update]');
+    const relativeUpdate=(iso)=>{
+      const t=new Date(iso).getTime(); if(!Number.isFinite(t)) return 'current';
+      const mins=Math.max(0,Math.floor((Date.now()-t)/60000));
+      if(mins<2)return 'updated just now'; if(mins<60)return `updated ${mins} min ago`;
+      const hrs=Math.floor(mins/60); if(hrs<24)return `updated ${hrs}h ago`;
+      const days=Math.floor(hrs/24); if(days<7)return `updated ${days}d ago`;
+      return `updated ${new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(t))}`;
+    };
+    fetch('https://api.github.com/repos/saibumoyo-alt/moyosoresaibu-website/commits?per_page=1',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'})
+      .then(r=>r.ok?r.json():Promise.reject()).then(j=>{const iso=j?.[0]?.commit?.committer?.date||j?.[0]?.commit?.author?.date;if(!iso)return;publicUpdateEls.forEach(el=>{el.textContent=relativeUpdate(iso);el.title=`Latest public website commit: ${new Date(iso).toLocaleString()}`})}).catch(()=>publicUpdateEls.forEach(el=>{if(el.textContent.trim()==='Checking…')el.textContent='public build current'}));
+
+    const freshWat=document.getElementById('freshWat');
+    const updateFreshWat=()=>{if(freshWat)freshWat.textContent=`WAT ${new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}`};
+    updateFreshWat(); setInterval(updateFreshWat,30000);
+
+    document.querySelectorAll('[data-fresh-group]').forEach(group=>{
+      const tabs=[...group.querySelectorAll('[data-fresh-tab]')],panels=[...group.querySelectorAll('[data-fresh-panel]')];
+      const activate=(id,focus=false)=>{tabs.forEach(tab=>{const on=tab.dataset.freshTab===id;tab.setAttribute('aria-selected',String(on));tab.tabIndex=on?0:-1;if(on&&focus)tab.focus()});panels.forEach(p=>p.hidden=p.dataset.freshPanel!==id)};
+      tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>activate(tab.dataset.freshTab));tab.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let n=i;if(e.key==='ArrowRight')n=(i+1)%tabs.length;if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;if(e.key==='Home')n=0;if(e.key==='End')n=tabs.length-1;activate(tabs[n].dataset.freshTab,true)})});
+    });
+
+  })();
+  </script>
+</body>
+</html>
