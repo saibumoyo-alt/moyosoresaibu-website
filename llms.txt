@@ -14,3 +14,7 @@ Main pages:
 - Contact: https://moyosoresaibu.com/contact
 
 The /start/ page is a social-entry landing page and is intentionally not indexed.
+
+Case studies:
+- Route remapping and retention: https://moyosoresaibu.com/case-studies/route-remapping-retention
+- Bold Loud customer development: https://moyosoresaibu.com/case-studies/bold-loud-customer-development
