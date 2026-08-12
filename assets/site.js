@@ -59,4 +59,34 @@
 
   setupForm(document.querySelector('[data-contact-form]'),'contact');
   document.querySelectorAll('[data-newsletter-form]').forEach(form=>setupForm(form,'field-notes'));
+
+  // Local section navigation. Normal anchor links work without JavaScript.
+  const nav=document.querySelector('[data-section-nav]');
+  if(nav && 'IntersectionObserver' in window){
+    const links=[...nav.querySelectorAll('[data-section-link]')];
+    const sections=links.map(link=>document.getElementById(link.dataset.sectionLink)).filter(Boolean);
+    const setCurrent=id=>links.forEach(link=>{
+      const active=link.dataset.sectionLink===id;
+      link.classList.toggle('is-current',active);
+      if(active) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current');
+    });
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(visible) setCurrent(visible.target.id);
+    },{rootMargin:'-25% 0px -60% 0px',threshold:[0,.1,.25,.5]});
+    sections.forEach(section=>observer.observe(section));
+  }
+
+  // Lightweight before/after story. If this script fails, both states remain visible.
+  const demo=document.querySelector('[data-decision-demo]');
+  if(demo && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    demo.classList.add('is-enhanced');
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting && entry.intersectionRatio>=.45) demo.classList.add('is-after');
+        else if(!entry.isIntersecting && entry.boundingClientRect.top>0) demo.classList.remove('is-after');
+      });
+    },{threshold:[0,.2,.45,.75]});
+    observer.observe(demo);
+  }
 })();

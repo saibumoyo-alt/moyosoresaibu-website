@@ -1,94 +1,40 @@
-# Moyosore Saibu Website — V9 Experience Upgrade
+# Deploy — Moyosore Apple-Mechanics Upgrade
 
-This package is a **drop-in upgrade layer** for the existing `moyosoresaibu-website` Cloudflare Pages repository. It strengthens the current V8.2 site without replacing the proven contact Worker, shared V8.2 stylesheet, shared script, existing evidence pages, case studies, insights, audio assets, or portrait asset set.
+This package is an overlay for the existing `moyosoresaibu-website` Cloudflare Pages repository.
 
-## What changed
+## Upload / replace
+Upload the contents of the deploy ZIP to the repository root, preserving folders. Commit to `main` so Cloudflare Pages deploys the update.
 
-### Main homepage (`/index.html`)
-- Added a visible **Start Here** route for first-time/social visitors.
-- Added a **3-move decision journey**: Notice → Decide → Execute.
-- Added a **Two modes · one operator** interaction: Field Mode ↔ System Mode.
-- Added an **original four-step operating process**: Understand → Choose → Execute → Review.
-- Added a **live public freshness signal** based on the latest public GitHub commit, with a graceful fallback rather than fabricated live counters.
-- Preserved the existing proof, intent routing, evidence links, insights, contact flow, sound control and V8.2 scripts.
-
-### Start page (`/start/`)
-- Keeps the warm editorial / handmade visual identity so it does not feel like a duplicate of the professional homepage.
-- Adds a compact **Meet → Choose → Move** orientation rail.
-- Adds a **Current ↔ Evergreen** interactive mode:
-  - Current: current role, dated field note, live WAT and public site freshness.
-  - Evergreen: Customers, Work, Money and Life.
-- Adds a **Notice → Ask → Decide → Do → Review** operating loop.
-- Keeps proof, latest thinking, tools, navigation and follow/contact CTAs.
-- Uses accessible keyboard-operable tabs and respects `prefers-reduced-motion`.
-
-### Discovery / AI / SEO
-- `sitemap.xml` now includes `/start/`.
-- `llms.txt` now identifies `/start/`, evidence, latest field notes and the distinction between the professional site and social-entry page.
-- `_redirects` normalizes `/start` to `/start/`.
-
-## Design lessons applied (not copied)
-
-The upgrade uses original layouts, copy and implementation while applying strategic patterns observed in the three reference sites:
-
-1. **Leedlime** — pain/benefit clarity, short process storytelling, freshness/status signals, proof close to the promise and a simple next action.
-2. **Digital Original XR** — dual-mode interaction, immersive scroll narrative and a page that teaches by letting the visitor choose a mode.
-3. **Hue & Code** — memorable positioning, a straight-line process, visible build quality/performance thinking, and stronger connection between proof and action.
-
-No reference-site code, graphics, logos, imagery or proprietary copy is included.
-
-## Files to upload / replace
-
-Replace:
+Important paths:
 - `/index.html`
-- `/sitemap.xml`
-- `/llms.txt`
-
-Add:
-- `/assets/v9-enhancements.css`
-- `/assets/v9-enhancements.js`
 - `/start/index.html`
-- `/start/assets/moyosore-saibu-portrait-960.jpg`
-- `/_redirects`
+- `/experience.html`
+- `/evidence.html`
+- `/assets/site.css`
+- `/assets/site.js`
+- the other shared top-level pages and assets included in the ZIP
 
-## Important: keep these existing repository files
+Keep the repository's existing individual Insight article files, Cloudflare Worker configuration and any files not replaced by this package.
 
-Do **not** delete your current:
-- `/assets/styles.css`
-- `/assets/script.js`
-- `/assets/audio/…`
-- `/assets/moyosore-saibu-portrait-*`
-- `/functions/…`
-- `/case-studies/…`
-- `/insights/…`
-- `/contact.html`, `/privacy.html`, `/evidence.html`, etc.
+## Production checks
+After Cloudflare reports a successful deployment, test these in an incognito browser and on a real phone:
 
-V9 intentionally layers on top of V8.2 so the existing email Worker and the rest of the site remain intact.
+1. `/` — hero, local jump bar, cited result links, audience-fit routes, before/after example, case studies, writing and Contact.
+2. `/start/` — local jump bar, four simple routes, cited proof and mobile horizontal navigation.
+3. `/experience` — local jump bar, CV download, cited result links and case-study routes.
+4. `/evidence#retention`, `/evidence#ranking`, `/evidence#tenure`, `/evidence#creator` — each anchor lands on the correct evidence item.
+5. Disable JavaScript and reload Home: identity, navigation, result sources, both before/after states and all links must remain usable.
+6. Enable reduced motion: the before/after example must not animate.
+7. Test 320px, 375px, 390px, tablet and desktop widths. The local navigation should scroll horizontally on narrow screens without forcing horizontal page overflow.
+8. Test the Field Notes form and Contact form.
+9. Run Lighthouse / PageSpeed mobile after Cloudflare caching is active.
 
-## GitHub → Cloudflare Pages deployment
+## Acceptance standard
+A new visitor should understand within seconds:
+- who Moyosore is,
+- what he does,
+- proof of the work,
+- which part of the site is relevant to them,
+- what to do next.
 
-1. Open the `saibumoyo-alt/moyosoresaibu-website` repository.
-2. Upload the files above using their exact folder paths.
-3. Commit to `main` with a message such as: `Launch V9 experience + Start page`.
-4. Cloudflare Pages should deploy automatically from `main` as it does today.
-5. After the deployment is green, verify:
-   - `https://moyosoresaibu.com/`
-   - `https://moyosoresaibu.com/start/`
-   - `https://moyosoresaibu.com/sitemap.xml`
-   - `https://moyosoresaibu.com/llms.txt`
-6. Test mobile first, then desktop.
-
-## Post-deploy checks
-
-- Homepage Start Here link opens `/start/`.
-- Field/System tabs work with click and left/right arrow keys.
-- Current/Evergreen tabs work with click and left/right arrow keys.
-- Sound is **off by default** and only activates after a user gesture.
-- Contact form still sends successfully through the existing Worker.
-- Latest public update either displays a relative GitHub update or a clean fallback.
-- No horizontal overflow at 320px/375px/390px widths.
-- Run PageSpeed/Lighthouse after the production deploy and compare Core Web Vitals with V8.2 before changing the existing critical image strategy.
-
-## Version intent
-
-V8.2 established professional authority. V9 makes that authority easier to *enter, understand and navigate* — especially from Instagram — while preserving the site's evidence-first professional core.
+No part of that first understanding depends on a live API or a successful JavaScript request.
