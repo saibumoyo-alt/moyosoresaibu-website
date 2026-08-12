@@ -1,28 +1,33 @@
 # Moyosore Saibu
 
-Official website: https://moyosoresaibu.com/
-Start page: https://moyosoresaibu.com/start/
+Official professional homepage: https://moyosoresaibu.com/
+Optional social-entry page: https://moyosoresaibu.com/start/
 
 Moyosore Saibu is a Nigerian commercial professional focused on sales execution, trade activation, territory management, route-to-market strategy, customer development, commercial analytics and practical AI-assisted workflows.
 
-## Start here
-- Start / social entry: https://moyosoresaibu.com/start/
-
-## Core pages
-- About: https://moyosoresaibu.com/about.html
-- Experience: https://moyosoresaibu.com/experience.html
-- Projects: https://moyosoresaibu.com/projects.html
-- Evidence & methodology: https://moyosoresaibu.com/evidence.html
+## Information architecture
+- Home: https://moyosoresaibu.com/
+- About: https://moyosoresaibu.com/about
+- Experience: https://moyosoresaibu.com/experience
+- Projects: https://moyosoresaibu.com/projects
+- Evidence & methodology: https://moyosoresaibu.com/evidence
 - Insights: https://moyosoresaibu.com/insights/
-- Contact: https://moyosoresaibu.com/contact.html
+- Contact: https://moyosoresaibu.com/contact
+- Start Here (optional social route): https://moyosoresaibu.com/start/
+
+## Site roles
+The root homepage is the primary professional authority and search/recruiter entry point. The /start/ page is a distinct optional landing page for visitors arriving from social or shared links. It is not a replacement for the homepage.
+
+## Operating framework
+NOTICE → DECIDE → EXECUTE → REVIEW
+
+## Evidence convention
+Selected career outcomes are presented with public-source context and stated limits. Evidence notes distinguish public professional claims from internal baselines and confidential operating data.
 
 ## Current public field notes
 - Sales reviews should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision.html
 - Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour.html
 
-## Public professional profile
+## Public profiles
 - LinkedIn: https://www.linkedin.com/in/moyosaibu
 - Instagram: https://www.instagram.com/moyosoresaibu/
-
-## Navigation intent
-The full website is the professional evidence and authority layer. The /start/ page is the fast social-entry layer for visitors who want to understand Moyosore through customers, work, money, life, proof and useful systems.

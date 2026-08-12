@@ -103,7 +103,7 @@ body::before{
   inset:0;
   z-index:9999;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.024;
   mix-blend-mode:soft-light
 }
@@ -713,7 +713,7 @@ body::after{
   position:absolute;
   inset:0;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.06;
   mix-blend-mode:screen;
 }
@@ -852,7 +852,7 @@ body::after{
   inset:0;
   border-radius:inherit;
   pointer-events:none;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.03;
 }
 .chart-frame svg{
@@ -937,7 +937,7 @@ body::after{
   content:"";
   position:absolute;
   inset:0;
-  background:url('/assets/grain.png');
+  background:url('/assets/grain.webp');
   opacity:.025;
   pointer-events:none;
 }
@@ -1558,3 +1558,19 @@ body.sound-on .graph-meta{
   display:inline-block;
   color:#dce4eb;
 }
+
+/* V9.3 audit hardening --------------------------------------------------- */
+/* Audio was removed from the professional experience. Hide stale controls
+   immediately on any legacy page that has not yet had its HTML shell rebuilt. */
+.sound-control,#ambient-score{display:none!important}
+
+/* Deep sections are allowed to skip rendering work until near the viewport. */
+@supports (content-visibility:auto){
+  main>.section:not(.hero):not(.page-hero){content-visibility:auto;contain-intrinsic-size:760px}
+}
+
+/* Keep compact links legible after Sound control removal. */
+.nav-right{gap:10px}
+
+/* Public copy should never expose internal build labels. */
+.v92-version,.v92-start-version{display:none!important}

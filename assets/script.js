@@ -7,6 +7,9 @@
 
   // Year and active navigation
   d.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
+  const footerCopy=d.querySelector('.footer .footer-inner > div:first-child');
+  if(footerCopy) footerCopy.textContent='© 2026 Moyosore Saibu. All rights reserved.';
+
   const path=location.pathname.replace(/index\.html$/,'');
   d.querySelectorAll('.nav-links a').forEach(a=>{
     const p=new URL(a.href,location.href).pathname.replace(/index\.html$/,'');
@@ -89,37 +92,10 @@
       }
     };
     updateWat();
+    setInterval(updateWat,60000);
   }
 
-  // V8 accessible sound: off by default, starts only after explicit visitor choice.
-  const ambient=d.getElementById('ambient-score'),soundBtn=d.querySelector('.sound-control');
-  let audioCtx=null,soundOn=false,fadeRaf=0;
-  const TARGET_VOLUME=.14,timeKey='ms_sound_time_v8',prefKey='ms_sound_optin_v8';
-  const safeSessionGet=k=>{try{return sessionStorage.getItem(k)}catch(e){return null}};
-  const safeSessionSet=(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}};
-  const ensureAudio=()=>{try{if(!audioCtx){const C=window.AudioContext||window.webkitAudioContext;if(C)audioCtx=new C()}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{})}catch(e){}};
-  const fadeTo=(target,duration=650)=>{if(!ambient)return;cancelAnimationFrame(fadeRaf);const from=ambient.volume,start=performance.now();const tick=t=>{const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);ambient.volume=Math.max(0,Math.min(1,from+(target-from)*ease));if(p<1)fadeRaf=requestAnimationFrame(tick)};fadeRaf=requestAnimationFrame(tick)};
-  const updateSoundButton=()=>{if(!soundBtn)return;soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.setAttribute('aria-label',soundOn?'Pause ambient sound':'Play ambient sound');const label=soundBtn.querySelector('.sound-control-label');if(label)label.textContent=soundOn?'Sound on':'Sound'};
-  const startSound=async()=>{if(!ambient)return;ensureAudio();try{const saved=Number(safeSessionGet(timeKey)||0);if(saved>0&&Number.isFinite(ambient.duration)&&saved<ambient.duration-1)ambient.currentTime=saved;ambient.volume=.01;await ambient.play();soundOn=true;safeSessionSet(prefKey,'1');fadeTo(TARGET_VOLUME,900);updateSoundButton()}catch(e){soundOn=false;updateSoundButton()}};
-  const stopSound=()=>{if(!ambient)return;fadeTo(0,220);setTimeout(()=>{if(ambient&&!ambient.paused){ambient.pause();safeSessionSet(timeKey,String(ambient.currentTime||0))}},230);soundOn=false;safeSessionSet(prefKey,'0');updateSoundButton()};
-  if(soundBtn)soundBtn.addEventListener('click',()=>soundOn?stopSound():startSound());
-  if(ambient&&safeSessionGet(prefKey)==='1')startSound();
-  addEventListener('pagehide',()=>{if(ambient&&!ambient.paused)safeSessionSet(timeKey,String(ambient.currentTime||0))},{passive:true});
-  updateSoundButton();
-
-  const blip=(kind='hover')=>{if(!soundOn)return;ensureAudio();if(!audioCtx||audioCtx.state!=='running')return;const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=kind==='click'?1750:2250;osc.type=kind==='click'?'sine':'triangle';osc.frequency.setValueAtTime(kind==='click'?420:610,now);osc.frequency.exponentialRampToValueAtTime(kind==='click'?340:710,now+.052);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(kind==='click'?.008:.003,now+.008);gain.gain.exponentialRampToValueAtTime(.0001,now+(kind==='click'?.085:.06));osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.11)};
-
-  // Interface SFX become active automatically once audio is permitted.
-  if(matchMedia('(pointer:fine)').matches){
-    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
-      el.addEventListener('pointerenter',()=>blip('hover'),{passive:true});
-      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
-    });
-  }else{
-    d.querySelectorAll('.btn,.nav-links a,.article,.card,.record,.case,.system-node,.chart-hotspot,.paper-note').forEach(el=>{
-      el.addEventListener('pointerdown',()=>blip('click'),{passive:true});
-    });
-  }
+  // Audio removed in V9.3: professional site is silent by default and by design.
 
   // V5 restrained 3D glass response. Fine-pointer only; touch and reduced-motion stay static.
   if(!reduce&&!saveData&&matchMedia('(pointer:fine)').matches){
@@ -181,6 +157,12 @@
       const circle=el.querySelector('.chart-hotspot');
       if(circle){
         ['mouseenter','focus','click'].forEach(type=>circle.addEventListener(type,()=>activate(el)));
+        circle.addEventListener('keydown',event=>{
+          if(event.key==='Enter'||event.key===' '){
+            event.preventDefault();
+            activate(el);
+          }
+        });
       }
     });
     block.addEventListener('mouseleave',()=>output.textContent=defaultText);
