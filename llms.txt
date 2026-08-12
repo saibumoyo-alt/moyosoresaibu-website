@@ -1,7 +1,7 @@
 # Moyosore Saibu
 
 Official professional homepage: https://moyosoresaibu.com/
-Optional social-entry page: https://moyosoresaibu.com/start/
+Legacy Start Here route: https://moyosoresaibu.com/start/ → redirects to the canonical homepage
 
 Moyosore Saibu is a Nigerian commercial professional focused on sales execution, trade activation, territory management, route-to-market strategy, customer development, commercial analytics and practical AI-assisted workflows.
 
@@ -13,10 +13,9 @@ Moyosore Saibu is a Nigerian commercial professional focused on sales execution,
 - Evidence & methodology: https://moyosoresaibu.com/evidence
 - Insights: https://moyosoresaibu.com/insights/
 - Contact: https://moyosoresaibu.com/contact
-- Start Here (optional social route): https://moyosoresaibu.com/start/
 
 ## Site roles
-The root homepage is the primary professional authority and search/recruiter entry point. The /start/ page is a distinct optional landing page for visitors arriving from social or shared links. It is not a replacement for the homepage.
+The root homepage is the single canonical professional authority and entry point. The legacy /start/ route permanently redirects to the root to avoid duplicate-content and navigation conflicts.
 
 ## Operating framework
 NOTICE → DECIDE → EXECUTE → REVIEW
@@ -25,8 +24,8 @@ NOTICE → DECIDE → EXECUTE → REVIEW
 Selected career outcomes are presented with public-source context and stated limits. Evidence notes distinguish public professional claims from internal baselines and confidential operating data.
 
 ## Current public field notes
-- Sales reviews should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision.html
-- Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour.html
+- Sales reviews should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision
+- Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour
 
 ## Public profiles
 - LinkedIn: https://www.linkedin.com/in/moyosaibu
