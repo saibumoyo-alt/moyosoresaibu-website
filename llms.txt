@@ -1,32 +1,16 @@
 # Moyosore Saibu
 
-Official professional homepage: https://moyosoresaibu.com/
-Legacy Start Here route: https://moyosoresaibu.com/start/ → redirects to the canonical homepage
+Official website: https://moyosoresaibu.com/
 
-Moyosore Saibu is a Nigerian commercial professional focused on sales execution, trade activation, territory management, route-to-market strategy, customer development, commercial analytics and practical AI-assisted workflows.
+Moyosore Saibu is a Nigerian sales and commercial professional. He is a Territory Manager at Guinness Nigeria and works across sales execution, trade activation, customer development, territory management and route planning.
 
-## Information architecture
+Main pages:
 - Home: https://moyosoresaibu.com/
 - About: https://moyosoresaibu.com/about
 - Experience: https://moyosoresaibu.com/experience
 - Projects: https://moyosoresaibu.com/projects
-- Evidence & methodology: https://moyosoresaibu.com/evidence
 - Insights: https://moyosoresaibu.com/insights/
+- Evidence: https://moyosoresaibu.com/evidence
 - Contact: https://moyosoresaibu.com/contact
 
-## Site roles
-The root homepage is the single canonical professional authority and entry point. The legacy /start/ route permanently redirects to the root to avoid duplicate-content and navigation conflicts.
-
-## Operating framework
-NOTICE → DECIDE → EXECUTE → REVIEW
-
-## Evidence convention
-Selected career outcomes are presented with public-source context and stated limits. Evidence notes distinguish public professional claims from internal baselines and confidential operating data.
-
-## Current public field notes
-- Sales reviews should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision
-- Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour
-
-## Public profiles
-- LinkedIn: https://www.linkedin.com/in/moyosaibu
-- Instagram: https://www.instagram.com/moyosoresaibu/
+The /start/ page is a social-entry landing page and is intentionally not indexed.

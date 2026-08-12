@@ -1,7 +1,6 @@
-/assets/styles.css
-  Cache-Control: public, max-age=0, must-revalidate
-/assets/script.js
-  Cache-Control: public, max-age=0, must-revalidate
-
-/*.html
-  Cache-Control: public, max-age=0, must-revalidate
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+/assets/*
+  Cache-Control: public, max-age=604800
