@@ -30,9 +30,9 @@ Cloudflare Pages deploys automatically from `main`. Keep `/functions/` because i
 - Preserved plain English, accessibility, reduced-motion/reduced-transparency support and clean URLs.
 
 
-## 3.0.0 Premium Neat
-- Removed every text underline treatment.
-- Replaced link underlines with clean pill, color and chevron interaction states.
-- Added a beginner-first quick orientation panel to Home and Start.
-- Simplified interactive graph labels and reduced visual noise.
-- Refined translucent glass surfaces for stronger contrast and less blur.
+## 3.0.0 Premium Clarity
+- Removed the local “On this page” navigation from the full site.
+- Rebuilt Home and Start for immediate beginner understanding.
+- Added progressive live refresh of the newest published Insight from the website itself.
+- Refined glass UI so transparency is strongest in navigation and focused premium surfaces.
+- Kept interactive proof graphs, evidence links and reduced-motion/transparency fallbacks.
