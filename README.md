@@ -1,38 +1,14 @@
-# Moyosore Saibu — Personal Website
+# Moyosore Saibu website - Premium Trust 3.1
 
-Current production build: **3.0.0**.
+Production-ready static website for moyosoresaibu.com.
 
-Static HTML/CSS/vanilla JavaScript deployed on Cloudflare Pages. The public interface uses one shared stylesheet (`/assets/site.css`) and one small enhancement script (`/assets/site.js`). Core content and navigation work without JavaScript.
-
-## Main routes
-- `/` — professional homepage
-- `/start/` — social-first landing page
-- `/about`
-- `/experience`
-- `/projects`
-- `/insights/`
-- `/evidence`
-- `/contact`
-
-## Current design rules
-Plain English, minimal UI, no live clocks, no GitHub pulse, no ambient audio, no animated KPI counters, direct evidence links, mobile-first layouts, and one clear reading path.
-
-## Deployment
-Cloudflare Pages deploys automatically from `main`. Keep `/functions/` because it contains the contact workflow.
-
-
-## 3.0.0 — Premium glass clarity system
-- Removed hand-drawn visual accents.
-- Added restrained translucent glass surfaces with opaque fallbacks.
-- Added interactive proof explorer: retention index, career timeline and creator reach.
-- Added safe real-time Nigeria time using the browser only; no external runtime API.
-- Added build-time current public context checked 13 Aug 2026.
-- Preserved plain English, accessibility, reduced-motion/reduced-transparency support and clean URLs.
-
-
-## 3.0.0 Premium Clarity
-- Removed the local “On this page” navigation from the full site.
-- Rebuilt Home and Start for immediate beginner understanding.
-- Added progressive live refresh of the newest published Insight from the website itself.
-- Refined glass UI so transparency is strongest in navigation and focused premium surfaces.
-- Kept interactive proof graphs, evidence links and reduced-motion/transparency fallbacks.
+Key rules:
+- Clean extensionless public URLs.
+- `.html` legacy URLs redirect to canonical routes.
+- No audio, autoplay, live clock, GitHub pulse, or placeholder status UI.
+- Home is the main professional landing page.
+- Start is a noindex social-entry page.
+- Projects use problem -> role -> action -> result.
+- CV and one-page professional profile are downloadable.
+- Insights include local search and topic filters with no external dependency.
+- Contact and Field Notes forms use the existing Cloudflare Worker with neutral email fallback copy.
