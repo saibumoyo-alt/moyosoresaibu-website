@@ -91,43 +91,62 @@
   }
 
 
-  // Premium human-touch motion: reveal and light tilt. The content still works fully without this block.
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    const revealTargets=[...document.querySelectorAll('.section-head,.hero-grid>div,.page-hero .shell,.metric,.card,.service,.fit-card,.case-feature,.article-row,.social-card,.decision-state,.contact-card,.evidence-item,.case-card,.timeline-item,.cta-panel,.inline-signup')];
-    revealTargets.forEach(el=>el.classList.add('reveal-up'));
-    if('IntersectionObserver' in window){
-      const revealObserver=new IntersectionObserver(entries=>{
-        entries.forEach(entry=>{
-          if(entry.isIntersecting){
-            entry.target.classList.add('is-visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },{rootMargin:'0px 0px -8% 0px',threshold:.08});
-      revealTargets.forEach((el,i)=>{
-        el.style.transitionDelay=(Math.min(i%6,4)*55)+'ms';
-        revealObserver.observe(el);
-      });
-    } else {
-      revealTargets.forEach(el=>el.classList.add('is-visible'));
-    }
+  // Safe real-time context: local browser time in Nigeria (Africa/Lagos). The HTML fallback is already readable.
+  const watTargets=[...document.querySelectorAll('[data-wat-time]')];
+  if(watTargets.length){
+    const watFormatter=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false,timeZoneName:'short'});
+    const updateWat=()=>{
+      const text=watFormatter.format(new Date()).replace('GMT+1','WAT');
+      watTargets.forEach(el=>{el.textContent=text+' · Nigeria'; el.setAttribute('datetime',new Date().toISOString());});
+    };
+    updateWat();
+    setInterval(updateWat,30000);
   }
 
-  if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
-    const tiltTargets=[...document.querySelectorAll('.metric,.card,.service,.fit-card,.case-feature,.social-card,.contact-card,.evidence-item,.case-card,.photo-frame,.cta-panel')];
-    tiltTargets.forEach(card=>{
-      card.classList.add('tilt-card');
-      card.addEventListener('mousemove',e=>{
-        const r=card.getBoundingClientRect();
-        const px=(e.clientX-r.left)/r.width;
-        const py=(e.clientY-r.top)/r.height;
-        const rx=(.5-py)*4;
-        const ry=(px-.5)*6;
-        card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+  // Interactive proof explorer. Without JavaScript all proof panels remain visible.
+  document.querySelectorAll('[data-proof-explorer]').forEach(explorer=>{
+    const tabs=[...explorer.querySelectorAll('[data-proof-tab]')];
+    const panels=[...explorer.querySelectorAll('[data-proof-panel]')];
+    if(!tabs.length||!panels.length) return;
+    explorer.classList.add('is-enhanced');
+    const activate=key=>{
+      tabs.forEach(tab=>{
+        const active=tab.dataset.proofTab===key;
+        tab.setAttribute('aria-selected',String(active));
+        tab.tabIndex=active?0:-1;
       });
-      card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
-      card.addEventListener('blur',()=>{ card.style.transform=''; },true);
+      panels.forEach(panel=>{ const active=panel.dataset.proofPanel===key; panel.classList.toggle('is-active',active); panel.hidden=!active; });
+    };
+    activate(tabs[0].dataset.proofTab);
+    tabs.forEach((tab,index)=>{
+      tab.addEventListener('click',()=>activate(tab.dataset.proofTab));
+      tab.addEventListener('keydown',event=>{
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+        event.preventDefault();
+        let next=index;
+        if(event.key==='ArrowRight') next=(index+1)%tabs.length;
+        if(event.key==='ArrowLeft') next=(index-1+tabs.length)%tabs.length;
+        if(event.key==='Home') next=0;
+        if(event.key==='End') next=tabs.length-1;
+        tabs[next].focus(); activate(tabs[next].dataset.proofTab);
+      });
     });
+    explorer.querySelectorAll('[data-career-tip]').forEach(segment=>{
+      const tip=explorer.querySelector('[data-career-tooltip]');
+      const show=()=>{if(tip) tip.textContent=segment.dataset.careerTip;};
+      segment.addEventListener('mouseenter',show); segment.addEventListener('focus',show); segment.addEventListener('click',show);
+    });
+  });
+
+  // Calm reveal motion. It never hides content when motion is reduced or JS is unavailable.
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+    document.documentElement.classList.add('motion-ready');
+    const targets=[...document.querySelectorAll('.section-head,.metric,.card,.service,.fit-card,.case-feature,.article-row,.social-card,.proof-explorer,.method-strip,.cta-panel,.page-hero .shell')];
+    targets.forEach(el=>el.setAttribute('data-motion-reveal',''));
+    const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('is-visible');reveal.unobserve(entry.target);}
+    }),{rootMargin:'0px 0px -8% 0px',threshold:.06});
+    targets.forEach(el=>reveal.observe(el));
   }
 
 })();
