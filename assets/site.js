@@ -79,7 +79,7 @@
 
   // Lightweight before/after story. If this script fails, both states remain visible.
   const demo=document.querySelector('[data-decision-demo]');
-  if(demo && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  if(demo && 'IntersectionObserver' in window && matchMedia('(min-width: 720px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
     demo.classList.add('is-enhanced');
     const observer=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
