@@ -1,6 +1,6 @@
 # Moyosore Saibu — Personal Website
 
-Current production build: **1.5.0**.
+Current production build: **1.6.0**.
 
 Static HTML/CSS/vanilla JavaScript deployed on Cloudflare Pages. The public interface uses one shared stylesheet (`/assets/site.css`) and one small enhancement script (`/assets/site.js`). Core content and navigation work without JavaScript.
 
@@ -19,3 +19,9 @@ Plain English, minimal UI, no live clocks, no GitHub pulse, no ambient audio, no
 
 ## Deployment
 Cloudflare Pages deploys automatically from `main`. Keep `/functions/` because it contains the contact workflow.
+
+
+## 1.6.0
+- Added premium motion and human-touch design layer.
+- Added paper/ink texture, hand-drawn underline accents, and interactive card motion.
+- Added visible website URL on home and start heroes.

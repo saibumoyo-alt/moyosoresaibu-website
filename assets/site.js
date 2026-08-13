@@ -89,4 +89,45 @@
     },{threshold:[0,.2,.45,.75]});
     observer.observe(demo);
   }
+
+
+  // Premium human-touch motion: reveal and light tilt. The content still works fully without this block.
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const revealTargets=[...document.querySelectorAll('.section-head,.hero-grid>div,.page-hero .shell,.metric,.card,.service,.fit-card,.case-feature,.article-row,.social-card,.decision-state,.contact-card,.evidence-item,.case-card,.timeline-item,.cta-panel,.inline-signup')];
+    revealTargets.forEach(el=>el.classList.add('reveal-up'));
+    if('IntersectionObserver' in window){
+      const revealObserver=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+      revealTargets.forEach((el,i)=>{
+        el.style.transitionDelay=(Math.min(i%6,4)*55)+'ms';
+        revealObserver.observe(el);
+      });
+    } else {
+      revealTargets.forEach(el=>el.classList.add('is-visible'));
+    }
+  }
+
+  if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const tiltTargets=[...document.querySelectorAll('.metric,.card,.service,.fit-card,.case-feature,.social-card,.contact-card,.evidence-item,.case-card,.photo-frame,.cta-panel')];
+    tiltTargets.forEach(card=>{
+      card.classList.add('tilt-card');
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const px=(e.clientX-r.left)/r.width;
+        const py=(e.clientY-r.top)/r.height;
+        const rx=(.5-py)*4;
+        const ry=(px-.5)*6;
+        card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
+      card.addEventListener('blur',()=>{ card.style.transform=''; },true);
+    });
+  }
+
 })();
