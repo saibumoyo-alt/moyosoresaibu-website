@@ -1,6 +1,6 @@
 # Moyosore Saibu — Personal Website
 
-Current production build: **2.0.0**.
+Current production build: **3.0.0**.
 
 Static HTML/CSS/vanilla JavaScript deployed on Cloudflare Pages. The public interface uses one shared stylesheet (`/assets/site.css`) and one small enhancement script (`/assets/site.js`). Core content and navigation work without JavaScript.
 
@@ -21,10 +21,18 @@ Plain English, minimal UI, no live clocks, no GitHub pulse, no ambient audio, no
 Cloudflare Pages deploys automatically from `main`. Keep `/functions/` because it contains the contact workflow.
 
 
-## 2.0.0 — Premium glass clarity system
+## 3.0.0 — Premium glass clarity system
 - Removed hand-drawn visual accents.
 - Added restrained translucent glass surfaces with opaque fallbacks.
 - Added interactive proof explorer: retention index, career timeline and creator reach.
 - Added safe real-time Nigeria time using the browser only; no external runtime API.
 - Added build-time current public context checked 13 Aug 2026.
 - Preserved plain English, accessibility, reduced-motion/reduced-transparency support and clean URLs.
+
+
+## 3.0.0 Premium Neat
+- Removed every text underline treatment.
+- Replaced link underlines with clean pill, color and chevron interaction states.
+- Added a beginner-first quick orientation panel to Home and Start.
+- Simplified interactive graph labels and reduced visual noise.
+- Refined translucent glass surfaces for stronger contrast and less blur.
