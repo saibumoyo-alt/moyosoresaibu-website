@@ -224,6 +224,11 @@
   const sourceLanguage='en';
   const originalText=new WeakMap();
   let activeTranslator=null;
+  const safeStorage={
+    get(key){try{return localStorage.getItem(key);}catch(e){return null;}},
+    set(key,value){try{localStorage.setItem(key,value);}catch(e){}},
+    remove(key){try{localStorage.removeItem(key);}catch(e){}}
+  };
 
   function collectTranslatableNodes(){
     const skip='script,style,noscript,code,pre,textarea,input,select,option,[data-no-translate],.language-dialog';
@@ -241,7 +246,7 @@
   function restoreEnglish(){
     collectTranslatableNodes().forEach(n=>{const original=originalText.get(n);if(original!==undefined)n.nodeValue=original;});
     document.documentElement.lang='en-NG'; document.documentElement.dir='ltr';
-    localStorage.removeItem('moyo-language');
+    safeStorage.remove('moyo-language');
   }
 
   async function translateLocally(target, status){
@@ -265,7 +270,7 @@
       }
       document.documentElement.lang=target;
       document.documentElement.dir=rtlLanguages.has(target.split('-')[0])?'rtl':'ltr';
-      localStorage.setItem('moyo-language',target);
+      safeStorage.set('moyo-language',target);
       status.textContent='Translated on this device';
       return true;
     }catch(e){return false;}
@@ -305,8 +310,8 @@
     trigger.addEventListener('click',()=>toggle(dialog.hidden)); close.addEventListener('click',()=>toggle(false));
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)toggle(false);});
     document.addEventListener('click',e=>{if(!dialog.hidden&&!wrap.contains(e.target)){dialog.hidden=true;trigger.setAttribute('aria-expanded','false');}});
-    const remembered=localStorage.getItem('moyo-language');
-    if(remembered&&remembered!=='en') setTimeout(async()=>{const ok=await translateLocally(remembered,status);if(!ok)localStorage.removeItem('moyo-language');},700);
+    const remembered=safeStorage.get('moyo-language');
+    if(remembered&&remembered!=='en') setTimeout(async()=>{const ok=await translateLocally(remembered,status);if(!ok)safeStorage.remove('moyo-language');},700);
   }
   createLanguageControl();
 

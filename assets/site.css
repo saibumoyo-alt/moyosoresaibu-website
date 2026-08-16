@@ -1043,3 +1043,27 @@ html[dir="rtl"] body{text-align:right}html[dir="rtl"] .language-control{right:au
 .retention-flow{margin-top:24px}
 .research-source-section .research-links{margin-top:20px}
 @media(max-width:760px){.retention-grid{grid-template-columns:1fr}.retention-card{padding:22px;border-radius:22px}.retention-card>strong{font-size:1.75rem}}
+
+
+/* Decision psychology — v8.1 */
+.decision-mini-grid,.decision-science-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:24px}
+.decision-mini-card,.decision-science-card{padding:24px;border-radius:26px}
+.decision-mini-card>span,.decision-number{display:inline-flex;align-items:center;min-height:30px;padding:5px 9px;border-radius:999px;background:rgba(18,19,15,.06);font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.decision-mini-card h3,.decision-science-card h3{margin:14px 0 8px;font-size:clamp(1.3rem,2.5vw,1.8rem);letter-spacing:-.04em;line-height:1.05}
+.decision-mini-card p,.decision-science-card p{margin:0;color:var(--muted);max-width:38ch}
+.decision-science-card strong{display:block;margin-top:18px;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+.decision-science-card strong+p{margin-top:6px;color:var(--ink)}
+.decision-ethics{display:flex;align-items:flex-start;gap:16px;margin-top:18px;padding:18px 20px;border-radius:20px}.decision-ethics strong{white-space:nowrap}.decision-ethics p{margin:0;color:var(--muted)}
+.decision-research-links{margin-top:18px}
+@media(max-width:800px){.decision-mini-grid,.decision-science-grid{grid-template-columns:1fr}.decision-ethics{display:block}.decision-ethics p{margin-top:6px}}
+
+/* Full-site accessibility + narrow-width fixes — v8.1 audit */
+.legacy-redirect a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border-radius:12px}
+.checkbox{align-items:center;min-height:44px}
+.checkbox input,.consent-row input{width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;margin:0!important;padding:0!important;flex:0 0 24px}
+.form-help a,.reading a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
+.recommendation-grid,.recommendation-card,.recommendation-copy-wrap,.recommendation-meta{min-width:0}
+.recommendation-card,.recommendation-copy-wrap,.recommendation-meta a,.recommendation-person span{overflow-wrap:anywhere}
+@media(max-width:360px){.recommendation-meta{gap:8px}.source-badge{white-space:normal}}
+.checkbox a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
+@media(max-width:360px){.section-head h2{font-size:2.15rem}}
