@@ -1,4 +1,4 @@
-# Deploy Premium Trust 3.1
+# Deploy Premium Proof 4.0
 
 Use this package as one upload/deployment.
 
@@ -7,7 +7,7 @@ Use this package as one upload/deployment.
 3. In GitHub open the website repository.
 4. Choose **Add file -> Upload files**.
 5. Upload the extracted contents directly into the repository root. Do not upload the outer folder.
-6. Commit directly to `main` with a message such as `Launch Premium Trust 3.1`.
+6. Commit directly to `main` with a message such as `Launch Premium Proof 4.0`.
 7. Wait for Cloudflare Pages to show a successful Production deployment for that commit.
 8. Hard refresh `/`, `/start/`, `/experience`, `/projects`, `/insights/`, and `/contact`.
 9. Confirm the CV and one-page profile download.

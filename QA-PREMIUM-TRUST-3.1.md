@@ -1,4 +1,4 @@
-# QA - Premium Trust 3.1
+# QA - Premium Proof 4.0
 
 Automated/static checks completed before packaging:
 

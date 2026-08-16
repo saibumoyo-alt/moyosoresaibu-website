@@ -1,4 +1,4 @@
-# Premium Trust 3.1 - Changes
+# Premium Proof 4.0 - Changes
 
 This build folds the external audit into the existing Premium Clarity site without reintroducing clutter.
 
