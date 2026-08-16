@@ -137,7 +137,7 @@
   // Calm reveal motion. No content is hidden without JS or when motion is reduced.
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
     document.documentElement.classList.add('motion-ready');
-    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.live-site-card,.recruiter-panel,.cta-panel,.page-hero .shell,.timeline-item,.evidence-item,.contact-card')];
+    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.live-site-card,.recruiter-panel,.cta-panel,.page-hero .shell,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card')];
     targets.forEach(el=>el.setAttribute('data-motion-reveal',''));
     const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(entry.isIntersecting){entry.target.classList.add('is-visible');reveal.unobserve(entry.target);}
@@ -188,4 +188,126 @@
       apply();
     }));
   });
+
+  // MOYO_TRANSLATOR_V1 — progressive multilingual reading.
+  // Chrome Translator API is used locally when available. A URL-based fallback
+  // keeps mobile and unsupported browsers functional without blocking first paint.
+  const siteChannels={
+    whatsapp:'2348134256221',
+    telegram:'moyosoresaibu'
+  };
+
+  function setupDirectChannels(){
+    const wa=(siteChannels.whatsapp||'').replace(/\D/g,'');
+    const tg=(siteChannels.telegram||'').replace(/^@/,'').trim();
+    document.querySelectorAll('[data-direct-channels]').forEach(section=>{
+      const waLink=section.querySelector('[data-whatsapp-link]');
+      const tgLink=section.querySelector('[data-telegram-link]');
+      let available=false;
+      if(wa&&waLink){
+        const message=encodeURIComponent('Hello Moyosore, I found you through moyosoresaibu.com. I would like to discuss a problem/opportunity.');
+        waLink.href=`https://wa.me/${wa}?text=${message}`; available=true;
+      }else if(waLink){waLink.hidden=true;}
+      if(tg&&tgLink){const tgMessage=encodeURIComponent('Hello Moyosore, I found you through moyosoresaibu.com. I would like to discuss a problem/opportunity.');tgLink.href=`https://t.me/${encodeURIComponent(tg)}?text=${tgMessage}`;available=true;}
+      else if(tgLink){tgLink.hidden=true;}
+      section.hidden=!available;
+    });
+  }
+  setupDirectChannels();
+
+  const languageOptions=[
+    ['en','English'],['yo','Yorùbá'],['fr','Français'],['pt','Português'],
+    ['sw','Kiswahili'],['ha','Hausa'],['es','Español'],['de','Deutsch'],
+    ['ar','العربية'],['zh-CN','中文']
+  ];
+  const rtlLanguages=new Set(['ar','fa','he','ur']);
+  const sourceLanguage='en';
+  const originalText=new WeakMap();
+  let activeTranslator=null;
+
+  function collectTranslatableNodes(){
+    const skip='script,style,noscript,code,pre,textarea,input,select,option,[data-no-translate],.language-dialog';
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(node){
+      const parent=node.parentElement;
+      if(!parent||parent.closest(skip)||!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+    const nodes=[]; let n;
+    while((n=walker.nextNode())) nodes.push(n);
+    return nodes;
+  }
+
+  function rememberOriginal(nodes){nodes.forEach(n=>{if(!originalText.has(n)) originalText.set(n,n.nodeValue);});}
+  function restoreEnglish(){
+    collectTranslatableNodes().forEach(n=>{const original=originalText.get(n);if(original!==undefined)n.nodeValue=original;});
+    document.documentElement.lang='en-NG'; document.documentElement.dir='ltr';
+    localStorage.removeItem('moyo-language');
+  }
+
+  async function translateLocally(target, status){
+    if(!('Translator' in self)) return false;
+    let availability;
+    try{availability=await Translator.availability({sourceLanguage,targetLanguage:target});}catch(e){return false;}
+    if(availability==='unavailable') return false;
+    try{
+      status.textContent=availability==='downloadable'?'Preparing language…':'Translating…';
+      activeTranslator=await Translator.create({
+        sourceLanguage,targetLanguage:target,
+        monitor(m){m.addEventListener('downloadprogress',e=>{if(Number.isFinite(e.loaded))status.textContent=`Preparing language… ${Math.round(e.loaded*100)}%`;});}
+      });
+      const nodes=collectTranslatableNodes(); rememberOriginal(nodes);
+      // Translate sequentially to avoid bursty model calls and preserve DOM stability.
+      for(const node of nodes){
+        const text=originalText.get(node) ?? node.nodeValue; if(!text.trim()) continue;
+        // Always translate from the saved English source so switching languages stays accurate.
+        node.nodeValue=text;
+        try{node.nodeValue=await activeTranslator.translate(text);}catch(e){/* keep original node */}
+      }
+      document.documentElement.lang=target;
+      document.documentElement.dir=rtlLanguages.has(target.split('-')[0])?'rtl':'ltr';
+      localStorage.setItem('moyo-language',target);
+      status.textContent='Translated on this device';
+      return true;
+    }catch(e){return false;}
+  }
+
+  function fallbackTranslate(target){
+    const url=new URL('https://translate.google.com/translate');
+    url.searchParams.set('sl','auto'); url.searchParams.set('tl',target); url.searchParams.set('u',location.href);
+    location.href=url.toString();
+  }
+
+  function createLanguageControl(){
+    if(document.querySelector('[data-language-control]'))return;
+    const wrap=document.createElement('div'); wrap.className='language-control'; wrap.dataset.languageControl=''; wrap.dataset.noTranslate='';
+    wrap.innerHTML=`<button class="language-trigger" type="button" aria-haspopup="dialog" aria-expanded="false"><span aria-hidden="true">文</span><span>Language</span></button>
+      <div class="language-dialog" role="dialog" aria-modal="false" aria-label="Choose reading language" hidden>
+        <div class="language-dialog-head"><div><strong>Read in your language</strong><span>Fast, progressive translation</span></div><button type="button" class="language-close" aria-label="Close language menu">×</button></div>
+        <div class="language-list"></div>
+        <p class="language-status" role="status" aria-live="polite">English original</p>
+        <p class="language-note">On supported desktop Chrome, translation can run locally. Other browsers use a secure external translation fallback.</p>
+      </div>`;
+    document.body.appendChild(wrap);
+    const trigger=wrap.querySelector('.language-trigger'); const dialog=wrap.querySelector('.language-dialog');
+    const close=wrap.querySelector('.language-close'); const list=wrap.querySelector('.language-list'); const status=wrap.querySelector('.language-status');
+    languageOptions.forEach(([code,label])=>{
+      const b=document.createElement('button');b.type='button';b.className='language-option';b.dataset.lang=code;b.innerHTML=`<span>${label}</span><small>${code==='en'?'Original':'Translate'}</small>`;
+      b.addEventListener('click',async()=>{
+        if(code==='en'){restoreEnglish();status.textContent='English original';dialog.hidden=true;trigger.setAttribute('aria-expanded','false');return;}
+        [...list.querySelectorAll('button')].forEach(x=>x.disabled=true);
+        const ok=await translateLocally(code,status);
+        [...list.querySelectorAll('button')].forEach(x=>x.disabled=false);
+        if(!ok){status.textContent='Opening translation…';fallbackTranslate(code);return;}
+        dialog.hidden=true;trigger.setAttribute('aria-expanded','false');
+      }); list.appendChild(b);
+    });
+    const toggle=open=>{dialog.hidden=!open;trigger.setAttribute('aria-expanded',String(open));if(open)close.focus();else trigger.focus();};
+    trigger.addEventListener('click',()=>toggle(dialog.hidden)); close.addEventListener('click',()=>toggle(false));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)toggle(false);});
+    document.addEventListener('click',e=>{if(!dialog.hidden&&!wrap.contains(e.target)){dialog.hidden=true;trigger.setAttribute('aria-expanded','false');}});
+    const remembered=localStorage.getItem('moyo-language');
+    if(remembered&&remembered!=='en') setTimeout(async()=>{const ok=await translateLocally(remembered,status);if(!ok)localStorage.removeItem('moyo-language');},700);
+  }
+  createLanguageControl();
+
 })();
