@@ -2,13 +2,15 @@
 
 Official website: https://moyosoresaibu.com/
 
-Moyosore Saibu is a Nigerian sales and commercial professional. He is a Territory Manager at Guinness Nigeria and works across sales execution, trade activation, customer development, territory management and route planning.
+Moyosore Saibu's website is positioned around solving commercial growth problems: market research, customer growth, sales execution, route-to-market, retention and practical decision systems. Current and past workplace roles are used as evidence of experience, not as the main brand identity.
 
 Main pages:
 - Home: https://moyosoresaibu.com/
-- About: https://moyosoresaibu.com/about
-- Experience: https://moyosoresaibu.com/experience
-- Projects: https://moyosoresaibu.com/projects
+- Solutions: https://moyosoresaibu.com/projects
+- Approach: https://moyosoresaibu.com/about
+- Proof: https://moyosoresaibu.com/experience
+- Growth system: https://moyosoresaibu.com/growth-system
+- Customer retention system: https://moyosoresaibu.com/retention-system
 - Insights: https://moyosoresaibu.com/insights/
 - Evidence: https://moyosoresaibu.com/evidence
 - Contact: https://moyosoresaibu.com/contact
@@ -18,3 +20,5 @@ The /start/ page is a social-entry landing page and is intentionally not indexed
 Case studies:
 - Route remapping and retention: https://moyosoresaibu.com/case-studies/route-remapping-retention
 - Bold Loud customer development: https://moyosoresaibu.com/case-studies/bold-loud-customer-development
+
+Core website language is visitor-first: identify the visitor's problem, show the practical solution, then show evidence.
