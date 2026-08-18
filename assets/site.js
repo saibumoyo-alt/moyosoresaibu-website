@@ -101,22 +101,24 @@
 
   if('requestIdleCallback' in window) window.requestIdleCallback(refreshCurrentRole,{timeout:1500}); else setTimeout(refreshCurrentRole,650);
 
-  // Interactive proof explorer. Without JS every proof panel remains visible.
-  document.querySelectorAll('[data-proof-explorer]').forEach(explorer=>{
-    const tabs=[...explorer.querySelectorAll('[data-proof-tab]')];
-    const panels=[...explorer.querySelectorAll('[data-proof-panel]')];
+  // Shared ARIA-tabs helper: click activation, roving tabindex, Arrow/Home/End keys.
+  // Without JS every panel remains visible — this only runs once JS executes.
+  const wireTabs=(container,tabSelector,panelSelector,tabKeyAttr,panelKeyAttr,onActivate)=>{
+    const tabs=[...container.querySelectorAll(tabSelector)];
+    const panels=[...container.querySelectorAll(panelSelector)];
     if(!tabs.length||!panels.length) return;
-    explorer.classList.add('is-enhanced');
+    container.classList.add('is-enhanced');
     const activate=key=>{
       tabs.forEach(tab=>{
-        const active=tab.dataset.proofTab===key;
+        const active=tab.dataset[tabKeyAttr]===key;
         tab.setAttribute('aria-selected',String(active)); tab.tabIndex=active?0:-1;
       });
-      panels.forEach(panel=>{const active=panel.dataset.proofPanel===key;panel.classList.toggle('is-active',active);panel.hidden=!active;});
+      panels.forEach(panel=>{const active=panel.dataset[panelKeyAttr]===key;panel.classList.toggle('is-active',active);panel.hidden=!active;});
+      if(onActivate) onActivate(tabs.findIndex(tab=>tab.dataset[tabKeyAttr]===key),key);
     };
-    activate(tabs[0].dataset.proofTab);
+    activate(tabs[0].dataset[tabKeyAttr]);
     tabs.forEach((tab,index)=>{
-      tab.addEventListener('click',()=>activate(tab.dataset.proofTab));
+      tab.addEventListener('click',()=>activate(tab.dataset[tabKeyAttr]));
       tab.addEventListener('keydown',event=>{
         if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
         event.preventDefault(); let next=index;
@@ -124,13 +126,26 @@
         if(event.key==='ArrowLeft') next=(index-1+tabs.length)%tabs.length;
         if(event.key==='Home') next=0;
         if(event.key==='End') next=tabs.length-1;
-        tabs[next].focus(); activate(tabs[next].dataset.proofTab);
+        tabs[next].focus(); activate(tabs[next].dataset[tabKeyAttr]);
       });
     });
+  };
+
+  // Interactive proof explorer. Without JS every proof panel remains visible.
+  document.querySelectorAll('[data-proof-explorer]').forEach(explorer=>{
+    wireTabs(explorer,'[data-proof-tab]','[data-proof-panel]','proofTab','proofPanel');
     explorer.querySelectorAll('[data-career-tip]').forEach(segment=>{
       const tip=explorer.querySelector('[data-career-tooltip]');
       const show=()=>{if(tip) tip.textContent=segment.dataset.careerTip;};
       segment.addEventListener('mouseenter',show);segment.addEventListener('focus',show);segment.addEventListener('click',show);
+    });
+  });
+
+  // Interactive growth-system diagram. Without JS every stage panel remains visible.
+  document.querySelectorAll('[data-growth-diagram]').forEach(wrap=>{
+    const tablist=wrap.querySelector('[role="tablist"]');
+    wireTabs(wrap,'[data-growth-tab]','[data-growth-panel]','growthTab','growthPanel',index=>{
+      if(tablist && index>=0) tablist.style.setProperty('--stage-index',index);
     });
   });
 
