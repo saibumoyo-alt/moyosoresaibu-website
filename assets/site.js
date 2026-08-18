@@ -285,7 +285,7 @@
   function createLanguageControl(){
     if(document.querySelector('[data-language-control]'))return;
     const wrap=document.createElement('div'); wrap.className='language-control'; wrap.dataset.languageControl=''; wrap.dataset.noTranslate='';
-    wrap.innerHTML=`<button class="language-trigger" type="button" aria-haspopup="dialog" aria-expanded="false"><span aria-hidden="true">文</span><span>Language</span></button>
+    wrap.innerHTML=`<button class="language-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Choose reading language"><span aria-hidden="true">文</span><span>Language</span></button>
       <div class="language-dialog" role="dialog" aria-modal="false" aria-label="Choose reading language" hidden>
         <div class="language-dialog-head"><div><strong>Read in your language</strong><span>Fast, progressive translation</span></div><button type="button" class="language-close" aria-label="Close language menu">×</button></div>
         <div class="language-list"></div>
@@ -314,5 +314,34 @@
     if(remembered&&remembered!=='en') setTimeout(async()=>{const ok=await translateLocally(remembered,status);if(!ok)safeStorage.remove('moyo-language');},700);
   }
   createLanguageControl();
+
+  // Latest Insight: the site's own /insights/ index is the only source of
+  // truth (no separate JSON to fall out of sync). One same-origin fetch,
+  // no polling, no external API. Stays hidden — never a loading state —
+  // until real content is ready; on any failure it just stays hidden.
+  async function loadLatestInsight(){
+    const el=document.querySelector('[data-latest-insight]');
+    if(!el) return;
+    try{
+      const res=await fetch('/insights/',{headers:{accept:'text/html'}});
+      if(!res.ok) return;
+      const doc=new DOMParser().parseFromString(await res.text(),'text/html');
+      const first=doc.querySelector('.article-row');
+      if(!first) return;
+      const href=first.getAttribute('href');
+      const title=first.querySelector('h3')?.textContent?.trim();
+      if(!href||!title) return;
+      const summary=first.querySelector('p')?.textContent?.trim();
+      const date=first.querySelector('.article-meta')?.textContent?.trim();
+      const link=el.querySelector('[data-latest-insight-link]');
+      link.href=href;
+      el.querySelector('[data-latest-insight-title]').textContent=title;
+      if(summary) el.querySelector('[data-latest-insight-summary]').textContent=summary;
+      if(date) el.querySelector('[data-latest-insight-date]').textContent=date;
+      el.hidden=false;
+    }catch(e){ /* graceful: stays hidden */ }
+  }
+  if('requestIdleCallback' in window) requestIdleCallback(loadLatestInsight,{timeout:2000});
+  else setTimeout(loadLatestInsight,300);
 
 })();

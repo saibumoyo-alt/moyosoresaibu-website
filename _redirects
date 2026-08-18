@@ -8,11 +8,9 @@
 /start /start/ 301
 /insights/index.html /insights/ 301
 /case-studies/route-remapping-retention.html /case-studies/route-remapping-retention 301
-/case-studies/trade-activation-enugu.html /projects 301
-/case-studies/trade-activation-enugu /projects 301
+/case-studies/trade-activation-enugu.html /case-studies/trade-activation-enugu 301
 /case-studies/bold-loud-customer-development.html /case-studies/bold-loud-customer-development 301
-/case-studies/abacha-festival-activation.html /projects 301
-/case-studies/abacha-festival-activation /projects 301
+/case-studies/abacha-festival-activation.html /case-studies/abacha-festival-activation 301
 /insights/follow-up-wins.html /insights/follow-up-wins 301
 /insights/availability-beats-intention.html /insights/availability-beats-intention 301
 /insights/route-discipline.html /insights/route-discipline 301
@@ -26,8 +24,8 @@
 /trade-activation-must-change-behaviour.html /insights/trade-activation-must-change-behaviour 301
 /route-remapping-retention.html /case-studies/route-remapping-retention 301
 /bold-loud-customer-development.html /case-studies/bold-loud-customer-development 301
-/trade-activation-enugu.html /projects 301
-/abacha-festival-activation.html /projects 301
+/trade-activation-enugu.html /case-studies/trade-activation-enugu 301
+/abacha-festival-activation.html /case-studies/abacha-festival-activation 301
 
 /growth-system.html /growth-system 301
 /retention-system.html /retention-system 301

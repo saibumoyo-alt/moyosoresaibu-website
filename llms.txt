@@ -15,7 +15,7 @@ Main pages:
 - Evidence: https://moyosoresaibu.com/evidence
 - Contact: https://moyosoresaibu.com/contact
 
-The /start/ page is a social-entry landing page and is intentionally not indexed.
+The /start/ page is a fast, scan-first landing page for visitors arriving from social bio links. It is indexed and distinct from the homepage.
 
 Case studies:
 - Route remapping and retention: https://moyosoresaibu.com/case-studies/route-remapping-retention
