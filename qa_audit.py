@@ -63,6 +63,25 @@ CANON = {
 
 errors = []
 soups = {}
+
+# Cache-busting: /assets/* is served with a 7-day Cache-Control (_headers),
+# so every page's site.css/site.js query string MUST match VERSION exactly.
+# A page still requesting the old ?v= after a real asset change means
+# returning visitors can get stale CSS/JS for up to 7 days — this bit a
+# real release once (see the PR review that added this check), so it's
+# checked on every page in PUBLIC, not just spot-checked.
+current_version = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
+asset_version_re = re.compile(r'/assets/site\.(?:css|js)\?v=([0-9][0-9A-Za-z.\-]*)')
+for rel in PUBLIC:
+    text = (ROOT / rel).read_text(encoding='utf-8')
+    found = set(asset_version_re.findall(text))
+    if not found:
+        errors.append(f'{rel}: no /assets/site.css or site.js ?v= reference found')
+    elif found != {current_version}:
+        stale = sorted(found - {current_version})
+        if stale:
+            errors.append(f'{rel}: asset cache-bust version {stale} does not match VERSION ({current_version})')
+
 for rel in PUBLIC:
     text = (ROOT / rel).read_text(encoding='utf-8')
     soup = BeautifulSoup(text, 'html.parser')
