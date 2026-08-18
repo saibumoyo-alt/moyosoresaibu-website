@@ -778,6 +778,8 @@ body.premium-glass::before{
 .evidence-trail>*:first-child{border-top:1px solid rgba(18,19,15,.08);border-left:1px solid rgba(18,19,15,.08)}
 .evidence-trail>*>strong{display:block;margin-bottom:14px;font-size:1.35rem;line-height:1.1;letter-spacing:-.03em}
 .evidence-trail>*>p{margin:0 0 16px;color:var(--muted);font-size:.92rem}
+.evidence-trail .evidence-item{background:transparent;box-shadow:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:20px 0}
+.evidence-trail .evidence-item:first-child{border-top:0;padding-top:0}
 
 /* .stat-composition: prominent number + context layout (uses existing .bar-track/.bar-fill) */
 .stat-composition{display:grid;gap:12px}
