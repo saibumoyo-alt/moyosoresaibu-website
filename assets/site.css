@@ -1124,3 +1124,9 @@ html[dir="rtl"] body{text-align:right}html[dir="rtl"] .language-control{right:au
 @media(max-width:360px){.recommendation-meta{gap:8px}.source-badge{white-space:normal}}
 .checkbox a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
 @media(max-width:360px){.section-head h2{font-size:2.15rem}}
+/* Pre-existing 320px-only overflow fix (v8.5.0 review): at exactly 320px a
+   long unbroken heading word (e.g. "Recommendation") can be wider than
+   .section-head's available width even at the 2.15rem step above. Narrowed
+   to the exact band where this happens (confirmed empirically: no overflow
+   from 330px up) so it changes nothing at any other width. */
+@media(max-width:329px){.section-head h2{font-size:2rem}}
