@@ -381,9 +381,104 @@
       if(summary) el.querySelector('[data-latest-insight-summary]').textContent=summary;
       if(date) el.querySelector('[data-latest-insight-date]').textContent=date;
       el.hidden=false;
+      document.dispatchEvent(new Event('zero-scroll:refresh'));
     }catch(e){ /* graceful: stays hidden */ }
   }
   if('requestIdleCallback' in window) requestIdleCallback(loadLatestInsight,{timeout:2000});
   else setTimeout(loadLatestInsight,300);
+
+  // Zero-scroll panel system. CSS scroll-snap (site.css, body.zero-scroll)
+  // already does the real work with no JS at all; this only layers on the
+  // dot-rail, the Next affordance, active-panel tracking and arrow-key nav.
+  // Rebuilding is safe to call more than once (e.g. after async content like
+  // the latest-insight card unhides) — it just replaces the existing rail.
+  function setupZeroScroll(){
+    if(!document.body.classList.contains('zero-scroll')) return;
+    const header=document.querySelector('.site-header');
+    const setHeaderHeight=()=>{ if(header) document.documentElement.style.setProperty('--header-h',`${Math.round(header.getBoundingClientRect().height)}px`); };
+    setHeaderHeight();
+    window.addEventListener('resize',setHeaderHeight);
+
+    const panels=[...document.querySelectorAll('main>section')].filter(s=>!s.hidden);
+    document.querySelectorAll('.panel-rail,.panel-next').forEach(el=>el.remove());
+    if(panels.length<2) return;
+    panels.forEach((section,i)=>{ if(!section.id) section.id=`panel-${i+1}`; });
+
+    const rail=document.createElement('nav');
+    rail.className='panel-rail'; rail.setAttribute('aria-label','Page sections');
+    const links=panels.map(section=>{
+      const label=section.dataset.panelLabel||section.querySelector('h1,h2')?.textContent?.trim()||section.id;
+      const a=document.createElement('a');
+      a.href=`#${section.id}`;
+      a.innerHTML=`<span class="sr-only">${label}</span><span class="panel-rail-label" aria-hidden="true">${label}</span>`;
+      rail.appendChild(a);
+      return a;
+    });
+    document.body.appendChild(rail);
+
+    const next=document.createElement('button');
+    next.type='button'; next.className='panel-next'; next.setAttribute('aria-label','Go to next section');
+    next.innerHTML='Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    document.body.appendChild(next);
+
+    let current=0;
+    const goTo=index=>{
+      index=Math.max(0,Math.min(panels.length-1,index));
+      panels[index].scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    };
+    next.addEventListener('click',()=>goTo(current+1));
+    const setActive=index=>{
+      current=index;
+      links.forEach((a,i)=>a.setAttribute('aria-current',String(i===index)));
+      next.classList.toggle('is-hidden',index>=panels.length-1);
+    };
+    setActive(0);
+
+    if('IntersectionObserver' in window){
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting&&entry.intersectionRatio>=0.55){
+            const idx=panels.indexOf(entry.target);
+            if(idx>-1) setActive(idx);
+          }
+        });
+      },{threshold:[0,.25,.5,.55,.75,1]});
+      panels.forEach(p=>observer.observe(p));
+    }
+
+    document.addEventListener('keydown',event=>{
+      const tag=(event.target.tagName||'').toLowerCase();
+      if(['input','textarea','select'].includes(tag)||event.target.isContentEditable) return;
+      if(event.key==='ArrowDown'||event.key==='PageDown'){event.preventDefault();goTo(current+1);}
+      else if(event.key==='ArrowUp'||event.key==='PageUp'){event.preventDefault();goTo(current-1);}
+    });
+  }
+  setupZeroScroll();
+  document.addEventListener('zero-scroll:refresh',setupZeroScroll);
+
+  // Live status chip — Moyosore's real local time (Africa/Lagos), read from
+  // the visitor's own device clock. No fetch, no backend: an honest,
+  // always-correct real-time signal rather than a manufactured "live" badge.
+  function setupLiveStatusChip(){
+    if(document.querySelector('[data-live-status]')) return;
+    let formatter;
+    try{ formatter=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Lagos',hour:'2-digit',minute:'2-digit',hour12:false}); }
+    catch(e){ return; }
+    const chip=document.createElement('div');
+    chip.className='live-status-chip'; chip.dataset.liveStatus='';
+    chip.dataset.noTranslate='';
+    chip.innerHTML=`<i aria-hidden="true"></i><span class="live-status-full">Lagos<span class="live-status-sep">·</span></span><time></time>`;
+    document.body.appendChild(chip);
+    const time=chip.querySelector('time');
+    const update=()=>{
+      const now=formatter.format(new Date());
+      time.textContent=now;
+      time.setAttribute('datetime',now);
+    };
+    chip.setAttribute('title','Moyosore’s current local time in Lagos, Nigeria (WAT)');
+    update();
+    setInterval(update,15000);
+  }
+  setupLiveStatusChip();
 
 })();
