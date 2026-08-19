@@ -37,6 +37,23 @@ EXPECTED_NAV = [
     ('/', 'Home'), ('/projects', 'Solutions'), ('/about', 'Approach'),
     ('/experience', 'Proof'), ('/insights/', 'Insights'), ('/contact', 'Contact'),
 ]
+# Solutions and Insights are category dropdowns (<details class="nav-dropdown">)
+# rather than plain links; each panel's first link is the "All X" catch-all
+# that stands in for the top-level href checked above, and the remaining
+# links are the categories a click should jump straight to.
+EXPECTED_DROPDOWN_LINKS = {
+    'Solutions': [
+        ('/projects', 'All solutions'), ('/projects#strategy', 'Strategy'),
+        ('/projects#campaigns', 'Campaigns'), ('/projects#digital', 'Digital'),
+        ('/projects#sales', 'Sales'), ('/projects#execution', 'Execution'),
+        ('/projects#retention', 'Retention'),
+    ],
+    'Insights': [
+        ('/insights/', 'All insights'), ('/insights/#sales', 'Sales'),
+        ('/insights/#customers', 'Customers'), ('/insights/#execution', 'Execution'),
+        ('/insights/#routes', 'Routes'),
+    ],
+}
 
 CANON = {
     'index.html': 'https://moyosoresaibu.com/',
@@ -102,7 +119,23 @@ for rel in PUBLIC:
         if not nav:
             errors.append(f'{rel}: no primary nav')
         else:
-            got = [(a.get('href'), a.get_text(' ', strip=True)) for a in nav.find_all('a', recursive=False)]
+            got = []
+            for child in nav.find_all(['a', 'details'], recursive=False):
+                if child.name == 'a':
+                    got.append((child.get('href'), child.get_text(' ', strip=True)))
+                    continue
+                summary = child.find('summary', recursive=False)
+                label = summary.get_text(' ', strip=True) if summary else None
+                panel_links = [(a.get('href'), a.get_text(' ', strip=True))
+                                for a in child.find_all('a')]
+                expected_links = EXPECTED_DROPDOWN_LINKS.get(label)
+                if expected_links is None:
+                    errors.append(f'{rel}: unexpected nav dropdown {label!r}')
+                elif panel_links != expected_links:
+                    errors.append(f'{rel}: {label} dropdown links mismatch {panel_links}')
+                # the dropdown's catch-all link stands in for the plain href
+                # EXPECTED_NAV would otherwise check for this label.
+                got.append((expected_links[0][0] if expected_links else None, label))
             if got != EXPECTED_NAV:
                 errors.append(f'{rel}: nav mismatch {got}')
 

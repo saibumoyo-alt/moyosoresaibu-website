@@ -202,7 +202,34 @@
       buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
       apply();
     }));
+
+    // Deep link from the header's Insights category dropdown, e.g. /insights/#sales.
+    const topic=location.hash.replace('#','').toLowerCase();
+    const match=buttons.find(b=>b.dataset.insightFilter===topic);
+    if(match){
+      filter=topic;
+      buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===match)));
+    }
+    apply();
   });
+
+  // Header category dropdowns (Solutions / Insights): only one open at a
+  // time, and close on an outside click or after a link is chosen.
+  const navDetails=[...document.querySelectorAll('header .nav-dropdown, header details.submenu')];
+  if(navDetails.length){
+    navDetails.forEach(node=>{
+      node.addEventListener('toggle',()=>{
+        if(!node.open) return;
+        navDetails.forEach(other=>{ if(other!==node) other.open=false; });
+      });
+      node.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{ node.open=false; }));
+    });
+    document.addEventListener('click',event=>{
+      navDetails.forEach(node=>{
+        if(node.open&&!node.contains(event.target)) node.open=false;
+      });
+    });
+  }
 
   // MOYO_TRANSLATOR_V1 — progressive multilingual reading.
   // Chrome Translator API is used locally when available. A URL-based fallback

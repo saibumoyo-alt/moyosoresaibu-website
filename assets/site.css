@@ -75,6 +75,22 @@ button{color:inherit}
 .desktop-nav a:hover,.desktop-nav a:focus-visible,.desktop-nav a[aria-current="page"]{background:white;color:var(--ink)}
 .header-cta{display:none;min-height:44px;padding:10px 17px;border-radius:999px;background:var(--ink);color:white;text-decoration:none;font-weight:750}
 .header-cta:hover,.header-cta:focus-visible{background:var(--accent);color:var(--accent-ink)}
+
+/* Desktop nav dropdown — grouped sub-links under Solutions / Insights, built
+   on native <details> so it works without JS (site.js only adds outside-click
+   and mutual-close polish). */
+.desktop-nav details.nav-dropdown{position:relative}
+.desktop-nav details.nav-dropdown>summary{list-style:none;cursor:pointer;min-height:42px;display:flex;align-items:center;gap:6px;padding:10px 12px;border-radius:999px;font-size:.94rem;font-weight:650;color:#3f423b}
+.desktop-nav details.nav-dropdown>summary::-webkit-details-marker{display:none}
+.desktop-nav details.nav-dropdown>summary::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform var(--duration-fast) var(--ease)}
+.desktop-nav details.nav-dropdown[open]>summary::after{transform:translateY(1px) rotate(-135deg)}
+.desktop-nav details.nav-dropdown>summary:hover,.desktop-nav details.nav-dropdown>summary:focus-visible,.desktop-nav details.nav-dropdown[open]>summary,.desktop-nav details.nav-dropdown>summary[aria-current="page"]{background:white;color:var(--ink)}
+.nav-dropdown-panel{position:absolute;left:0;top:52px;z-index:10;width:max-content;min-width:210px;padding:8px;border:1px solid var(--line);border-radius:18px;background:white;box-shadow:var(--shadow)}
+.nav-dropdown-panel a{display:block;padding:11px 14px;border-radius:12px;text-decoration:none;font-weight:650;font-size:.92rem;color:#3f423b}
+.nav-dropdown-panel a:hover,.nav-dropdown-panel a:focus-visible{background:var(--surface-soft);color:var(--ink)}
+.nav-dropdown-panel a:first-child{margin-bottom:2px;color:var(--muted);font-weight:750;font-size:.78rem;letter-spacing:.02em;text-transform:uppercase}
+.nav-dropdown-panel a:first-child:hover,.nav-dropdown-panel a:first-child:focus-visible{color:var(--ink)}
+
 .mobile-menu{position:relative}
 .mobile-menu summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:white;font-weight:700}
 .mobile-menu summary::-webkit-details-marker{display:none}
@@ -82,6 +98,16 @@ button{color:inherit}
 .mobile-menu nav a{display:block;padding:12px 14px;border-radius:12px;text-decoration:none;font-weight:650}
 .mobile-menu nav a:hover,.mobile-menu nav a:focus-visible,.mobile-menu nav a[aria-current="page"]{background:var(--surface-soft)}
 .mobile-menu nav .menu-contact{margin-top:6px;background:var(--ink);color:white;text-align:center}
+
+/* Mobile nav submenu — nested disclosure inside the main mobile-menu details,
+   grouping Solutions / Insights sub-links instead of one flat list. */
+.mobile-menu nav details.submenu{margin:2px 0;border-radius:12px}
+.mobile-menu nav details.submenu>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;font-weight:650}
+.mobile-menu nav details.submenu>summary::-webkit-details-marker{display:none}
+.mobile-menu nav details.submenu>summary::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform var(--duration-fast) var(--ease)}
+.mobile-menu nav details.submenu[open]>summary::after{transform:translateY(1px) rotate(-135deg)}
+.mobile-menu nav details.submenu>summary:hover,.mobile-menu nav details.submenu>summary:focus-visible,.mobile-menu nav details.submenu>summary[aria-current="page"]{background:var(--surface-soft)}
+.mobile-menu nav details.submenu>a{padding-left:26px;font-weight:600;font-size:.94rem}
 
 .hero{padding:64px 0 76px}
 .hero-grid{display:grid;gap:42px;align-items:center}
