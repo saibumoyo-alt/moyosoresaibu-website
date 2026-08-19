@@ -1123,3 +1123,126 @@ html[dir="rtl"] body{text-align:right}html[dir="rtl"] .language-control{right:au
 @media(max-width:360px){.recommendation-meta{gap:8px}.source-badge{white-space:normal}}
 .checkbox a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
 @media(max-width:360px){.section-head h2{font-size:2.15rem}}
+
+
+/* Zero-scroll experience — v9.0.0
+   Opt-in per page via `zero-scroll` on <body>. Every top-level `main>section`
+   becomes one full-viewport panel: the next thing to read or do is always
+   already on screen, one deliberate scroll/swipe/click away, never a long
+   drag through a page. Pure CSS scroll-snap does the actual mechanics, so
+   it works with zero JS (proximity snap, not mandatory — it never fights a
+   user mid-scroll or traps focus in a form). site.js only layers on the
+   dot-rail, the Next affordance, active-panel tracking and arrow-key polish.
+   A panel is never clipped: min-height (not height) means an unusually tall
+   panel just keeps native scroll inside itself instead of losing content. */
+:root{--header-h:73px}
+@media(min-width:960px){:root{--header-h:77px}}
+
+body.zero-scroll{scroll-snap-type:y proximity}
+body.zero-scroll main>section{
+  scroll-snap-align:start;
+  scroll-margin-top:var(--header-h);
+  min-height:calc(100dvh - var(--header-h));
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:clamp(24px,4.5vh,64px);
+  padding-bottom:clamp(24px,4.5vh,64px);
+}
+body.zero-scroll main>section>.shell{width:100%}
+@media(max-height:720px){
+  body.zero-scroll main>section{padding-top:clamp(14px,2.6vh,36px);padding-bottom:clamp(14px,2.6vh,36px)}
+  body.zero-scroll .hero .scan-proof-strip{margin-top:8px}
+}
+/* retention-levers is 7 detailed cards — the one grid on the site dense
+   enough that 2 columns can't get near one viewport. Widening it is a safe,
+   scoped fix: nothing else on the site uses .retention-grid. Cards this
+   full still won't always fit a short screen; scroll-snap proximity (not
+   mandatory) lets that one panel take its own native scroll instead of
+   fighting the page. */
+@media(min-width:900px){
+  body.zero-scroll .retention-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  body.zero-scroll .retention-card{padding:20px}
+  body.zero-scroll .retention-card>strong{font-size:1.4rem}
+}
+
+/* The hero is the one panel whose normal (scroll-based) type scale is built
+   for a page with no height budget at all — clamp() up to 7.2rem plus a
+   proof strip plus a portrait photo. Zero-scroll gives it a real budget
+   (100dvh minus header), so its scale has to blend vh into the clamp growth
+   term, same idea as the rest of the system, just applied by hand where a
+   generic `section` rule can't reach specific children. */
+body.zero-scroll .hero h1{font-size:clamp(2.1rem,3.4vw + 3.2vh,4.85rem);margin-bottom:14px}
+body.zero-scroll .hero .hero-copy{font-size:clamp(.98rem,.7vw + 1.3vh,1.28rem);line-height:1.4;margin-bottom:14px}
+body.zero-scroll .hero .scan-bullets{margin-top:8px}
+body.zero-scroll .hero .actions{margin-top:2px}
+body.zero-scroll .hero .scan-proof-strip{margin-top:16px;gap:10px}
+body.zero-scroll .hero .scan-proof-strip div{min-height:0;padding:11px 14px}
+body.zero-scroll .hero .scan-proof-strip strong{font-size:1.5rem}
+body.zero-scroll .hero-grid{gap:clamp(20px,4vw,48px)}
+body.zero-scroll .hero-photo{width:min(46%,260px)}
+
+@media(max-width:959px){
+  body.zero-scroll .hero h1{font-size:clamp(2rem,7vw + 2vh,3.2rem);line-height:.98}
+  body.zero-scroll .hero-photo{width:min(40vw,190px);margin-top:6px}
+  body.zero-scroll .hero .scan-proof-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+  body.zero-scroll .hero .scan-proof-strip strong{font-size:1.15rem}
+  body.zero-scroll .hero .scan-proof-strip span{font-size:.68rem}
+  body.zero-scroll .hero .photo-label{display:none}
+}
+@media(max-width:520px){
+  body.zero-scroll .hero .scan-proof-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Below ~640px the portrait is the one thing worth cutting to make the
+   message + the two actions fit one screen without a scroll — it's still
+   one swipe away in the photo's own visual rhythm elsewhere on the page,
+   and every proof number and CTA stays exactly where it was. */
+@media(max-width:639px){
+  body.zero-scroll .hero-photo{display:none}
+  body.zero-scroll .hero h1{font-size:clamp(1.9rem,8vw + 1.6vh,2.7rem)}
+  body.zero-scroll .hero .hero-copy{font-size:.95rem;line-height:1.36;margin-bottom:10px}
+  body.zero-scroll .hero .scan-bullets{gap:6px;margin-top:6px}
+  body.zero-scroll .hero .scan-bullets span{min-height:0;padding:5px 9px;font-size:.72rem}
+  body.zero-scroll .hero .actions{gap:8px;margin-top:8px}
+  body.zero-scroll .hero .btn{min-height:44px;padding:10px 16px}
+  body.zero-scroll .hero .scan-proof-strip{margin-top:10px;gap:6px}
+  body.zero-scroll .hero .scan-proof-strip div{padding:8px 10px}
+}
+
+/* Panel rail — real <a href="#id"> anchors, so it still works as a plain
+   in-page jump list if JS never runs. site.js only builds it and tracks
+   the active dot; it degrades to nothing (not broken) without JS. */
+.panel-rail{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.panel-rail a{position:relative;display:block;width:8px;height:8px;border-radius:50%;background:rgba(18,19,15,.18);text-decoration:none;transition:background var(--duration-fast) var(--ease),width var(--duration-fast) var(--ease),height var(--duration-fast) var(--ease)}
+.panel-rail a::before{content:"";position:absolute;inset:-9px}
+.panel-rail a:hover,.panel-rail a:focus-visible{background:rgba(18,19,15,.42)}
+.panel-rail a[aria-current="true"]{background:var(--ink);width:8px;height:26px;border-radius:5px}
+.panel-rail-label{position:absolute;right:20px;top:50%;transform:translateY(-50%);padding:6px 12px;border-radius:999px;background:var(--ink);color:#fff;font-size:.76rem;font-weight:700;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--duration-fast) var(--ease)}
+.panel-rail a:hover .panel-rail-label,.panel-rail a:focus-visible .panel-rail-label{opacity:1}
+
+.panel-next{position:fixed;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translate(-50%,0);z-index:80;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:9px 17px;border:1px solid rgba(18,19,15,.13);border-radius:999px;background:rgba(250,249,245,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 14px 34px rgba(10,12,9,.13);color:var(--ink);font:inherit;font-size:.86rem;font-weight:750;cursor:pointer;transition:opacity var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease),border-color var(--duration-fast) var(--ease)}
+.panel-next:hover,.panel-next:focus-visible{border-color:rgba(18,19,15,.32);transform:translate(-50%,-2px)}
+.panel-next svg{width:14px;height:14px}
+.panel-next.is-hidden{opacity:0;pointer-events:none;transform:translate(-50%,8px)}
+
+@media(max-width:719px){
+  .panel-rail{right:9px;gap:9px}
+  .panel-rail-label{display:none}
+  .panel-next{bottom:max(16px,env(safe-area-inset-bottom));padding:9px 15px}
+}
+@media(prefers-reduced-motion:reduce){
+  body.zero-scroll{scroll-snap-type:none}
+  .panel-next,.panel-rail a{transition:none}
+}
+@media(prefers-reduced-transparency:reduce){.panel-next{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
+
+/* Live status chip — Moyosore's real local time, computed client-side from
+   the visitor's own clock (no backend, never a fetch). Small, honest,
+   always-on real-time signal rather than a fabricated "live" badge. */
+.live-status-chip{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:9998;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 14px;border:1px solid rgba(18,19,15,.13);border-radius:999px;background:rgba(250,249,245,.88);box-shadow:0 12px 35px rgba(10,12,9,.14),inset 0 1px 0 rgba(255,255,255,.9);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);font-size:.82rem;font-weight:750;color:var(--ink)}
+.live-status-chip i{width:7px;height:7px;border-radius:50%;background:#6e8c15;box-shadow:0 0 0 5px rgba(200,247,74,.24);flex:0 0 auto}
+.live-status-chip time{font-variant-numeric:tabular-nums}
+.live-status-chip .live-status-sep{margin:0 1px;color:var(--muted);font-weight:600}
+@media(max-width:640px){.live-status-chip .live-status-full{display:none}}
+@media(prefers-reduced-transparency:reduce){.live-status-chip{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
+html[dir="rtl"] .live-status-chip{left:auto;right:max(16px,env(safe-area-inset-right))}
