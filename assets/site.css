@@ -775,6 +775,33 @@ body.premium-glass::before{
 .growth-panel>p:first-child{margin:0;font-weight:700;font-size:.95rem}
 .growth-panel>p:last-of-type{margin:0;color:var(--muted);font-size:.92rem}
 
+/* .category-nav: Solutions category picker (v8.5.0). Deliberately distinct
+   from .growth-diagram above it — same underlying wireTabs() tab/tabpanel
+   mechanics, but a lighter pill/chip rail (borrowed from the .insight-filter
+   pattern) instead of a boxed stage tablist with a progress bar. The
+   growth-diagram answers "how does the method work"; this answers "which
+   part do I need". Panels are the existing #strategy/#campaigns/#digital/
+   #sales/#execution/#retention sections — no new ids introduced. A local
+   horizontal scroll is intentional at narrow widths; the page itself never
+   scrolls horizontally. */
+.category-nav-wrap{margin-top:22px}
+.category-nav{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding:4px 20px 10px 2px;margin:0 -2px}
+.category-nav::-webkit-scrollbar{display:none}
+.category-nav [role="tab"]{flex:0 0 auto;scroll-snap-align:start;min-height:46px;display:inline-flex;align-items:center;padding:11px 18px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);color:var(--ink);cursor:pointer;font-size:.92rem;font-weight:750;text-decoration:none;white-space:nowrap;transition:background var(--duration-standard) var(--ease),border-color var(--duration-standard) var(--ease),color var(--duration-standard) var(--ease)}
+.category-nav [role="tab"]:hover,.category-nav [role="tab"]:focus-visible{border-color:var(--ink)}
+.category-nav [role="tab"][aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 8px 24px rgba(17,19,15,.14)}
+.category-problem{margin:14px 0 0;color:var(--muted);font-size:.95rem;max-width:56ch}
+
+/* .proof-jump-nav: restrained jump navigation for the Proof page (Results/
+   Work/Recommendation/Evidence). Plain links, not tabs — nothing on the
+   page is ever hidden by this control. Intentionally a fresh component,
+   not a revival of the dormant .section-nav (killed site-wide in the
+   3.0.0 "content first" release; that decision stands everywhere except
+   here, where the reviewer explicitly asked for jump navigation). */
+.proof-jump-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.proof-jump-nav a{min-height:44px;display:inline-flex;align-items:center;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);color:var(--ink);text-decoration:none;font-size:.92rem;font-weight:750}
+.proof-jump-nav a:hover,.proof-jump-nav a:focus-visible{border-color:var(--ink);background:white}
+
 /* .evidence-trail: vertical/horizontal progression showing evidence groupings */
 .evidence-trail{display:grid;gap:0;grid-template-columns:1fr;border-radius:22px;overflow:hidden}
 .evidence-trail>*{padding:26px;border:1px solid rgba(18,19,15,.08);background:rgba(255,255,255,.72);border-left:0;border-top:0}
@@ -1097,3 +1124,9 @@ html[dir="rtl"] body{text-align:right}html[dir="rtl"] .language-control{right:au
 @media(max-width:360px){.recommendation-meta{gap:8px}.source-badge{white-space:normal}}
 .checkbox a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
 @media(max-width:360px){.section-head h2{font-size:2.15rem}}
+/* Pre-existing 320px-only overflow fix (v8.5.0 review): at exactly 320px a
+   long unbroken heading word (e.g. "Recommendation") can be wider than
+   .section-head's available width even at the 2.15rem step above. Narrowed
+   to the exact band where this happens (confirmed empirically: no overflow
+   from 330px up) so it changes nothing at any other width. */
+@media(max-width:329px){.section-head h2{font-size:2rem}}

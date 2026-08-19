@@ -103,10 +103,19 @@
 
   // Shared ARIA-tabs helper: click activation, roving tabindex, Arrow/Home/End keys.
   // Without JS every panel remains visible — this only runs once JS executes.
-  const wireTabs=(container,tabSelector,panelSelector,tabKeyAttr,panelKeyAttr,onActivate)=>{
+  // `initialKey` (optional) lets a caller open on something other than the
+  // first tab — e.g. a URL hash — falling back to the first tab when it
+  // doesn't match any known key. `panelsRoot` (optional) lets panels live
+  // outside `container` (the Solutions category panels are page-level
+  // sections, not nested inside the tablist wrapper like the growth-diagram
+  // stage panels are); it defaults to `container` so existing callers are
+  // unaffected. Returns {activate,tabs,panels} so a caller can drive the
+  // same tab state from elsewhere on the page (deep links, other in-page
+  // links pointing at the same anchors).
+  const wireTabs=(container,tabSelector,panelSelector,tabKeyAttr,panelKeyAttr,onActivate,initialKey,panelsRoot)=>{
     const tabs=[...container.querySelectorAll(tabSelector)];
-    const panels=[...container.querySelectorAll(panelSelector)];
-    if(!tabs.length||!panels.length) return;
+    const panels=[...(panelsRoot||container).querySelectorAll(panelSelector)];
+    if(!tabs.length||!panels.length) return null;
     container.classList.add('is-enhanced');
     const activate=key=>{
       tabs.forEach(tab=>{
@@ -116,7 +125,8 @@
       panels.forEach(panel=>{const active=panel.dataset[panelKeyAttr]===key;panel.classList.toggle('is-active',active);panel.hidden=!active;});
       if(onActivate) onActivate(tabs.findIndex(tab=>tab.dataset[tabKeyAttr]===key),key);
     };
-    activate(tabs[0].dataset[tabKeyAttr]);
+    const validKeys=new Set(tabs.map(tab=>tab.dataset[tabKeyAttr]));
+    activate(validKeys.has(initialKey)?initialKey:tabs[0].dataset[tabKeyAttr]);
     tabs.forEach((tab,index)=>{
       tab.addEventListener('click',()=>activate(tab.dataset[tabKeyAttr]));
       tab.addEventListener('keydown',event=>{
@@ -129,6 +139,7 @@
         tabs[next].focus(); activate(tabs[next].dataset[tabKeyAttr]);
       });
     });
+    return {activate,tabs,panels};
   };
 
   // Interactive proof explorer. Without JS every proof panel remains visible.
@@ -146,6 +157,36 @@
     const tablist=wrap.querySelector('[role="tablist"]');
     wireTabs(wrap,'[data-growth-tab]','[data-growth-panel]','growthTab','growthPanel',index=>{
       if(tablist && index>=0) tablist.style.setProperty('--stage-index',index);
+    });
+  });
+
+  // Solutions category navigation. Without JS every category section remains
+  // visible in document order and the nav items are plain #-anchors, so
+  // nothing breaks. With JS: one category shown at a time via wireTabs(),
+  // opening on the URL hash (so /projects#sales lands on Sales, not the
+  // default first tab) and staying in sync with any other on-page link that
+  // targets one of the same six anchors (e.g. the growth-diagram's existing
+  // "See it in Strategy" links) so a click never lands on a hidden panel.
+  document.querySelectorAll('[data-category-nav]').forEach(nav=>{
+    const rawKey=(location.hash||'').slice(1);
+    const api=wireTabs(nav,'[role="tab"]','[data-category-panel]','categoryTab','categoryPanel',null,rawKey,document);
+    if(!api) return;
+    const keys=new Set(api.tabs.map(tab=>tab.dataset.categoryTab));
+    if(keys.has(rawKey)){
+      // Belt-and-braces: the browser's own fragment scroll can race JS that
+      // hides the other five panels on load, so re-assert it once the
+      // right panel is definitely visible.
+      requestAnimationFrame(()=>{document.getElementById(rawKey)?.scrollIntoView({block:'start'});});
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(link=>{
+      if(nav.contains(link)) return;
+      const key=link.getAttribute('href').slice(1);
+      if(!keys.has(key)) return;
+      link.addEventListener('click',()=>api.activate(key));
+    });
+    window.addEventListener('hashchange',()=>{
+      const key=(location.hash||'').slice(1);
+      if(keys.has(key)) api.activate(key);
     });
   });
 
