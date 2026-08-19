@@ -836,12 +836,16 @@ body.premium-glass::before{
 .start-contact-link{display:inline-flex}
 .start-page .hero-premium h1{font-size:clamp(3.5rem,11vw,7rem)}
 /* Tall-viewport balance: reuse the existing body/main flex chain (html/body/main above)
-   so the single hero section centers within remaining space instead of leaving a
-   dead gap above the footer. main already fills exactly that space; this just lets
-   .start-hero claim and center within it. Mobile is unaffected — content already
-   exceeds viewport height there, so flex-basis:auto floors at natural content size. */
+   so the single hero section claims the remaining space between header and footer
+   instead of leaving a dead gap. Weighted flex spacers (not align-items:center) bias
+   the content toward the upper-middle rather than dead-center — an editorial position,
+   not a mathematical one. Mobile is unaffected — content already exceeds viewport
+   height there, so the spacers have no leftover space to distribute and collapse
+   toward 0px, same self-limiting behavior as a plain flex:1 0 auto would have. */
 .start-ui main{display:flex;flex-direction:column}
-.start-ui .start-hero{flex:1 0 auto;display:flex;align-items:center}
+.start-ui .start-hero{flex:1 0 auto;display:flex;flex-direction:column}
+.start-ui .start-hero::before{content:"";flex:0.6 0 0}
+.start-ui .start-hero::after{content:"";flex:1.4 0 0}
 .compact-facts{grid-template-columns:1fr}
 
 .motion-ready [data-motion-reveal]{opacity:0;transform:translateY(14px) scale(.995)}
@@ -869,7 +873,7 @@ body.premium-glass::before{
   .process-rail.four-up{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-flow:column}
   .process-rail.four-up>*{border-top:0}
   .process-rail.four-up>*:not(:first-child){border-left:1px solid rgba(18,19,15,.08)}
-  #proof-final-cta{min-height:56vh;display:grid;align-items:center}
+  #proof-final-cta{padding-block:clamp(120px,10vw,200px)}
 }
 @media(max-width:719px){
   .site-header{position:sticky}
