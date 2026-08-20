@@ -28,7 +28,7 @@
 <link href="/assets/favicon.ico" rel="icon" sizes="32x32"/>
 <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon"/>
 <link href="/site.webmanifest" rel="manifest"/>
-<link href="/assets/site.css?v=9.0.0" rel="stylesheet"/>
+<link href="/assets/site.css?v=10.0.0" rel="stylesheet"/>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://moyosoresaibu.com/#person","name":"Moyosore Saibu","url":"https://moyosoresaibu.com/","image":"https://moyosoresaibu.com/assets/og-moyosore-saibu.jpg","sameAs":["https://www.instagram.com/moyosoresaibu/","https://www.linkedin.com/in/moyosaibu","https://www.facebook.com/omobasaibu.moyo/","https://www.pinterest.com/saibumoyo/","https://www.youtube.com/@saibumoyo","https://t.me/moyosoresaibu"],"knowsAbout":["Market research","Growth strategy","Digital marketing","Sales execution","Customer growth","Route-to-market","Commercial problem-solving","AI-assisted workflows"],"description":"Solution-first commercial website focused on fixing sales, customer, route and decision problems.","contactPoint":{"@type":"ContactPoint","contactType":"business inquiries","telephone":"+2348134256221","url":"https://wa.me/2348134256221","availableLanguage":["English","Yorùbá"]}},{"@type":"WebSite","url":"https://moyosoresaibu.com/","name":"Moyosore Saibu","publisher":{"@id":"https://moyosoresaibu.com/#person"}}]}</script>
 </head>
 <body class="premium-glass scan-ui zero-scroll">
@@ -61,11 +61,12 @@
 <section class="hero hero-premium scan-hero" id="overview">
 <div class="shell hero-grid scan-hero-grid">
 <div class="hero-content scan-stack">
-<p class="eyebrow">Growth problems. Clear moves.</p>
+<p class="visitor-greeting" data-visitor-greeting hidden>Welcome back, <span data-visitor-name></span> 👋</p>
+<p class="eyebrow">For SMEs, sales teams &amp; growing brands</p>
 <h1>Growth stuck?<br/>Find the friction.</h1>
-<p class="hero-copy scan-copy">You get a clear view of what is blocking sales, customers, execution or retention — then a practical next move.</p>
-<div aria-label="Growth system" class="scan-bullets"><span>Research the market</span><span>Win the sale</span><span>Keep the customer</span></div>
 <div class="actions"><a class="btn" href="/contact?intent=challenge">Solve your problem</a><a class="btn secondary" href="/projects">See solutions</a></div>
+<p class="hero-copy scan-copy">This site turns a stuck sales, customer or growth problem into a clear next move — pick a category below, see only what applies to you.</p>
+<div aria-label="Growth system" class="scan-bullets"><span>Research the market</span><span>Win the sale</span><span>Keep the customer</span></div>
 <div class="scan-proof-strip">
 <div><strong>+22%</strong><span>Retention proof</span></div>
 <div><strong>#1</strong><span>Performance proof</span></div>
@@ -83,71 +84,32 @@
 </div>
 </div>
 </section>
-<section class="section scan-choice-section" id="problems">
+<section class="section cat-switch-section" id="solutions">
 <div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Start with the problem</p><h2>What is not working?</h2><p>Pick the closest one.</p></div>
-<div class="choice-grid">
-<a class="choice-card premium-card" href="/projects#strategy"><span class="choice-kicker">Marketing feels random</span><h3>Build a clear plan</h3><p>Know the market, customer and best move.</p></a>
-<a class="choice-card premium-card" href="/projects#sales"><span class="choice-kicker">Leads are not buying</span><h3>Improve the sale</h3><p>Ask better questions. Show real value.</p></a>
-<a class="choice-card premium-card" href="/retention-system"><span class="choice-kicker">Customers are leaving</span><h3>Stop avoidable churn</h3><p>Fix service, friction and repeat buying.</p></a>
-<a class="choice-card premium-card" href="/projects#execution"><span class="choice-kicker">The team lacks direction</span><h3>Turn plans into action</h3><p>Set priorities, routes and simple measures.</p></a>
+<div class="section-head scan-head"><p class="eyebrow">Start here</p><h2>What's stuck?</h2><p>Click a category. See only what applies to you — everything else stays out of the way.</p></div>
+<div class="cat-switch" data-cat-switch>
+<div aria-label="Growth categories" class="cat-tabs" role="tablist">
+<button aria-controls="cat-panel-strategy" aria-selected="true" data-cat-tab="strategy" id="strategy" role="tab" tabindex="0">Strategy</button>
+<button aria-controls="cat-panel-campaigns" aria-selected="false" data-cat-tab="campaigns" id="campaigns" role="tab" tabindex="-1">Campaigns</button>
+<button aria-controls="cat-panel-digital" aria-selected="false" data-cat-tab="digital" id="digital" role="tab" tabindex="-1">Digital</button>
+<button aria-controls="cat-panel-sales" aria-selected="false" data-cat-tab="sales" id="sales" role="tab" tabindex="-1">Sales</button>
+<button aria-controls="cat-panel-execution" aria-selected="false" data-cat-tab="execution" id="execution" role="tab" tabindex="-1">Execution</button>
+<button aria-controls="cat-panel-retention" aria-selected="false" data-cat-tab="retention" id="retention" role="tab" tabindex="-1">Retention</button>
+</div>
+<div class="cat-panels">
+<div aria-labelledby="strategy" class="cat-panel" data-cat-panel="strategy" id="cat-panel-strategy" role="tabpanel"><span class="cat-kicker">Marketing feels random</span><h3>Build a clear plan</h3><p>Know the market, the customer and the best move — before spending anything.</p><div class="cat-fit"><strong>Best fit:</strong> Growing brands and SMEs planning their next move.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/projects#strategy">See Strategy solutions</a></div></div>
+<div aria-labelledby="campaigns" class="cat-panel" data-cat-panel="campaigns" hidden="" id="cat-panel-campaigns" role="tabpanel"><span class="cat-kicker">Reach isn't landing</span><h3>Reach people the right way</h3><p>Inbound, outbound and omnichannel — matched to the channel your customer actually uses.</p><div class="cat-fit"><strong>Best fit:</strong> Brands ready to launch or relaunch.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/projects#campaigns">See Campaigns solutions</a></div></div>
+<div aria-labelledby="digital" class="cat-panel" data-cat-panel="digital" hidden="" id="cat-panel-digital" role="tabpanel"><span class="cat-kicker">Can't be found online</span><h3>Build demand people can find</h3><p>Fast pages, clear content and search intent built around real customer questions.</p><div class="cat-fit"><strong>Best fit:</strong> SMEs building a first real digital presence.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/projects#digital">See Digital solutions</a></div></div>
+<div aria-labelledby="sales" class="cat-panel" data-cat-panel="sales" hidden="" id="cat-panel-sales" role="tabpanel"><span class="cat-kicker">Leads are not buying</span><h3>Improve the sale</h3><p>Ask better questions, show real value, recommend the right solution instead of pushing a pitch.</p><div class="cat-fit"><strong>Best fit:</strong> Sales teams needing stronger conversion.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/projects#sales">See Sales solutions</a></div></div>
+<div aria-labelledby="execution" class="cat-panel" data-cat-panel="execution" hidden="" id="cat-panel-execution" role="tabpanel"><span class="cat-kicker">The plan doesn't survive the field</span><h3>Turn plans into action</h3><p>Buyer research, route priority and activation that make the plan work outside the slide deck.</p><div class="cat-fit"><strong>Best fit:</strong> Distributors, retailers and field teams.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/projects#execution">See Execution solutions</a></div></div>
+<div aria-labelledby="retention" class="cat-panel" data-cat-panel="retention" hidden="" id="cat-panel-retention" role="tabpanel"><span class="cat-kicker">Customers are leaving quietly</span><h3>Stop avoidable churn</h3><p>Fix service, remove friction and stay relevant so the customers you already won choose to stay.</p><div class="cat-fit"><strong>Best fit:</strong> Anyone with existing customers to protect.</div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve this</a><a class="btn secondary" href="/retention-system">See the retention system</a></div></div>
+</div>
 </div>
 </div>
 </section>
-<section class="section soft" id="fit">
+<section class="section soft" id="proof-home">
 <div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Best fit</p><h2>Is this for you?</h2><p>You need practical growth, not more noise.</p></div>
-<div class="scan-card-grid four-up audience-grid">
-<article class="scan-card premium-card"><span class="audience-tag">SMEs</span><h3>Small business owners</h3><p>Need a clearer way to find and keep customers.</p></article>
-<article class="scan-card premium-card"><span class="audience-tag">Sales</span><h3>Sales teams</h3><p>Need better calls, routes, follow-up and conversion.</p></article>
-<article class="scan-card premium-card"><span class="audience-tag">Trade</span><h3>Distributors &amp; retailers</h3><p>Need stronger availability, movement and customer value.</p></article>
-<article class="scan-card premium-card"><span class="audience-tag">Growth</span><h3>Growing brands</h3><p>Need marketing and sales to work as one system.</p></article>
-</div>
-</div>
-</section>
-<section class="section" id="system-preview">
-<div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Your growth path</p><h2>One connected system.</h2><p>Research → plan → reach → sell → retain → improve.</p></div>
-<div aria-label="Growth system steps" class="growth-flow">
-<div><span>01</span><strong>Research</strong><small>Know the market.</small></div>
-<div><span>02</span><strong>Plan</strong><small>Choose the customer.</small></div>
-<div><span>03</span><strong>Reach</strong><small>Use the right channels.</small></div>
-<div><span>04</span><strong>Sell</strong><small>Solve the real need.</small></div>
-<div><span>05</span><strong>Retain</strong><small>Keep good customers.</small></div>
-<div><span>06</span><strong>Improve</strong><small>Measure and learn.</small></div>
-</div>
-<div class="writing-footer"><a class="btn secondary" href="/projects#growth-diagram">Explore the growth system</a></div>
-</div>
-</section>
-<section class="section decision-ease-section" id="decision-ease">
-<div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Make choosing easy</p><h2>Your customer should understand the next move fast.</h2><p>Clear feeling. Clear choice. Clear reason to act.</p></div>
-<div class="decision-mini-grid">
-<article class="decision-mini-card premium-card"><span>Notice</span><h3>Make the problem real.</h3><p>Start with what the customer feels or wants.</p></article>
-<article class="decision-mini-card premium-card"><span>Choose</span><h3>Reduce the mental work.</h3><p>Keep the main options simple.</p></article>
-<article class="decision-mini-card premium-card"><span>Act</span><h3>Show the cost of waiting.</h3><p>Use real consequences. Never fake fear.</p></article>
-</div>
-<div class="writing-footer"><a class="btn secondary" href="/growth-system#how-people-decide">See how people decide</a></div>
-</div>
-</section><section class="section soft why-choose-section" id="why-choose">
-<div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">What you get</p><h2>Clarity before activity.</h2><p>Your problem comes first. The method follows.</p></div>
-<div class="scan-card-grid four-up">
-<article class="scan-card premium-card"><h3>Clear diagnosis</h3><p>You see what is blocking growth.</p></article>
-<article class="scan-card premium-card"><h3>Evidence first</h3><p>You get proof before big claims.</p></article>
-<article class="scan-card premium-card"><h3>Simple action</h3><p>You know what to do next.</p></article>
-<article class="scan-card premium-card"><h3>Human + AI</h3><p>You get faster analysis without losing judgement.</p></article>
-</div>
-</div>
-</section>
-<section class="section" id="evidence-statement">
-<div class="shell">
-<div class="quote-panel"><h2>Evidence isn't decoration. It's how you know this works.</h2><p>Every number on this site links to where it came from and what it doesn't prove.</p></div>
-</div>
-</section>
-<section class="section" id="proof-home">
-<div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Proof</p><h2>Real work. Public evidence.</h2><p>Results stay separate from new capabilities.</p></div>
+<div class="section-head scan-head"><p class="eyebrow">Proof</p><h2>Real work. Public evidence.</h2><p>Evidence isn't decoration — every number links to where it came from and what it doesn't prove.</p></div>
 <div class="proof-grid proof-grid-cited premium-metrics proof-grid-flex mini-proof-grid">
 <article class="metric premium-card"><div class="metric-label">Retention</div><strong>+22%</strong><span>Route remap result.</span><a class="metric-evidence" href="/evidence#retention">View proof</a></article>
 <article class="metric premium-card"><div class="metric-label">Ranking</div><strong>#1</strong><span>Area. Division. Region.</span><a class="metric-evidence" href="/evidence#ranking">View proof</a></article>
@@ -174,21 +136,9 @@
 </div>
 </div>
 </section>
-<section class="section soft" data-latest-insight hidden id="latest-insight-home">
-<div class="shell">
-<div class="section-head scan-head"><p class="eyebrow">Latest insight</p><h2>Fresh thinking, not stale badges.</h2></div>
-<div class="choice-grid">
-<a class="choice-card premium-card" data-latest-insight-link href="/insights/">
-<span class="choice-kicker" data-latest-insight-date></span>
-<h3 data-latest-insight-title></h3>
-<p data-latest-insight-summary></p>
-</a>
-</div>
-</div>
-</section>
-<section class="section final-contact" id="contact-home"><div class="shell"><div class="cta-panel premium-cta"><p class="eyebrow">Next step</p><h2>What is stuck?</h2><p>Send the problem, goal and blocker. That is enough to start.</p><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve your problem</a><a class="btn ghost-on-dark" href="/projects">See solutions</a><a class="btn ghost-on-dark" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">WhatsApp</a></div></div></div></section>
+<section class="section final-contact" id="contact-home"><div class="shell"><div class="cta-panel premium-cta"><p class="eyebrow">Next step</p><h2>What is stuck?</h2><p>Send the problem, goal and blocker. That is enough to start.</p><div class="fit-pills"><span>Clear diagnosis</span><span>Evidence first</span><span>Simple next move</span></div><div class="actions"><a class="btn" href="/contact?intent=challenge">Solve your problem</a><a class="btn ghost-on-dark" href="/projects">See solutions</a><a class="btn ghost-on-dark" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">WhatsApp</a></div></div></div></section>
 </main>
 <footer class="site-footer"><div class="shell footer-inner"><div>© <span data-live-year="">2026</span> Moyosore Saibu. All rights reserved.</div><div class="footer-links"><a class="direct-footer-link" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">WhatsApp</a><a class="direct-footer-link" href="https://t.me/moyosoresaibu?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">Telegram</a><a href="https://www.instagram.com/moyosoresaibu/" rel="noopener noreferrer" target="_blank">Instagram</a><a href="https://www.linkedin.com/in/moyosaibu" rel="noopener noreferrer" target="_blank">LinkedIn</a><a href="https://www.facebook.com/omobasaibu.moyo/" rel="noopener noreferrer" target="_blank">Facebook</a><a href="/privacy">Privacy</a><a href="/start/">Start page</a></div></div></footer>
-<script defer="" src="/assets/site.js?v=9.0.0"></script>
+<script defer="" src="/assets/site.js?v=10.0.0"></script>
 </body>
 </html>
