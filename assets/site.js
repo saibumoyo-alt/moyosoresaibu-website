@@ -564,4 +564,58 @@
   }
   setupLiveStatusChip();
 
+  // Mobile sticky CTA — long-scroll pages only (the zero-scroll hubs already
+  // keep a CTA on every screen; /privacy and /start/ opt out on purpose).
+  // Pure progressive enhancement: without JS nothing changes, the header CTA
+  // and every in-page button stay exactly where they already are.
+  function setupMobileStickyCta(){
+    if(document.body.classList.contains('zero-scroll')) return;
+    if(document.body.classList.contains('start-ui')) return;
+    if(location.pathname==='/privacy') return;
+    const bar=document.createElement('div');
+    bar.className='mobile-sticky-cta';
+    bar.innerHTML='<span data-mobile-cta-label>Ready when you are.</span><a href="/contact?intent=challenge">Solve this</a>';
+    document.body.appendChild(bar);
+    document.body.classList.add('has-mobile-cta');
+    let name=null; try{name=localStorage.getItem('moyo_visitor_name');}catch(e){}
+    const label=bar.querySelector('[data-mobile-cta-label]');
+    if(name&&label) label.textContent=`${name}, ready when you are.`;
+    let shown=false;
+    const reveal=()=>{
+      if(shown||window.scrollY<=360) return;
+      shown=true; bar.classList.add('is-visible');
+      window.removeEventListener('scroll',reveal);
+    };
+    window.addEventListener('scroll',reveal,{passive:true});
+    reveal();
+    const footer=document.querySelector('.site-footer');
+    if(footer&&'IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
+        bar.classList.toggle('is-visible',shown&&!entry.isIntersecting);
+      }),{rootMargin:'0px 0px -10% 0px'});
+      io.observe(footer);
+    }
+  }
+  setupMobileStickyCta();
+
+  // Magnetic primary buttons — desktop pointer only, a few px of pull toward
+  // the cursor on the site's highest-intent buttons. Scoped deliberately
+  // (header CTA, hero actions, CTA panels) rather than every .btn, so it
+  // reinforces the one primary action per screen instead of decorating all of them.
+  if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const strength=9;
+    document.querySelectorAll('.header-cta,.hero .actions .btn,.cta-panel .btn').forEach(btn=>{
+      btn.classList.add('is-magnetic');
+      btn.addEventListener('pointermove',event=>{
+        const r=btn.getBoundingClientRect();
+        btn.style.setProperty('--magnet-x',`${((event.clientX-r.left)/r.width-.5)*strength}px`);
+        btn.style.setProperty('--magnet-y',`${((event.clientY-r.top)/r.height-.5)*strength}px`);
+      });
+      btn.addEventListener('pointerleave',()=>{
+        btn.style.setProperty('--magnet-x','0px');
+        btn.style.setProperty('--magnet-y','0px');
+      });
+    });
+  }
+
 })();

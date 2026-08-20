@@ -53,6 +53,12 @@ EXPECTED_DROPDOWN_LINKS = {
         ('/insights/#customers', 'Customers'), ('/insights/#execution', 'Execution'),
         ('/insights/#routes', 'Routes'),
     ],
+    'Contact': [
+        ('/contact', 'All contact options'), ('/contact?intent=challenge', 'Solve this'),
+        ('/contact?intent=general', 'Ask a question'),
+        ('https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve.', 'WhatsApp'),
+        ('mailto:saibumoyo@gmail.com', 'Email'),
+    ],
 }
 
 CANON = {
