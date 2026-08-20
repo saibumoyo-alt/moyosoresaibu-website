@@ -43,6 +43,17 @@
   --duration-reveal:.55s;    /* Tier 3 — section/card scroll-reveal */
   --duration-slow:.9s;       /* Tier 4 — premium slow emphasis: one-time reveal only */
 
+  /* Motion tokens — v8.6. New interaction/transition work should reach for
+     these instead of a hardcoded duration; the four tiers above stay as
+     they were (scroll-reveal timing is unrelated to interaction timing). */
+  --motion-instant:.12s;   /* state flips: pressed, selected, focus */
+  --motion-fast:.17s;      /* hover/focus feedback, tab/filter switches */
+  --motion-base:.25s;      /* panel settle, dialog/page transitions */
+  --motion-slow:.4s;       /* rare — a single emphasis moment, never a loop */
+  --ease-enter:var(--ease-emphasis);         /* alias — entrances */
+  --ease-exit:cubic-bezier(.4,0,.2,1);       /* exits */
+  --ease-spring:cubic-bezier(.34,1.56,.64,1); /* magnetic/settle overshoot */
+
   /* Responsive rhythm */
   --mobile-section-y:88px;
 }
@@ -1123,3 +1134,107 @@ html[dir="rtl"] body{text-align:right}html[dir="rtl"] .language-control{right:au
 @media(max-width:360px){.recommendation-meta{gap:8px}.source-badge{white-space:normal}}
 .checkbox a{display:inline-flex;align-items:center;min-height:24px;padding-block:2px}
 @media(max-width:360px){.section-head h2{font-size:2.15rem}}
+
+
+/* Premium motion + personalization — v8.6. Extends the existing systems
+   above (motion-reveal, data-glass-spotlight, wireTabs) rather than adding
+   competing engines. Every rule here is disabled outright under
+   prefers-reduced-motion via the blanket rule already in this file (line
+   ~271); the few rules below that also need an explicit reduced-motion
+   fallback (JS never adds these classes when motion is reduced, but the
+   fallback keeps the file correct standalone). */
+
+/* Native View Transitions for full page navigations. Restrained fade + tiny
+   shift, never a SPA — unsupported browsers just navigate normally. */
+@media (prefers-reduced-motion:no-preference){
+  @supports (view-transition-name:root){
+    @view-transition{navigation:auto}
+    ::view-transition-old(root){animation:moyo-vt-out var(--motion-base) var(--ease-exit) both}
+    ::view-transition-new(root){animation:moyo-vt-in var(--motion-base) var(--ease-enter) both}
+  }
+}
+@keyframes moyo-vt-out{to{opacity:0;transform:translateY(-6px)}}
+@keyframes moyo-vt-in{from{opacity:0;transform:translateY(6px)}}
+
+/* Hero stagger — a first-paint entrance for the hero/page-hero content,
+   distinct from the generic scroll-reveal above. These elements sit in the
+   initial viewport, so the same IntersectionObserver fires immediately;
+   this just staggers the group instead of revealing it as one block. */
+.motion-ready .hero-content>.eyebrow[data-motion-reveal],
+.motion-ready .page-hero .shell>.kicker[data-motion-reveal]{transition-delay:0ms}
+.motion-ready .hero-content>h1[data-motion-reveal],
+.motion-ready .page-hero .shell>h1[data-motion-reveal]{transition-delay:50ms}
+.motion-ready .hero-content>.hero-copy[data-motion-reveal],
+.motion-ready .hero-content>.scan-bullets[data-motion-reveal],
+.motion-ready .page-hero .shell>p[data-motion-reveal]{transition-delay:120ms}
+.motion-ready .hero-content>.actions[data-motion-reveal],
+.motion-ready .page-hero .shell>.actions[data-motion-reveal]{transition-delay:190ms}
+
+/* Tab/stage panel settle — used by wireTabs (proof-explorer, growth-diagram)
+   when a panel changes from hidden to active. JS only adds .is-settling when
+   motion is allowed, so no reduced-motion override is needed here. */
+[data-growth-panel],[data-proof-panel]{transition:opacity var(--motion-base) var(--ease-standard),transform var(--motion-base) var(--ease-standard)}
+[data-growth-panel].is-settling,[data-proof-panel].is-settling{opacity:0;transform:translateY(6px)}
+
+/* Selected glass-spotlight surfaces beyond the hero photo: dark CTA panels
+   and the one verified recommendation card. Reuses [data-glass-spotlight]'s
+   existing ::after pseudo (defined above) — only the background is tuned
+   per-surface here. */
+.cta-panel[data-glass-spotlight]{position:relative;overflow:hidden}
+.cta-panel[data-glass-spotlight]>*{position:relative;z-index:1}
+.cta-panel[data-glass-spotlight]::after{background:radial-gradient(380px circle at var(--spot-x,50%) var(--spot-y,20%),rgba(255,255,255,.14),transparent 62%);opacity:1}
+
+/* Insight/proof/growth tab controls join the Tier-1 micro-interaction set. */
+.insight-filter,.proof-tab,.growth-diagram [role="tab"]{transition:transform var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+input,select,textarea{transition:border-color var(--motion-fast) var(--ease-standard),box-shadow var(--motion-fast) var(--ease-standard)}
+.form-status{transition:color var(--motion-fast) var(--ease-standard)}
+
+/* Card depth: restrained pointer tilt on the primary choice/scan cards is
+   driven entirely by site.js (pointer:fine + motion allowed only), which
+   sets transform:perspective(...) inline. The existing Tier-2 transition
+   already on these classes (line ~633) smooths every change — no extra
+   CSS is needed here. */
+
+/* Contextual "recommended" link on Solutions — reuses .proof-link; hidden
+   until site.js confirms a real prior choice exists. */
+.page-hero [data-personalize-recommend]{display:inline-flex;margin-top:18px}
+.page-hero [data-personalize-recommend][hidden]{display:none}
+
+/* Footer personalization controls — plain buttons styled like footer links
+   (they trigger the dialog / clear storage, they don't navigate). */
+.footer-personalize-link{border:0;background:transparent;padding:0;font:inherit;font-weight:650;color:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.footer-personalize-link:hover,.footer-personalize-link:focus-visible{color:var(--ink)}
+
+/* Visitor first-name dialog — native <dialog>, styled with the same glass
+   language as .language-dialog. Optional, skippable, never full-screen. */
+.name-dialog{width:min(420px,calc(100vw - 40px));padding:0;margin:auto;border:1px solid rgba(18,19,15,.12);border-radius:28px;background:rgba(250,249,245,.97);-webkit-backdrop-filter:blur(24px) saturate(1.15);backdrop-filter:blur(24px) saturate(1.15);box-shadow:0 30px 90px rgba(10,12,9,.24);color:var(--ink);overflow:hidden}
+.name-dialog::backdrop{background:rgba(15,17,13,.42)}
+.name-dialog-form{position:relative;padding:clamp(26px,5vw,34px)}
+.name-dialog-close{position:absolute;right:16px;top:16px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(18,19,15,.07);font-size:1.3rem;line-height:1;cursor:pointer;color:var(--ink)}
+.name-dialog-close:hover,.name-dialog-close:focus-visible{background:rgba(18,19,15,.14)}
+.name-dialog-eyebrow{margin:0 0 8px;color:var(--muted);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.name-dialog-form h2{margin:0 0 18px;max-width:88%;font-size:clamp(1.5rem,4vw,1.9rem);line-height:1.15;letter-spacing:-.03em}
+.name-dialog-form input{min-height:50px;margin-bottom:16px;font-size:1.05rem}
+.name-dialog-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.name-dialog-privacy{margin:18px 0 0;color:var(--muted);font-size:.78rem;line-height:1.5}
+.name-dialog-welcome{padding:clamp(40px,8vw,56px) clamp(26px,5vw,34px);text-align:center;font-size:1.3rem;font-weight:750;letter-spacing:-.02em}
+@media(prefers-reduced-motion:no-preference){
+  @supports (transition-behavior:allow-discrete){
+    .name-dialog{transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
+    .name-dialog::backdrop{transition:opacity var(--motion-base) var(--ease-standard),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
+    @starting-style{
+      .name-dialog[open]{opacity:0;transform:translateY(10px) scale(.98)}
+      .name-dialog[open]::backdrop{opacity:0}
+    }
+  }
+}
+@media(prefers-reduced-transparency:reduce){.name-dialog{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media(max-width:480px){.name-dialog{border-radius:22px}}
+
+/* Same open-transition treatment for the existing language dialog. */
+@media(prefers-reduced-motion:no-preference){
+  @supports (transition-behavior:allow-discrete){
+    .language-dialog{transition:opacity var(--motion-fast) var(--ease-enter),transform var(--motion-fast) var(--ease-enter),display var(--motion-fast) allow-discrete}
+    @starting-style{.language-dialog:not([hidden]){opacity:0;transform:translateY(8px) scale(.98)}}
+  }
+}

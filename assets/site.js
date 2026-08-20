@@ -1,6 +1,11 @@
 (()=>{
   const worker='https://moyosore-contact-mailer.saibumoyo.workers.dev/contact';
 
+  // Shared motion gates — computed once, reused by every motion feature
+  // below (and by the pre-existing reveal/spotlight checks further down).
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine=matchMedia('(pointer:fine)').matches;
+
   function setStarted(form){
     const field=form.querySelector('[name="started_at"]');
     if(field) field.value=String(Date.now());
@@ -113,7 +118,20 @@
         const active=tab.dataset[tabKeyAttr]===key;
         tab.setAttribute('aria-selected',String(active)); tab.tabIndex=active?0:-1;
       });
-      panels.forEach(panel=>{const active=panel.dataset[panelKeyAttr]===key;panel.classList.toggle('is-active',active);panel.hidden=!active;});
+      panels.forEach(panel=>{
+        const active=panel.dataset[panelKeyAttr]===key;
+        const wasHidden=panel.hidden;
+        panel.classList.toggle('is-active',active);
+        panel.hidden=!active;
+        // Settle-in transition for a panel switching from hidden to active
+        // (never on first mount, where nothing was hidden yet). Confirms
+        // the interaction and gives the new content a subtle physical
+        // arrival instead of an instant swap.
+        if(active&&wasHidden&&!reducedMotion){
+          panel.classList.add('is-settling');
+          requestAnimationFrame(()=>requestAnimationFrame(()=>panel.classList.remove('is-settling')));
+        }
+      });
       if(onActivate) onActivate(tabs.findIndex(tab=>tab.dataset[tabKeyAttr]===key),key);
     };
     activate(tabs[0].dataset[tabKeyAttr]);
@@ -150,9 +168,12 @@
   });
 
   // Calm reveal motion. No content is hidden without JS or when motion is reduced.
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+  if(!reducedMotion && 'IntersectionObserver' in window){
     document.documentElement.classList.add('motion-ready');
-    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.page-hero .shell,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method')];
+    // Hero/page-hero children are listed individually (instead of one
+    // '.page-hero .shell' block) so the CSS stagger rules above can reveal
+    // eyebrow → heading → copy → actions in sequence rather than as one unit.
+    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method,.hero-content>.eyebrow,.hero-content>h1,.hero-content>.hero-copy,.hero-content>.scan-bullets,.hero-content>.actions,.page-hero .shell>.kicker,.page-hero .shell>h1,.page-hero .shell>p,.page-hero .shell>.actions')];
     targets.forEach(el=>el.setAttribute('data-motion-reveal',''));
     const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(entry.isIntersecting){entry.target.classList.add('is-visible');reveal.unobserve(entry.target);}
@@ -161,12 +182,83 @@
   }
 
   // Desktop-only glass spotlight. It is visual polish, not a dependency.
-  if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  if(pointerFine && !reducedMotion){
     document.querySelectorAll('[data-glass-spotlight]').forEach(el=>{
       el.addEventListener('pointermove',event=>{
         const r=el.getBoundingClientRect();
         el.style.setProperty('--spot-x',`${event.clientX-r.left}px`);
         el.style.setProperty('--spot-y',`${event.clientY-r.top}px`);
+      });
+    });
+  }
+
+  // Homepage hero parallax: portrait + its glass label only. Passive scroll
+  // listener, rAF-batched, transform-only, skipped under reduced motion and
+  // on narrow mobile where the shift isn't worth the extra scroll work.
+  if(!reducedMotion && innerWidth>=720){
+    const parallaxWrap=document.querySelector('.hero-photo');
+    const parallaxFrame=parallaxWrap&&parallaxWrap.querySelector('.photo-frame');
+    const parallaxLabel=parallaxWrap&&parallaxWrap.querySelector('.photo-label');
+    if(parallaxFrame){
+      let ticking=false;
+      const update=()=>{
+        ticking=false;
+        const r=parallaxWrap.getBoundingClientRect();
+        if(r.bottom<0||r.top>innerHeight) return; // only touch elements near/in view
+        const shift=Math.max(-1,Math.min(1,(r.top+r.height/2-innerHeight/2)/innerHeight));
+        parallaxFrame.style.transform=`translate3d(0,${(shift*10).toFixed(1)}px,0)`;
+        if(parallaxLabel) parallaxLabel.style.transform=`translate3d(0,${(shift*5).toFixed(1)}px,0)`;
+      };
+      addEventListener('scroll',()=>{ if(!ticking){ticking=true;requestAnimationFrame(update);} },{passive:true});
+      update();
+    }
+  }
+
+  // Magnetic pull on the site's highest-intent buttons only — header CTA,
+  // the primary hero action and primary CTA-panel buttons. Pointer-fine
+  // desktop only; keyboard focus, tab order and layout are never touched.
+  if(pointerFine && !reducedMotion){
+    document.querySelectorAll('.header-cta,.hero-premium .actions>.btn:not(.secondary),.cta-panel .actions>.btn:not(.secondary):not(.ghost-on-dark)').forEach(btn=>{
+      let raf=null;
+      btn.addEventListener('pointermove',event=>{
+        if(raf) return;
+        raf=requestAnimationFrame(()=>{
+          raf=null;
+          const r=btn.getBoundingClientRect();
+          const x=((event.clientX-r.left)/r.width-.5)*10;
+          const y=((event.clientY-r.top)/r.height-.5)*10;
+          btn.style.transition='none';
+          btn.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(1.015)`;
+        });
+      });
+      btn.addEventListener('pointerleave',()=>{
+        if(raf){cancelAnimationFrame(raf);raf=null;}
+        btn.style.transition=`transform var(--motion-base) var(--ease-spring)`;
+        btn.style.transform='translate(0,0) scale(1)';
+      });
+    });
+  }
+
+  // Restrained pointer tilt on the primary choice/scan cards. The card's
+  // existing Tier-2 CSS transition (transform, ~250ms) already smooths
+  // every update, so this only ever writes a transform — no extra timing
+  // logic needed here.
+  if(pointerFine && !reducedMotion){
+    document.querySelectorAll('.choice-card,.scan-card').forEach(card=>{
+      let raf=null;
+      card.addEventListener('pointermove',event=>{
+        if(raf) return;
+        raf=requestAnimationFrame(()=>{
+          raf=null;
+          const r=card.getBoundingClientRect();
+          const px=(event.clientX-r.left)/r.width-.5;
+          const py=(event.clientY-r.top)/r.height-.5;
+          card.style.transform=`perspective(700px) translateY(-4px) rotateX(${(-py*2.4).toFixed(2)}deg) rotateY(${(px*2.4).toFixed(2)}deg)`;
+        });
+      });
+      card.addEventListener('pointerleave',()=>{
+        if(raf){cancelAnimationFrame(raf);raf=null;}
+        card.style.transform='';
       });
     });
   }
