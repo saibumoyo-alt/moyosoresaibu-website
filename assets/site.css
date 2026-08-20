@@ -17,20 +17,59 @@
   --shell:1160px;
   --content:760px;
 
-  /* Radius scale */
+  /* Typography scale — v9. Two families: display (headlines, always
+     clamp()+tight tracking+heavy weight) and body (everything else).
+     Existing per-context heading rules keep their own hand-tuned values
+     (see docs/design-system.md) — these tokens are for new components
+     (Talk to Moyo, problem-selector, calculator, filters) so they don't
+     invent a sixth one-off size. */
+  --text-display-1:clamp(2.75rem,8vw,5.5rem);
+  --text-display-2:clamp(2.1rem,6vw,3.6rem);
+  --text-display-3:clamp(1.6rem,4vw,2.4rem);
+  --text-body-lg:clamp(1.05rem,2vw,1.25rem);
+  --text-body:1rem;
+  --text-body-sm:.92rem;
+  --text-body-xs:.8rem;
+
+  /* Spacing scale — v9. 4px-rooted. Use for new gap/padding/margin
+     values; existing hardcoded spacing isn't being mass-migrated. */
+  --space-1:4px;  --space-2:8px;  --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-7:32px; --space-8:40px;
+  --space-9:48px; --space-10:64px; --space-11:80px; --space-12:96px;
+
+  /* Radius scale — v9. --radius-sm/--radius kept as the original tokens
+     (now aliased) so nothing already using them changes. */
+  --radius-xs:12px;
   --radius-sm:16px;
-  --radius:24px;
+  --radius-md:24px;
+  --radius:var(--radius-md);      /* back-compat alias */
+  --radius-lg:32px;
+  --radius-pill:999px;
 
-  /* Elevation */
-  --shadow:0 18px 55px rgba(17,19,15,.07);
-  --premium-shadow:0 24px 80px rgba(25,30,20,.08),inset 0 1px 0 rgba(255,255,255,.88);
+  /* Elevation scale — v9. --shadow/--premium-shadow kept as aliases. */
+  --elevation-1:0 1px 0 rgba(18,19,15,.02),0 8px 24px rgba(17,19,15,.05);
+  --elevation-2:0 18px 55px rgba(17,19,15,.07);
+  --shadow:var(--elevation-2);    /* back-compat alias */
+  --elevation-3:0 24px 80px rgba(25,30,20,.08),inset 0 1px 0 rgba(255,255,255,.88);
+  --premium-shadow:var(--elevation-3); /* back-compat alias */
+  --elevation-4:0 30px 90px rgba(10,12,9,.24);
 
-  /* Glass — reserved for the sticky header and the hero photo frame only;
-     everything else uses flat surfaces + --shadow/--premium-shadow instead. */
+  /* Glass — three restrained levels (see docs/design-system.md). Content
+     cards deliberately stay flat surfaces + elevation, not glass — that
+     predates this scale and still holds. --glass-fill/line/shadow/blur
+     (below) are the original tokens, kept as-is and aliased to level 3
+     (the hero photo frame, the strongest blur on the site) so nothing
+     already consuming them changes. */
+  --glass-1-fill:rgba(246,245,239,.92);
+  --glass-1-blur:16px;
+  --glass-2-fill:rgba(250,249,245,.97);
+  --glass-2-blur:24px;
   --glass-fill:rgba(255,255,255,.62);
   --glass-line:rgba(255,255,255,.72);
   --glass-shadow:0 18px 60px rgba(25,28,20,.08), inset 0 1px 0 rgba(255,255,255,.86);
   --glass-blur:18px;
+  --glass-3-fill:var(--glass-fill);
+  --glass-3-blur:var(--glass-blur);
 
   /* Motion — four tiers, one curve pair. Don't hardcode a duration/ease
      elsewhere; extend this scale instead. */
@@ -1207,7 +1246,7 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 
 /* Visitor first-name dialog — native <dialog>, styled with the same glass
    language as .language-dialog. Optional, skippable, never full-screen. */
-.name-dialog{width:min(420px,calc(100vw - 40px));padding:0;margin:auto;border:1px solid rgba(18,19,15,.12);border-radius:28px;background:rgba(250,249,245,.97);-webkit-backdrop-filter:blur(24px) saturate(1.15);backdrop-filter:blur(24px) saturate(1.15);box-shadow:0 30px 90px rgba(10,12,9,.24);color:var(--ink);overflow:hidden}
+.name-dialog{width:min(420px,calc(100vw - 40px));padding:0;margin:auto;border:1px solid rgba(18,19,15,.12);border-radius:28px;background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-4);color:var(--ink);overflow:hidden}
 .name-dialog::backdrop{background:rgba(15,17,13,.42)}
 .name-dialog-form{position:relative;padding:clamp(26px,5vw,34px)}
 .name-dialog-close{position:absolute;right:16px;top:16px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(18,19,15,.07);font-size:1.3rem;line-height:1;cursor:pointer;color:var(--ink)}
