@@ -357,6 +357,161 @@
   }
   createLanguageControl();
 
+  // ---------------------------------------------------------------------
+  // v8.6 — Privacy-safe visitor personalization. First name only, stored
+  // on this device only (via the safeStorage helper above), never sent to
+  // the contact form, the Worker, or any analytics. All personalized text
+  // is written with textContent, never innerHTML, so a stored value can
+  // only ever render as inert text, whatever characters it contains.
+  // ---------------------------------------------------------------------
+  (function personalization(){
+    const NAME_KEY='moyo:firstName:v1';
+    const DISMISSED_KEY='moyo:namePromptDismissed:v1';
+    const CATEGORY_KEY='moyo:lastCategory:v1';
+    const CATEGORY_LABELS={strategy:'Strategy',campaigns:'Campaigns',digital:'Digital',sales:'Sales',execution:'Execution',retention:'Retention'};
+
+    const getName=()=>safeStorage.get(NAME_KEY)||'';
+
+    // Trim, collapse whitespace, cap length, strip angle brackets as
+    // defense-in-depth (textContent already makes HTML injection
+    // impossible either way). International names, apostrophes and
+    // hyphens all pass through untouched.
+    function sanitizeName(raw){
+      let name=(raw||'').normalize('NFC').replace(/[<>]/g,'').replace(/\s+/g,' ').trim();
+      if(name.length>40) name=name.slice(0,40).trim();
+      return name;
+    }
+
+    function render(){
+      const name=getName();
+      document.querySelectorAll('[data-personalize="hero"]').forEach(el=>{
+        el.textContent=name?`${name}, growth stuck?`:'Growth stuck?';
+      });
+      document.querySelectorAll('[data-personalize="plan-label"]').forEach(el=>{
+        el.textContent=name?`${name}’s Growth Plan`:'Your growth path';
+      });
+      document.querySelectorAll('[data-personalize="proof-label"]').forEach(el=>{
+        el.textContent=name?`${name}, here’s the proof`:'Proof';
+      });
+      document.querySelectorAll('[data-personalize="contact-heading"]').forEach(el=>{
+        el.textContent=name?`${name}, start with three things.`:'Start with three things.';
+      });
+      document.querySelectorAll('[data-personalize-trigger]').forEach(btn=>{
+        btn.textContent=name?'Change name':'Personalize';
+      });
+      document.querySelectorAll('[data-personalize-forget]').forEach(btn=>{
+        btn.hidden=!name;
+      });
+      updateRecommendBadge(name);
+    }
+
+    // Contextual recommendation: only shown when a real prior choice
+    // exists (a homepage problem route was actually clicked) and the
+    // matching section is actually present on this page — never invented.
+    function updateRecommendBadge(name){
+      const el=document.querySelector('[data-personalize-recommend]');
+      if(!el) return;
+      const category=safeStorage.get(CATEGORY_KEY);
+      const label=category&&CATEGORY_LABELS[category];
+      const target=label&&document.getElementById(category);
+      if(!label||!target){ el.hidden=true; return; }
+      el.textContent=name?`${name}, let’s look at ${label}.`:`Recommended next: ${label}.`;
+      el.href=`#${category}`;
+      el.hidden=false;
+    }
+
+    // Homepage problem routes: remember only the category key. No profile,
+    // no remote tracking — one string, on this device, used to open the
+    // right door on the very next page.
+    document.querySelectorAll('[data-category]').forEach(card=>{
+      card.addEventListener('click',()=>{ safeStorage.set(CATEGORY_KEY,card.dataset.category); });
+    });
+
+    // --- Dialog -----------------------------------------------------------
+    let dialog=null, lastFocused=null;
+
+    function buildDialog(){
+      if(dialog) return dialog;
+      dialog=document.createElement('dialog');
+      dialog.className='name-dialog';
+      dialog.setAttribute('aria-labelledby','name-dialog-title');
+      dialog.innerHTML=`<form method="dialog" class="name-dialog-form" data-name-form>
+          <button type="button" class="name-dialog-close" data-name-close aria-label="Close">&times;</button>
+          <p class="name-dialog-eyebrow">Welcome.</p>
+          <h2 id="name-dialog-title">What’s your first name?</h2>
+          <label class="sr-only" for="visitor-first-name">First name</label>
+          <input id="visitor-first-name" name="firstName" type="text" maxlength="40" autocomplete="given-name" placeholder="Daniel" data-name-input>
+          <div class="name-dialog-actions">
+            <button type="submit" class="btn" data-name-save>Personalize my experience</button>
+            <button type="button" class="text-link" data-name-skip>Continue without your name</button>
+          </div>
+          <p class="name-dialog-privacy">Stored only on this device. Never sent with your messages or analytics.</p>
+        </form>
+        <div class="name-dialog-welcome" data-name-welcome hidden role="status"></div>`;
+      document.body.appendChild(dialog);
+      const form=dialog.querySelector('[data-name-form]');
+      const input=dialog.querySelector('[data-name-input]');
+      const welcome=dialog.querySelector('[data-name-welcome]');
+      const close=()=>{ if(dialog.open) dialog.close(); };
+      dialog.querySelector('[data-name-close]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
+      dialog.querySelector('[data-name-skip]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
+      form.addEventListener('submit',event=>{
+        event.preventDefault();
+        const name=sanitizeName(input.value);
+        safeStorage.set(DISMISSED_KEY,'1');
+        if(!name){ close(); return; }
+        safeStorage.set(NAME_KEY,name);
+        render();
+        // Brief in-dialog confirmation, then close and return focus — not a
+        // toast, and it never repeats.
+        form.hidden=true; welcome.hidden=false; welcome.textContent=`Welcome, ${name}.`;
+        setTimeout(close,900);
+      });
+      dialog.addEventListener('close',()=>{
+        form.hidden=false; welcome.hidden=true; input.value=getName();
+        if(lastFocused&&document.contains(lastFocused)) lastFocused.focus();
+      });
+      dialog.addEventListener('cancel',()=>{ safeStorage.set(DISMISSED_KEY,'1'); }); // Escape key
+      dialog.addEventListener('click',event=>{ if(event.target===dialog) close(); }); // backdrop click
+      return dialog;
+    }
+
+    function openDialog(){
+      lastFocused=document.activeElement;
+      const d=buildDialog();
+      d.querySelector('[data-name-input]').value=getName();
+      if(!('showModal' in d)) return; // very old browser: control stays inert, never blocks the site
+      d.showModal();
+      d.querySelector('[data-name-input]').focus();
+    }
+
+    document.addEventListener('click',event=>{
+      if(event.target.closest('[data-personalize-trigger]')){ openDialog(); return; }
+      if(event.target.closest('[data-personalize-forget]')){ safeStorage.remove(NAME_KEY); render(); }
+    });
+
+    // Progressive footer control — "Personalize" / "Change name" plus
+    // "Forget my name" (shown only once a name is stored). Absent
+    // entirely with JS off; identical on every page.
+    document.querySelectorAll('.footer-links').forEach(list=>{
+      const trigger=document.createElement('button');
+      trigger.type='button'; trigger.className='footer-personalize-link'; trigger.dataset.personalizeTrigger='';
+      const forget=document.createElement('button');
+      forget.type='button'; forget.className='footer-personalize-link'; forget.dataset.personalizeForget=''; forget.hidden=true; forget.textContent='Forget my name';
+      list.append(trigger,forget);
+    });
+
+    render();
+
+    // First-visit prompt: optional, skippable, shown at most once. A short
+    // idle delay keeps it off the critical first paint — this is a compact
+    // dialog the visitor can dismiss instantly, never a blocking gate.
+    if(!getName() && !safeStorage.get(DISMISSED_KEY)){
+      const show=()=>openDialog();
+      if('requestIdleCallback' in window) requestIdleCallback(show,{timeout:2500}); else setTimeout(show,1200);
+    }
+  })();
+
   // Latest Insight: the site's own /insights/ index is the only source of
   // truth (no separate JSON to fall out of sync). One same-origin fetch,
   // no polling, no external API. Stays hidden — never a loading state —
