@@ -21,8 +21,8 @@
      clamp()+tight tracking+heavy weight) and body (everything else).
      Existing per-context heading rules keep their own hand-tuned values
      (see docs/design-system.md) — these tokens are for new components
-     (Talk to Moyo, problem-selector, calculator, filters) so they don't
-     invent a sixth one-off size. */
+     (problem-selector, calculator, filters) so they don't invent a sixth
+     one-off size. */
   --text-display-1:clamp(2.75rem,8vw,5.5rem);
   --text-display-2:clamp(2.1rem,6vw,3.6rem);
   --text-display-3:clamp(1.6rem,4vw,2.4rem);
@@ -1076,9 +1076,7 @@ body.premium-glass::before{
 
 
 /* Premium language control — v5.1 */
-/* Pushed up above the Talk to Moyo widget (same corner, higher z-index,
-   defined below) instead of overlapping it. */
-.language-control{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:9998;font-family:inherit}
+.language-control{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9998;font-family:inherit}
 .language-trigger{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:10px 15px;border:1px solid rgba(18,19,15,.13);border-radius:999px;background:rgba(250,249,245,.88);box-shadow:0 12px 35px rgba(10,12,9,.14),inset 0 1px 0 rgba(255,255,255,.9);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);color:var(--ink);font:inherit;font-size:.88rem;font-weight:800;cursor:pointer}
 .language-trigger:hover,.language-trigger:focus-visible{transform:translateY(-1px);border-color:rgba(18,19,15,.28)}
 .language-trigger>span:first-child{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:white;font-size:.76rem}
@@ -1279,104 +1277,3 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
     @starting-style{.language-dialog:not([hidden]){opacity:0;transform:translateY(8px) scale(.98)}}
   }
 }
-
-/* Talk to Moyo — persistent floating contact assistant. Same fixed corner
-   as .language-control, one level above it in z-index and pushed below it
-   visually (see .language-control's bottom offset above). Built entirely
-   in JS (site.js); no markup changes needed on any page. */
-.ttm-widget{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;flex-direction:row-reverse;align-items:center;gap:10px;font-family:inherit}
-
-.ttm-trigger{position:relative;flex:0 0 auto;width:56px;height:56px;padding:0;display:grid;place-items:center;border:1px solid rgba(18,19,15,.10);border-radius:50%;background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-3);color:var(--ink);font:inherit;cursor:pointer;transition:transform var(--motion-fast) var(--ease-spring),box-shadow var(--motion-fast) var(--ease-standard)}
-/* Environmental highlight: a faint top-edge lightness, not a gradient
-   effect — the kind of detail that reads as "physical glass" rather than
-   a flat blurred rectangle, without adding any visible chrome. */
-.ttm-trigger::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -6px 10px -8px rgba(18,19,15,.12)}
-.ttm-trigger:hover,.ttm-trigger:focus-visible{box-shadow:var(--elevation-4)}
-/* Keyboard focus never depends on the magnetic pointer effect above (that
-   only ever fires from pointermove) — give it its own visible scale. */
-.ttm-trigger:focus-visible{transform:scale(1.05)}
-.ttm-widget.is-inviting .ttm-trigger{transform:scale(1.04)}
-
-.ttm-avatar{position:relative;width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--surface-soft);transition:opacity var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
-.ttm-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.ttm-avatar-lg{width:52px;height:52px;flex:0 0 52px}
-.ttm-status-dot{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;background:#6e8c15;border:2px solid var(--glass-2-fill)}
-@media(prefers-reduced-motion:no-preference){
-  .ttm-status-dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(200,247,74,.6);animation:ttmPulse 2.6s ease-out infinite}
-  @keyframes ttmPulse{0%{transform:scale(.55);opacity:.85}75%{transform:scale(1.5);opacity:0}100%{opacity:0}}
-}
-
-/* Morphing launcher → close affordance: the avatar fades/shrinks out and
-   an × fades in when the panel is open, so the same button that invited
-   the visitor in also, visibly, lets them out. */
-.ttm-trigger-close{position:absolute;inset:0;display:grid;place-items:center;font-size:1.4rem;line-height:1;opacity:0;transform:scale(.6);transition:opacity var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
-.ttm-widget.is-open .ttm-trigger .ttm-avatar{opacity:0;transform:scale(.7)}
-.ttm-widget.is-open .ttm-trigger-close{opacity:1;transform:scale(1)}
-
-/* The "Talk to an expert"-style callout: appears once automatically
-   (desktop, pointer-fine, motion allowed, first visit only, or on a real
-   return visit / meaningful case-study engagement — see site.js) and
-   again on hover — never baked permanently into the trigger, so the
-   resting state stays a clean icon-only circle at every width. */
-.ttm-callout{max-width:210px;padding:9px 14px;border-radius:var(--radius-pill);background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur));backdrop-filter:blur(var(--glass-2-blur));border:1px solid rgba(18,19,15,.10);box-shadow:var(--elevation-2);font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;opacity:0;transform:translateX(6px) scale(.97);pointer-events:none;transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter)}
-.ttm-callout.is-visible{opacity:1;transform:none}
-
-.ttm-panel{position:absolute;right:0;bottom:68px;width:min(360px,calc(100vw - 32px));padding:18px;border:1px solid rgba(18,19,15,.12);border-radius:var(--radius-lg);background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-4);color:var(--ink);isolation:isolate}
-.ttm-panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
-.ttm-panel-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
-.ttm-panel-who{flex:1;min-width:0}
-.ttm-panel-who strong{display:block;font-size:1rem}
-.ttm-status-line{display:block;margin-top:2px;color:var(--muted);font-size:.8rem;font-weight:650}
-.ttm-close{flex:0 0 auto;width:32px;height:32px;border:0;border-radius:50%;background:rgba(18,19,15,.07);font-size:1.2rem;line-height:1;cursor:pointer;color:var(--ink)}
-.ttm-close:hover,.ttm-close:focus-visible{background:rgba(18,19,15,.14)}
-
-.ttm-headline{margin:0 0 4px;font-size:1.05rem;font-weight:800;letter-spacing:-.015em;line-height:1.3}
-.ttm-context-line{margin:0 0 14px;color:var(--muted);font-size:.86rem;line-height:1.4}
-
-/* Intent chips — short labels, strong touch targets, layered hover (border
-   + background + tiny lift together, never a bare scale()). */
-.ttm-intents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
-.ttm-intent{min-height:44px;padding:10px 12px;border:1px solid rgba(18,19,15,.10);border-radius:12px;background:rgba(255,255,255,.55);color:var(--ink);font:inherit;font-size:.82rem;font-weight:700;line-height:1.25;text-align:left;cursor:pointer;transition:transform var(--motion-fast) var(--ease-standard),background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard),box-shadow var(--motion-fast) var(--ease-standard)}
-@media(pointer:fine){.ttm-intent:hover{transform:translateY(-1px);background:#fff;border-color:rgba(18,19,15,.28);box-shadow:var(--elevation-1)}}
-.ttm-intent:focus-visible{background:#fff;border-color:rgba(18,19,15,.28)}
-.ttm-skip{display:block;width:100%;padding:6px 2px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.82rem;font-weight:700;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.ttm-skip:hover,.ttm-skip:focus-visible{color:var(--ink)}
-
-.ttm-back{display:inline-flex;align-items:center;margin:0 0 12px;padding:4px 2px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
-.ttm-back:hover,.ttm-back:focus-visible{color:var(--ink)}
-
-.ttm-actions{display:grid;gap:8px}
-.ttm-action{display:flex;align-items:center;gap:12px;min-height:56px;padding:9px 13px;border:1px solid rgba(18,19,15,.10);border-radius:14px;background:rgba(255,255,255,.6);color:var(--ink);text-decoration:none;transition:transform var(--motion-fast) var(--ease-standard),background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
-@media(pointer:fine){.ttm-action:hover{transform:translateY(-1px);background:#fff;border-color:rgba(18,19,15,.28)}}
-.ttm-action:focus-visible{background:#fff;border-color:rgba(18,19,15,.28)}
-.ttm-action-icon{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:var(--ink);color:#fff;font-size:.76rem;font-weight:900}
-.ttm-action-copy{display:flex;flex-direction:column;min-width:0}
-.ttm-action-copy strong{font-size:.9rem;font-weight:750}
-.ttm-action-copy small{margin-top:1px;color:var(--muted);font-size:.76rem;font-weight:600}
-
-@media(prefers-reduced-motion:no-preference){
-  @supports (transition-behavior:allow-discrete){
-    .ttm-panel{transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter),display var(--motion-base) allow-discrete}
-    @starting-style{.ttm-panel:not([hidden]){opacity:0;transform:translateY(10px) scale(.97)}}
-  }
-}
-@media(prefers-reduced-transparency:reduce){
-  .ttm-trigger,.ttm-callout,.ttm-panel{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
-}
-@media(max-width:400px){
-  .ttm-panel{right:-6px}
-}
-
-/* Mobile: a real bottom sheet, not a shrunk floating card — full width,
-   anchored to the viewport edge, rounded top corners only, safe-area
-   aware. Same DOM/logic, just a different geometry. */
-@media(max-width:719px){
-  .ttm-panel{position:fixed;left:0;right:0;bottom:0;width:100%;max-height:min(78vh,560px);overflow-y:auto;border-radius:22px 22px 0 0;border-width:1px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom))}
-  .ttm-intents{grid-template-columns:1fr 1fr}
-  @supports (transition-behavior:allow-discrete){
-    @starting-style{.ttm-panel:not([hidden]){opacity:1;transform:translateY(100%)}}
-  }
-}
-html[dir="rtl"] .ttm-widget{right:auto;left:max(16px,env(safe-area-inset-left));flex-direction:row}
-html[dir="rtl"] .ttm-panel{right:auto;left:0}
-@media(max-width:719px){html[dir="rtl"] .ttm-panel{left:0;right:0}}

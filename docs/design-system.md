@@ -17,9 +17,9 @@ use it; it does not duplicate the raw values (read the CSS for those).
   library. Cloudflare Pages serves plain HTML/CSS/JS. Keep it that way —
   it's why this site is fast by default.
 - **Progressive enhancement everywhere.** Every interactive feature (tabs,
-  filters, personalization, the problem-selector, Talk to Moyo) must leave
-  the page fully readable and navigable with JS off. JS only ever adds
-  behavior on top of content that already works.
+  filters, personalization, the problem-selector) must leave the page
+  fully readable and navigable with JS off. JS only ever adds behavior on
+  top of content that already works.
 - **One token, many call sites.** A shadow, radius, spacing value or
   duration used in more than one place is a token, not a repeated literal.
 
@@ -69,8 +69,8 @@ rather than by convention:
 
 - **`--glass-1`** — nav bars, sticky surfaces. Barely-there blur, mostly
   opaque.
-- **`--glass-2`** — floating controls: the language control, Talk to Moyo
-  panel, the personalization dialog.
+- **`--glass-2`** — floating controls: the language control, the
+  personalization dialog.
 - **`--glass-3`** — the hero photo frame only. The strongest blur on the
   site, reserved for the one place depth actually reads as premium rather
   than decorative.
