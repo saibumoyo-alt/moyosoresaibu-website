@@ -633,8 +633,8 @@
       ['grow-sales','Grow Sales','improving sales for my business'],
       ['build-brand','Build My Brand','building my brand'],
       ['improve-business','Improve My Business','improving my business'],
-      ['work-with-me','Work With Me','working together'],
-      ['hire-me','Hire Me','a role — I’d like to discuss it'],
+      ['work-with-me','Work With Moyo','working together'],
+      ['hire-me','Hire Moyo','a role — I’d like to discuss it'],
       ['digital-project','Website / Digital Project','a website or digital project'],
       ['something-else','Something Else','something I’d like to discuss'],
     ];
