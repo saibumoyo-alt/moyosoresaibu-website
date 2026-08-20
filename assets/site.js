@@ -604,6 +604,103 @@
     }
   })();
 
+  // ---------------------------------------------------------------------
+  // Talk to Moyo — persistent floating contact control. Reuses siteChannels
+  // (already defined above) for WhatsApp/Telegram, so the phone number and
+  // handle live in exactly one place. Fixed bottom-right; the language
+  // control (same corner) is pushed up above it via CSS, not overlapped.
+  // Suppressed entirely on /contact — that page already is the full
+  // contact experience, a floating duplicate there is just clutter.
+  // ---------------------------------------------------------------------
+  (function talkToMoyo(){
+    if(/^\/contact\/?$/.test(location.pathname)) return;
+    const wa=(siteChannels.whatsapp||'').replace(/\D/g,'');
+    const tg=(siteChannels.telegram||'').replace(/^@/,'').trim();
+    if(!wa && !tg) return; // nothing real to offer — don't show an empty widget
+
+    // Deterministic, transparent per-page context line. Not personalized
+    // with the visitor's name — this is about where they are, not who
+    // they are (the name dialog already owns that).
+    const CONTEXTS=[
+      [/^\/case-studies\//, 'Want a result like this? Let’s talk.'],
+      [/^\/experience\/?$/, 'Looking for someone who can execute? Talk to Moyo.'],
+      [/^\/insights\//, 'Want to apply this to your business? Ask Moyo.'],
+      [/^\/(projects|growth-system|retention-system)\/?$/, 'Need help choosing the right fit? Talk to Moyo.'],
+      [/^\/evidence\/?$/, 'Want proof this applies to you? Talk to Moyo.'],
+    ];
+    const context=(CONTEXTS.find(([re])=>re.test(location.pathname))||[null,'Have a challenge? Talk to Moyo.'])[1];
+
+    const wrap=document.createElement('div');
+    wrap.className='ttm-widget'; wrap.dataset.ttmWidget=''; wrap.dataset.noTranslate='';
+    const avatarPicture=`<picture><source srcset="/assets/moyosore-saibu-portrait-720.avif" type="image/avif"><source srcset="/assets/moyosore-saibu-portrait-720.webp" type="image/webp"><img src="/assets/moyosore-saibu-portrait-720.jpg" alt="" width="44" height="44" loading="lazy" decoding="async"></picture>`;
+    wrap.innerHTML=`
+      <div class="ttm-callout" data-ttm-callout aria-hidden="true"><span data-ttm-callout-text>Talk to Moyo</span></div>
+      <button type="button" class="ttm-trigger" data-ttm-trigger aria-haspopup="dialog" aria-expanded="false" aria-label="Talk to Moyo — usually replies quickly">
+        <span class="ttm-avatar">${avatarPicture}<i class="ttm-status-dot" aria-hidden="true"></i></span>
+      </button>
+      <div class="ttm-panel" role="dialog" aria-modal="false" aria-label="Talk to Moyo" hidden>
+        <div class="ttm-panel-head">
+          <span class="ttm-avatar ttm-avatar-lg">${avatarPicture}<i class="ttm-status-dot" aria-hidden="true"></i></span>
+          <div class="ttm-panel-who"><strong>Moyosore Saibu</strong><span class="ttm-status-line">🟢 Available · Usually replies quickly</span></div>
+          <button type="button" class="ttm-close" data-ttm-close aria-label="Close">&times;</button>
+        </div>
+        <p class="ttm-context-line" data-ttm-context></p>
+        <div class="ttm-actions">
+          ${wa?'<a class="ttm-action" data-ttm-whatsapp target="_blank" rel="noopener noreferrer" href="#"><span class="ttm-action-icon">W</span>WhatsApp</a>':''}
+          ${tg?'<a class="ttm-action" data-ttm-telegram target="_blank" rel="noopener noreferrer" href="#"><span class="ttm-action-icon">T</span>Telegram</a>':''}
+          ${wa?'<a class="ttm-action" data-ttm-call target="_blank" rel="noopener noreferrer" href="#"><span class="ttm-action-icon">C</span>Book a call</a>':''}
+          <a class="ttm-action" href="/contact"><span class="ttm-action-icon">M</span>Send a message</a>
+        </div>
+      </div>`;
+    document.body.appendChild(wrap);
+
+    wrap.querySelector('[data-ttm-context]').textContent=context;
+    if(wa){
+      const waMsg=encodeURIComponent('Hello Moyosore, I found you through moyosoresaibu.com. I would like to discuss a problem/opportunity.');
+      wrap.querySelector('[data-ttm-whatsapp]').href=`https://wa.me/${wa}?text=${waMsg}`;
+      const callMsg=encodeURIComponent('Hello Moyosore, I’d like to book a short call to discuss a problem/opportunity. Here are a few times that could work for me: ');
+      wrap.querySelector('[data-ttm-call]').href=`https://wa.me/${wa}?text=${callMsg}`;
+    }
+    if(tg){
+      const tgMsg=encodeURIComponent('Hello Moyosore, I found you through moyosoresaibu.com. I would like to discuss a problem/opportunity.');
+      wrap.querySelector('[data-ttm-telegram]').href=`https://t.me/${encodeURIComponent(tg)}?text=${tgMsg}`;
+    }
+
+    const trigger=wrap.querySelector('[data-ttm-trigger]');
+    const panel=wrap.querySelector('.ttm-panel');
+    const closeBtn=wrap.querySelector('[data-ttm-close]');
+    const callout=wrap.querySelector('[data-ttm-callout]');
+
+    const showCallout=show=>callout.classList.toggle('is-visible',show);
+
+    const toggle=open=>{
+      panel.hidden=!open;
+      trigger.setAttribute('aria-expanded',String(open));
+      if(open){ showCallout(false); wrap.classList.remove('is-inviting'); panel.querySelector('.ttm-action, .ttm-close')?.focus(); }
+      else{ trigger.focus(); }
+    };
+    trigger.addEventListener('click',()=>toggle(panel.hidden));
+    closeBtn.addEventListener('click',()=>toggle(false));
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!panel.hidden) toggle(false); });
+    document.addEventListener('click',e=>{ if(!panel.hidden&&!wrap.contains(e.target)) toggle(false); });
+
+    // Subtle, one-time attention callout — desktop only, never while reduced
+    // motion is on, never once the visitor has ever opened the panel.
+    if(pointerFine && !reducedMotion && matchMedia('(min-width:960px)').matches && !safeStorage.get('moyo:ttmSeen:v1')){
+      const invite=()=>{
+        if(!panel.hidden) return;
+        wrap.classList.add('is-inviting'); showCallout(true);
+        setTimeout(()=>{ showCallout(false); wrap.classList.remove('is-inviting'); },4200);
+        safeStorage.set('moyo:ttmSeen:v1','1');
+      };
+      setTimeout(invite,3200);
+    }
+    if(pointerFine){
+      trigger.addEventListener('mouseenter',()=>{ if(panel.hidden) showCallout(true); });
+      trigger.addEventListener('mouseleave',()=>{ if(!wrap.classList.contains('is-inviting')) showCallout(false); });
+    }
+  })();
+
   // Latest Insight: the site's own /insights/ index is the only source of
   // truth (no separate JSON to fall out of sync). One same-origin fetch,
   // no polling, no external API. Stays hidden — never a loading state —

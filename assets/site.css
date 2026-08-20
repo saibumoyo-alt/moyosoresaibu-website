@@ -1076,7 +1076,9 @@ body.premium-glass::before{
 
 
 /* Premium language control — v5.1 */
-.language-control{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9998;font-family:inherit}
+/* Pushed up above the Talk to Moyo widget (same corner, higher z-index,
+   defined below) instead of overlapping it. */
+.language-control{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:9998;font-family:inherit}
 .language-trigger{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:10px 15px;border:1px solid rgba(18,19,15,.13);border-radius:999px;background:rgba(250,249,245,.88);box-shadow:0 12px 35px rgba(10,12,9,.14),inset 0 1px 0 rgba(255,255,255,.9);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);color:var(--ink);font:inherit;font-size:.88rem;font-weight:800;cursor:pointer}
 .language-trigger:hover,.language-trigger:focus-visible{transform:translateY(-1px);border-color:rgba(18,19,15,.28)}
 .language-trigger>span:first-child{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:white;font-size:.76rem}
@@ -1277,3 +1279,57 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
     @starting-style{.language-dialog:not([hidden]){opacity:0;transform:translateY(8px) scale(.98)}}
   }
 }
+
+/* Talk to Moyo — persistent floating contact control. Same fixed corner as
+   .language-control, one level above it in z-index and pushed below it
+   visually (see .language-control's bottom offset above). Built entirely
+   in JS (site.js); no markup changes needed on any page. */
+.ttm-widget{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;flex-direction:row-reverse;align-items:center;gap:10px;font-family:inherit}
+
+.ttm-trigger{flex:0 0 auto;width:56px;height:56px;padding:0;display:grid;place-items:center;border:1px solid rgba(18,19,15,.10);border-radius:50%;background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-3);color:var(--ink);font:inherit;cursor:pointer;transition:transform var(--motion-fast) var(--ease-spring),box-shadow var(--motion-fast) var(--ease-standard)}
+.ttm-trigger:hover,.ttm-trigger:focus-visible{transform:scale(1.06);box-shadow:var(--elevation-4)}
+.ttm-widget.is-inviting .ttm-trigger{transform:scale(1.04)}
+
+.ttm-avatar{position:relative;width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--surface-soft)}
+.ttm-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.ttm-avatar-lg{width:52px;height:52px;flex:0 0 52px}
+.ttm-status-dot{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;background:#6e8c15;border:2px solid var(--glass-2-fill)}
+@media(prefers-reduced-motion:no-preference){
+  .ttm-status-dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(200,247,74,.6);animation:ttmPulse 2.6s ease-out infinite}
+  @keyframes ttmPulse{0%{transform:scale(.55);opacity:.85}75%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+}
+
+/* The "Talk to an expert"-style callout: appears once automatically
+   (desktop, pointer-fine, motion allowed, first visit only) and again on
+   hover — never baked permanently into the trigger, so the resting state
+   stays a clean icon-only circle at every width. */
+.ttm-callout{max-width:190px;padding:9px 14px;border-radius:var(--radius-pill);background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur));backdrop-filter:blur(var(--glass-2-blur));border:1px solid rgba(18,19,15,.10);box-shadow:var(--elevation-2);font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;opacity:0;transform:translateX(6px) scale(.97);pointer-events:none;transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter)}
+.ttm-callout.is-visible{opacity:1;transform:none}
+
+.ttm-panel{position:absolute;right:0;bottom:68px;width:min(340px,calc(100vw - 32px));padding:18px;border:1px solid rgba(18,19,15,.12);border-radius:var(--radius-lg);background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-4);color:var(--ink)}
+.ttm-panel-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.ttm-panel-who{flex:1;min-width:0}
+.ttm-panel-who strong{display:block;font-size:1rem}
+.ttm-status-line{display:block;margin-top:2px;color:var(--muted);font-size:.8rem;font-weight:650}
+.ttm-close{flex:0 0 auto;width:32px;height:32px;border:0;border-radius:50%;background:rgba(18,19,15,.07);font-size:1.2rem;line-height:1;cursor:pointer;color:var(--ink)}
+.ttm-close:hover,.ttm-close:focus-visible{background:rgba(18,19,15,.14)}
+.ttm-context-line{margin:0 0 14px;font-size:.94rem;font-weight:700;letter-spacing:-.01em;line-height:1.35}
+.ttm-actions{display:grid;gap:8px}
+.ttm-action{display:flex;align-items:center;gap:10px;min-height:46px;padding:9px 13px;border:1px solid rgba(18,19,15,.10);border-radius:14px;background:rgba(255,255,255,.6);color:var(--ink);text-decoration:none;font-size:.9rem;font-weight:700;transition:background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+.ttm-action:hover,.ttm-action:focus-visible{background:#fff;border-color:rgba(18,19,15,.28)}
+.ttm-action-icon{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:9px;background:var(--ink);color:#fff;font-size:.72rem;font-weight:900}
+
+@media(prefers-reduced-motion:no-preference){
+  @supports (transition-behavior:allow-discrete){
+    .ttm-panel{transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter),display var(--motion-base) allow-discrete}
+    @starting-style{.ttm-panel:not([hidden]){opacity:0;transform:translateY(10px) scale(.97)}}
+  }
+}
+@media(prefers-reduced-transparency:reduce){
+  .ttm-trigger,.ttm-callout,.ttm-panel{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@media(max-width:400px){
+  .ttm-panel{right:-6px}
+}
+html[dir="rtl"] .ttm-widget{right:auto;left:max(16px,env(safe-area-inset-left));flex-direction:row}
+html[dir="rtl"] .ttm-panel{right:auto;left:0}
