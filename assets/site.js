@@ -1,6 +1,11 @@
 (()=>{
   const worker='https://moyosore-contact-mailer.saibumoyo.workers.dev/contact';
 
+  // Shared motion gates — computed once, reused by every motion feature
+  // below (and by the pre-existing reveal/spotlight checks further down).
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine=matchMedia('(pointer:fine)').matches;
+
   function setStarted(form){
     const field=form.querySelector('[name="started_at"]');
     if(field) field.value=String(Date.now());
@@ -113,7 +118,20 @@
         const active=tab.dataset[tabKeyAttr]===key;
         tab.setAttribute('aria-selected',String(active)); tab.tabIndex=active?0:-1;
       });
-      panels.forEach(panel=>{const active=panel.dataset[panelKeyAttr]===key;panel.classList.toggle('is-active',active);panel.hidden=!active;});
+      panels.forEach(panel=>{
+        const active=panel.dataset[panelKeyAttr]===key;
+        const wasHidden=panel.hidden;
+        panel.classList.toggle('is-active',active);
+        panel.hidden=!active;
+        // Settle-in transition for a panel switching from hidden to active
+        // (never on first mount, where nothing was hidden yet). Confirms
+        // the interaction and gives the new content a subtle physical
+        // arrival instead of an instant swap.
+        if(active&&wasHidden&&!reducedMotion){
+          panel.classList.add('is-settling');
+          requestAnimationFrame(()=>requestAnimationFrame(()=>panel.classList.remove('is-settling')));
+        }
+      });
       if(onActivate) onActivate(tabs.findIndex(tab=>tab.dataset[tabKeyAttr]===key),key);
     };
     activate(tabs[0].dataset[tabKeyAttr]);
@@ -150,9 +168,12 @@
   });
 
   // Calm reveal motion. No content is hidden without JS or when motion is reduced.
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+  if(!reducedMotion && 'IntersectionObserver' in window){
     document.documentElement.classList.add('motion-ready');
-    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.page-hero .shell,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method')];
+    // Hero/page-hero children are listed individually (instead of one
+    // '.page-hero .shell' block) so the CSS stagger rules above can reveal
+    // eyebrow → heading → copy → actions in sequence rather than as one unit.
+    const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method,.hero-content>.eyebrow,.hero-content>h1,.hero-content>.hero-copy,.hero-content>.scan-bullets,.hero-content>.actions,.page-hero .shell>.kicker,.page-hero .shell>h1,.page-hero .shell>p,.page-hero .shell>.actions')];
     targets.forEach(el=>el.setAttribute('data-motion-reveal',''));
     const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(entry.isIntersecting){entry.target.classList.add('is-visible');reveal.unobserve(entry.target);}
@@ -161,12 +182,83 @@
   }
 
   // Desktop-only glass spotlight. It is visual polish, not a dependency.
-  if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  if(pointerFine && !reducedMotion){
     document.querySelectorAll('[data-glass-spotlight]').forEach(el=>{
       el.addEventListener('pointermove',event=>{
         const r=el.getBoundingClientRect();
         el.style.setProperty('--spot-x',`${event.clientX-r.left}px`);
         el.style.setProperty('--spot-y',`${event.clientY-r.top}px`);
+      });
+    });
+  }
+
+  // Homepage hero parallax: portrait + its glass label only. Passive scroll
+  // listener, rAF-batched, transform-only, skipped under reduced motion and
+  // on narrow mobile where the shift isn't worth the extra scroll work.
+  if(!reducedMotion && innerWidth>=720){
+    const parallaxWrap=document.querySelector('.hero-photo');
+    const parallaxFrame=parallaxWrap&&parallaxWrap.querySelector('.photo-frame');
+    const parallaxLabel=parallaxWrap&&parallaxWrap.querySelector('.photo-label');
+    if(parallaxFrame){
+      let ticking=false;
+      const update=()=>{
+        ticking=false;
+        const r=parallaxWrap.getBoundingClientRect();
+        if(r.bottom<0||r.top>innerHeight) return; // only touch elements near/in view
+        const shift=Math.max(-1,Math.min(1,(r.top+r.height/2-innerHeight/2)/innerHeight));
+        parallaxFrame.style.transform=`translate3d(0,${(shift*10).toFixed(1)}px,0)`;
+        if(parallaxLabel) parallaxLabel.style.transform=`translate3d(0,${(shift*5).toFixed(1)}px,0)`;
+      };
+      addEventListener('scroll',()=>{ if(!ticking){ticking=true;requestAnimationFrame(update);} },{passive:true});
+      update();
+    }
+  }
+
+  // Magnetic pull on the site's highest-intent buttons only — header CTA,
+  // the primary hero action and primary CTA-panel buttons. Pointer-fine
+  // desktop only; keyboard focus, tab order and layout are never touched.
+  if(pointerFine && !reducedMotion){
+    document.querySelectorAll('.header-cta,.hero-premium .actions>.btn:not(.secondary),.cta-panel .actions>.btn:not(.secondary):not(.ghost-on-dark)').forEach(btn=>{
+      let raf=null;
+      btn.addEventListener('pointermove',event=>{
+        if(raf) return;
+        raf=requestAnimationFrame(()=>{
+          raf=null;
+          const r=btn.getBoundingClientRect();
+          const x=((event.clientX-r.left)/r.width-.5)*10;
+          const y=((event.clientY-r.top)/r.height-.5)*10;
+          btn.style.transition='none';
+          btn.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(1.015)`;
+        });
+      });
+      btn.addEventListener('pointerleave',()=>{
+        if(raf){cancelAnimationFrame(raf);raf=null;}
+        btn.style.transition=`transform var(--motion-base) var(--ease-spring)`;
+        btn.style.transform='translate(0,0) scale(1)';
+      });
+    });
+  }
+
+  // Restrained pointer tilt on the primary choice/scan cards. The card's
+  // existing Tier-2 CSS transition (transform, ~250ms) already smooths
+  // every update, so this only ever writes a transform — no extra timing
+  // logic needed here.
+  if(pointerFine && !reducedMotion){
+    document.querySelectorAll('.choice-card,.scan-card').forEach(card=>{
+      let raf=null;
+      card.addEventListener('pointermove',event=>{
+        if(raf) return;
+        raf=requestAnimationFrame(()=>{
+          raf=null;
+          const r=card.getBoundingClientRect();
+          const px=(event.clientX-r.left)/r.width-.5;
+          const py=(event.clientY-r.top)/r.height-.5;
+          card.style.transform=`perspective(700px) translateY(-4px) rotateX(${(-py*2.4).toFixed(2)}deg) rotateY(${(px*2.4).toFixed(2)}deg)`;
+        });
+      });
+      card.addEventListener('pointerleave',()=>{
+        if(raf){cancelAnimationFrame(raf);raf=null;}
+        card.style.transform='';
       });
     });
   }
@@ -356,6 +448,161 @@
     if(remembered&&remembered!=='en') setTimeout(async()=>{const ok=await translateLocally(remembered,status);if(!ok)safeStorage.remove('moyo-language');},700);
   }
   createLanguageControl();
+
+  // ---------------------------------------------------------------------
+  // v8.6 — Privacy-safe visitor personalization. First name only, stored
+  // on this device only (via the safeStorage helper above), never sent to
+  // the contact form, the Worker, or any analytics. All personalized text
+  // is written with textContent, never innerHTML, so a stored value can
+  // only ever render as inert text, whatever characters it contains.
+  // ---------------------------------------------------------------------
+  (function personalization(){
+    const NAME_KEY='moyo:firstName:v1';
+    const DISMISSED_KEY='moyo:namePromptDismissed:v1';
+    const CATEGORY_KEY='moyo:lastCategory:v1';
+    const CATEGORY_LABELS={strategy:'Strategy',campaigns:'Campaigns',digital:'Digital',sales:'Sales',execution:'Execution',retention:'Retention'};
+
+    const getName=()=>safeStorage.get(NAME_KEY)||'';
+
+    // Trim, collapse whitespace, cap length, strip angle brackets as
+    // defense-in-depth (textContent already makes HTML injection
+    // impossible either way). International names, apostrophes and
+    // hyphens all pass through untouched.
+    function sanitizeName(raw){
+      let name=(raw||'').normalize('NFC').replace(/[<>]/g,'').replace(/\s+/g,' ').trim();
+      if(name.length>40) name=name.slice(0,40).trim();
+      return name;
+    }
+
+    function render(){
+      const name=getName();
+      document.querySelectorAll('[data-personalize="hero"]').forEach(el=>{
+        el.textContent=name?`${name}, growth stuck?`:'Growth stuck?';
+      });
+      document.querySelectorAll('[data-personalize="plan-label"]').forEach(el=>{
+        el.textContent=name?`${name}’s Growth Plan`:'Your growth path';
+      });
+      document.querySelectorAll('[data-personalize="proof-label"]').forEach(el=>{
+        el.textContent=name?`${name}, here’s the proof`:'Proof';
+      });
+      document.querySelectorAll('[data-personalize="contact-heading"]').forEach(el=>{
+        el.textContent=name?`${name}, start with three things.`:'Start with three things.';
+      });
+      document.querySelectorAll('[data-personalize-trigger]').forEach(btn=>{
+        btn.textContent=name?'Change name':'Personalize';
+      });
+      document.querySelectorAll('[data-personalize-forget]').forEach(btn=>{
+        btn.hidden=!name;
+      });
+      updateRecommendBadge(name);
+    }
+
+    // Contextual recommendation: only shown when a real prior choice
+    // exists (a homepage problem route was actually clicked) and the
+    // matching section is actually present on this page — never invented.
+    function updateRecommendBadge(name){
+      const el=document.querySelector('[data-personalize-recommend]');
+      if(!el) return;
+      const category=safeStorage.get(CATEGORY_KEY);
+      const label=category&&CATEGORY_LABELS[category];
+      const target=label&&document.getElementById(category);
+      if(!label||!target){ el.hidden=true; return; }
+      el.textContent=name?`${name}, let’s look at ${label}.`:`Recommended next: ${label}.`;
+      el.href=`#${category}`;
+      el.hidden=false;
+    }
+
+    // Homepage problem routes: remember only the category key. No profile,
+    // no remote tracking — one string, on this device, used to open the
+    // right door on the very next page.
+    document.querySelectorAll('[data-category]').forEach(card=>{
+      card.addEventListener('click',()=>{ safeStorage.set(CATEGORY_KEY,card.dataset.category); });
+    });
+
+    // --- Dialog -----------------------------------------------------------
+    let dialog=null, lastFocused=null;
+
+    function buildDialog(){
+      if(dialog) return dialog;
+      dialog=document.createElement('dialog');
+      dialog.className='name-dialog';
+      dialog.setAttribute('aria-labelledby','name-dialog-title');
+      dialog.innerHTML=`<form method="dialog" class="name-dialog-form" data-name-form>
+          <button type="button" class="name-dialog-close" data-name-close aria-label="Close">&times;</button>
+          <p class="name-dialog-eyebrow">Welcome.</p>
+          <h2 id="name-dialog-title">What’s your first name?</h2>
+          <label class="sr-only" for="visitor-first-name">First name</label>
+          <input id="visitor-first-name" name="firstName" type="text" maxlength="40" autocomplete="given-name" placeholder="Daniel" data-name-input>
+          <div class="name-dialog-actions">
+            <button type="submit" class="btn" data-name-save>Personalize my experience</button>
+            <button type="button" class="text-link" data-name-skip>Continue without your name</button>
+          </div>
+          <p class="name-dialog-privacy">Stored only on this device. Never sent with your messages or analytics.</p>
+        </form>
+        <div class="name-dialog-welcome" data-name-welcome hidden role="status"></div>`;
+      document.body.appendChild(dialog);
+      const form=dialog.querySelector('[data-name-form]');
+      const input=dialog.querySelector('[data-name-input]');
+      const welcome=dialog.querySelector('[data-name-welcome]');
+      const close=()=>{ if(dialog.open) dialog.close(); };
+      dialog.querySelector('[data-name-close]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
+      dialog.querySelector('[data-name-skip]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
+      form.addEventListener('submit',event=>{
+        event.preventDefault();
+        const name=sanitizeName(input.value);
+        safeStorage.set(DISMISSED_KEY,'1');
+        if(!name){ close(); return; }
+        safeStorage.set(NAME_KEY,name);
+        render();
+        // Brief in-dialog confirmation, then close and return focus — not a
+        // toast, and it never repeats.
+        form.hidden=true; welcome.hidden=false; welcome.textContent=`Welcome, ${name}.`;
+        setTimeout(close,900);
+      });
+      dialog.addEventListener('close',()=>{
+        form.hidden=false; welcome.hidden=true; input.value=getName();
+        if(lastFocused&&document.contains(lastFocused)) lastFocused.focus();
+      });
+      dialog.addEventListener('cancel',()=>{ safeStorage.set(DISMISSED_KEY,'1'); }); // Escape key
+      dialog.addEventListener('click',event=>{ if(event.target===dialog) close(); }); // backdrop click
+      return dialog;
+    }
+
+    function openDialog(){
+      lastFocused=document.activeElement;
+      const d=buildDialog();
+      d.querySelector('[data-name-input]').value=getName();
+      if(!('showModal' in d)) return; // very old browser: control stays inert, never blocks the site
+      d.showModal();
+      d.querySelector('[data-name-input]').focus();
+    }
+
+    document.addEventListener('click',event=>{
+      if(event.target.closest('[data-personalize-trigger]')){ openDialog(); return; }
+      if(event.target.closest('[data-personalize-forget]')){ safeStorage.remove(NAME_KEY); render(); }
+    });
+
+    // Progressive footer control — "Personalize" / "Change name" plus
+    // "Forget my name" (shown only once a name is stored). Absent
+    // entirely with JS off; identical on every page.
+    document.querySelectorAll('.footer-links').forEach(list=>{
+      const trigger=document.createElement('button');
+      trigger.type='button'; trigger.className='footer-personalize-link'; trigger.dataset.personalizeTrigger='';
+      const forget=document.createElement('button');
+      forget.type='button'; forget.className='footer-personalize-link'; forget.dataset.personalizeForget=''; forget.hidden=true; forget.textContent='Forget my name';
+      list.append(trigger,forget);
+    });
+
+    render();
+
+    // First-visit prompt: optional, skippable, shown at most once. A short
+    // idle delay keeps it off the critical first paint — this is a compact
+    // dialog the visitor can dismiss instantly, never a blocking gate.
+    if(!getName() && !safeStorage.get(DISMISSED_KEY)){
+      const show=()=>openDialog();
+      if('requestIdleCallback' in window) requestIdleCallback(show,{timeout:2500}); else setTimeout(show,1200);
+    }
+  })();
 
   // Latest Insight: the site's own /insights/ index is the only source of
   // truth (no separate JSON to fall out of sync). One same-origin fetch,
