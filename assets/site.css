@@ -1285,6 +1285,11 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
    visually (see .language-control's bottom offset above). Built entirely
    in JS (site.js); no markup changes needed on any page. */
 .ttm-widget{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;flex-direction:row-reverse;align-items:center;gap:10px;font-family:inherit}
+/* Entrance settle-in, mobile and desktop alike — see site.js for the
+   double-rAF toggle. Skipped entirely under reduced motion (JS never adds
+   .is-entering there), so this rule only ever needs to handle motion-on. */
+.ttm-widget{transition:opacity var(--motion-slow) var(--ease-spring),transform var(--motion-slow) var(--ease-spring)}
+.ttm-widget.is-entering{opacity:0;transform:translateY(20px) scale(.92)}
 
 .ttm-trigger{position:relative;flex:0 0 auto;width:56px;height:56px;padding:0;display:grid;place-items:center;border:1px solid rgba(18,19,15,.10);border-radius:50%;background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-3);color:var(--ink);font:inherit;cursor:pointer;transition:transform var(--motion-fast) var(--ease-spring),box-shadow var(--motion-fast) var(--ease-standard)}
 /* Environmental highlight: a faint top-edge lightness, not a gradient

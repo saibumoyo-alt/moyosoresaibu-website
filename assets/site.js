@@ -709,6 +709,16 @@
       </div>`;
     document.body.appendChild(wrap);
 
+    // Entrance: a brief settle-in instead of just appearing, on mobile and
+    // desktop alike. Same double-rAF pattern used elsewhere in this file so
+    // the browser actually paints the "before" state before animating away
+    // from it. Skipped outright under reduced motion — the widget is just
+    // there, instantly, no motion required to use it.
+    if(!reducedMotion){
+      wrap.classList.add('is-entering');
+      requestAnimationFrame(()=>requestAnimationFrame(()=>wrap.classList.remove('is-entering')));
+    }
+
     const state={intent:null};
     // Recomputed every time the panel opens, not just once at page load —
     // the visitor may personalize (or forget their name) via the footer
@@ -822,7 +832,10 @@
       safeStorage.set(SEEN_KEY,'1'); safeStorage.set(AUTO_PROMPT_KEY,String(Date.now()));
     };
 
-    if(pointerFine && !reducedMotion && matchMedia('(min-width:960px)').matches){
+    // Mobile gets the same callouts as desktop now (just no hover-reveal,
+    // since touch has no hover, and no magnetic pointer response above —
+    // those two stay pointer-fine only on purpose).
+    if(!reducedMotion){
       const everSeen=!!safeStorage.get(SEEN_KEY);
       if(!everSeen){
         // True first visit to the site: the one generic, gentle nudge.
