@@ -1,6 +1,73 @@
 (()=>{
   const worker='https://moyosore-contact-mailer.saibumoyo.workers.dev/contact';
 
+  // Name gate — first-visit only. Nothing leaves the device: the name is
+  // read/written to localStorage and used purely to personalize this visit.
+  // Progressive enhancement: without JS no gate ever appears and every page
+  // remains fully visible and crawlable, same philosophy as the rest of this file.
+  (function setupNameGate(){
+    const KEY='moyo_visitor_name';
+    const read=()=>{try{return localStorage.getItem(KEY);}catch(e){return null;}};
+    const write=v=>{try{localStorage.setItem(KEY,v);}catch(e){}};
+
+    function personalize(name){
+      document.querySelectorAll('[data-visitor-name]').forEach(el=>{el.textContent=name;});
+      document.querySelectorAll('[data-visitor-greeting]').forEach(el=>{el.hidden=false;});
+      document.documentElement.classList.add('has-visitor-name');
+    }
+
+    function openGate(){
+      document.documentElement.classList.add('gate-open');
+      const overlay=document.createElement('div');
+      overlay.className='name-gate';
+      overlay.setAttribute('role','dialog');
+      overlay.setAttribute('aria-modal','true');
+      overlay.setAttribute('aria-labelledby','name-gate-title');
+      overlay.dataset.noTranslate='';
+      overlay.innerHTML=
+        '<div class="name-gate-card">'+
+          '<p class="name-gate-eyebrow">Welcome</p>'+
+          '<h1 id="name-gate-title">What should I call you?</h1>'+
+          '<p class="name-gate-copy">This site turns a stuck sales, customer or growth problem into a clear next move. Tell me your first name so your visit can be personal — it stays on this device only.</p>'+
+          '<form class="name-gate-form" novalidate>'+
+            '<label class="sr-only" for="name-gate-input">Your first name</label>'+
+            '<input id="name-gate-input" name="visitor-name" type="text" autocomplete="given-name" placeholder="e.g. Ada" minlength="2" maxlength="40" autocapitalize="words" required/>'+
+            '<button type="submit" class="btn">Continue →</button>'+
+          '</form>'+
+          '<p class="name-gate-note">No email. No signup. Just your name.</p>'+
+        '</div>';
+      document.body.appendChild(overlay);
+      const input=overlay.querySelector('input');
+      const form=overlay.querySelector('form');
+      setTimeout(()=>input.focus(),60);
+      overlay.addEventListener('keydown',event=>{
+        if(event.key!=='Tab') return;
+        const focusable=[...overlay.querySelectorAll('input,button')];
+        const first=focusable[0],last=focusable[focusable.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      });
+      form.addEventListener('submit',event=>{
+        event.preventDefault();
+        const raw=input.value.trim().replace(/\s+/g,' ');
+        if(raw.length<2){ input.setAttribute('aria-invalid','true'); input.focus(); return; }
+        const clean=raw.replace(/[^\p{L}\p{M}'\- ]/gu,'').slice(0,40)||raw.slice(0,40);
+        const first=(clean.split(' ')[0]||clean);
+        const displayName=first.charAt(0).toUpperCase()+first.slice(1);
+        write(displayName);
+        document.documentElement.classList.remove('gate-open');
+        overlay.classList.add('is-closing');
+        personalize(displayName);
+        setTimeout(()=>overlay.remove(),300);
+      });
+    }
+
+    const existing=read();
+    if(existing){ personalize(existing); return; }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',openGate);
+    else openGate();
+  })();
+
   function setStarted(form){
     const field=form.querySelector('[name="started_at"]');
     if(field) field.value=String(Date.now());
@@ -148,6 +215,22 @@
       if(tablist && index>=0) tablist.style.setProperty('--stage-index',index);
     });
   });
+
+  // Category switcher: click a category, see only that category's content.
+  // Without JS every panel remains visible (progressive enhancement, same
+  // rule as the rest of this file) — this only narrows to one at a time.
+  const catSwitchers=[...document.querySelectorAll('[data-cat-switch]')];
+  catSwitchers.forEach(wrap=>wireTabs(wrap,'[data-cat-tab]','[data-cat-panel]','catTab','catPanel'));
+  const activateCatFromHash=()=>{
+    const topic=location.hash.replace('#','').toLowerCase();
+    if(!topic) return;
+    catSwitchers.forEach(wrap=>{
+      const match=[...wrap.querySelectorAll('[data-cat-tab]')].find(tab=>tab.dataset.catTab===topic);
+      if(match) match.click();
+    });
+  };
+  activateCatFromHash();
+  window.addEventListener('hashchange',activateCatFromHash);
 
   // Calm reveal motion. No content is hidden without JS or when motion is reduced.
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
