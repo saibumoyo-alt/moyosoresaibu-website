@@ -1246,18 +1246,35 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 
 /* Visitor first-name dialog — native <dialog>, styled with the same glass
    language as .language-dialog. Optional, skippable, never full-screen. */
-.name-dialog{width:min(420px,calc(100vw - 40px));padding:0;margin:auto;border:1px solid rgba(18,19,15,.12);border-radius:28px;background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-4);color:var(--ink);overflow:hidden}
+.name-dialog{width:min(400px,calc(100vw - 32px));padding:0;margin:auto;border:1px solid rgba(18,19,15,.12);border-radius:var(--radius-lg);background:var(--glass-2-fill);-webkit-backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);backdrop-filter:blur(var(--glass-2-blur)) saturate(1.15);box-shadow:var(--elevation-4);color:var(--ink);overflow:hidden}
 .name-dialog::backdrop{background:rgba(15,17,13,.42)}
-.name-dialog-form{position:relative;padding:clamp(26px,5vw,34px)}
-.name-dialog-close{position:absolute;right:16px;top:16px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(18,19,15,.07);font-size:1.3rem;line-height:1;cursor:pointer;color:var(--ink)}
-.name-dialog-close:hover,.name-dialog-close:focus-visible{background:rgba(18,19,15,.14)}
+.name-dialog-form{position:relative;padding:32px}
+/* Quiet by default — a close affordance, not a focal point (#9). */
+.name-dialog-close{position:absolute;right:14px;top:14px;width:30px;height:30px;border:0;border-radius:50%;background:transparent;font-size:1.15rem;line-height:1;cursor:pointer;color:var(--muted);opacity:.7;transition:background var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),opacity var(--motion-fast) var(--ease-standard)}
+.name-dialog-close:hover,.name-dialog-close:focus-visible{background:rgba(18,19,15,.08);color:var(--ink);opacity:1}
 .name-dialog-eyebrow{margin:0 0 8px;color:var(--muted);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.name-dialog-form h2{margin:0 0 18px;max-width:88%;font-size:clamp(1.5rem,4vw,1.9rem);line-height:1.15;letter-spacing:-.03em}
-.name-dialog-form input{min-height:50px;margin-bottom:16px;font-size:1.05rem}
-.name-dialog-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
-.name-dialog-privacy{margin:18px 0 0;color:var(--muted);font-size:.78rem;line-height:1.5}
-.name-dialog-welcome{padding:clamp(40px,8vw,56px) clamp(26px,5vw,34px);text-align:center;font-size:1.3rem;font-weight:750;letter-spacing:-.02em}
+.name-dialog-form h2{margin:0 0 12px;max-width:88%;font-size:clamp(1.5rem,4vw,1.9rem);line-height:1.15;letter-spacing:-.03em}
+.name-dialog-sub{margin:0 0 24px;max-width:92%;color:var(--muted);font-size:.92rem;line-height:1.5}
+.name-dialog-form input{min-height:50px;margin-bottom:16px;font-size:1.05rem;border-radius:var(--radius-xs)}
+/* One clean ring instead of the browser outline stacked on the site-wide
+   focus ring (#2) — a single accent-tinted halo tied to the input's own
+   radius, no separate offset outline fighting it. */
+.name-dialog-form input:focus-visible{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(200,247,74,.55)}
+.name-dialog-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:4px}
+.name-dialog-actions .btn:active{transform:scale(.97)}
+/* Immediate personalized feedback (#8): a short, purposeful pulse only on
+   the empty↔filled transition — never on every keystroke. */
 @media(prefers-reduced-motion:no-preference){
+  .name-dialog-actions [data-name-save].is-updating{animation:name-cta-pulse .22s var(--ease-standard)}
+}
+@keyframes name-cta-pulse{from{opacity:.4;transform:translateY(1px)}to{opacity:1;transform:translateY(0)}}
+/* Skip: a plain, quiet text action, not a second button (#1, #6). */
+.name-dialog-skip{border:0;background:none;padding:0;color:var(--muted);font:inherit;font-weight:650;font-size:.88rem;text-decoration:none;cursor:pointer;transition:color var(--motion-fast) var(--ease-standard)}
+.name-dialog-skip:hover,.name-dialog-skip:focus-visible{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.name-dialog-privacy{margin:20px 0 0;color:var(--muted);font-size:.78rem;line-height:1.5}
+.name-dialog-welcome{padding:clamp(40px,8vw,56px) 32px;text-align:center;font-size:1.3rem;font-weight:750;letter-spacing:-.02em}
+@media(prefers-reduced-motion:no-preference){
+  .name-dialog-welcome:not([hidden]){animation:name-dialog-welcome-in var(--motion-base) var(--ease-emphasis)}
   @supports (transition-behavior:allow-discrete){
     .name-dialog{transition:opacity var(--motion-base) var(--ease-enter),transform var(--motion-base) var(--ease-enter),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
     .name-dialog::backdrop{transition:opacity var(--motion-base) var(--ease-standard),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
@@ -1267,8 +1284,9 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
     }
   }
 }
+@keyframes name-dialog-welcome-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-transparency:reduce){.name-dialog{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
-@media(max-width:480px){.name-dialog{border-radius:22px}}
+@media(max-width:480px){.name-dialog{border-radius:var(--radius-md)}}
 
 /* Same open-transition treatment for the existing language dialog. */
 @media(prefers-reduced-motion:no-preference){

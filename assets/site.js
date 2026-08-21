@@ -535,20 +535,38 @@
           <button type="button" class="name-dialog-close" data-name-close aria-label="Close">&times;</button>
           <p class="name-dialog-eyebrow">Welcome.</p>
           <h2 id="name-dialog-title">What’s your first name?</h2>
+          <p class="name-dialog-sub">We’ll use it to personalize headlines and recommendations as you browse.</p>
           <label class="sr-only" for="visitor-first-name">First name</label>
           <input id="visitor-first-name" name="firstName" type="text" maxlength="40" autocomplete="given-name" placeholder="Daniel" data-name-input>
           <div class="name-dialog-actions">
-            <button type="submit" class="btn" data-name-save>Personalize my experience</button>
-            <button type="button" class="text-link" data-name-skip>Continue without your name</button>
+            <button type="submit" class="btn" data-name-save>Personalize</button>
+            <button type="button" class="name-dialog-skip" data-name-skip>Skip for now</button>
           </div>
-          <p class="name-dialog-privacy">Stored only on this device. Never sent with your messages or analytics.</p>
+          <p class="name-dialog-privacy">Stays on this device only. Never sent or shared.</p>
         </form>
         <div class="name-dialog-welcome" data-name-welcome hidden role="status"></div>`;
       document.body.appendChild(dialog);
       const form=dialog.querySelector('[data-name-form]');
       const input=dialog.querySelector('[data-name-input]');
       const welcome=dialog.querySelector('[data-name-welcome]');
+      const saveBtn=dialog.querySelector('[data-name-save]');
       const close=()=>{ if(dialog.open) dialog.close(); };
+      // Immediate personalized feedback: the CTA names the visitor back as
+      // they type, so the payoff is visible before they ever submit. The
+      // brief pulse only fires on the empty↔filled transition, not every
+      // keystroke, so it reads as one small confirmation, not decoration.
+      let hasNamePreview=false;
+      function syncSaveLabel(animateOnFlip){
+        const preview=sanitizeName(input.value);
+        const hasName=!!preview;
+        saveBtn.textContent=hasName?`Continue as ${preview}`:'Personalize';
+        if(animateOnFlip&&hasName!==hasNamePreview){
+          saveBtn.classList.remove('is-updating'); void saveBtn.offsetWidth; saveBtn.classList.add('is-updating');
+        }
+        hasNamePreview=hasName;
+      }
+      input.addEventListener('input',()=>syncSaveLabel(true));
+      dialog._syncSaveLabel=syncSaveLabel;
       dialog.querySelector('[data-name-close]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
       dialog.querySelector('[data-name-skip]').addEventListener('click',()=>{ safeStorage.set(DISMISSED_KEY,'1'); close(); });
       form.addEventListener('submit',event=>{
@@ -565,6 +583,7 @@
       });
       dialog.addEventListener('close',()=>{
         form.hidden=false; welcome.hidden=true; input.value=getName();
+        syncSaveLabel(false);
         if(lastFocused&&document.contains(lastFocused)) lastFocused.focus();
       });
       dialog.addEventListener('cancel',()=>{ safeStorage.set(DISMISSED_KEY,'1'); }); // Escape key
@@ -576,6 +595,7 @@
       lastFocused=document.activeElement;
       const d=buildDialog();
       d.querySelector('[data-name-input]').value=getName();
+      d._syncSaveLabel(false);
       if(!('showModal' in d)) return; // very old browser: control stays inert, never blocks the site
       d.showModal();
       d.querySelector('[data-name-input]').focus();
