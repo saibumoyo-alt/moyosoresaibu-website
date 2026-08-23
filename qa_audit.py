@@ -46,7 +46,7 @@ EXPECTED_DROPDOWN_LINKS = {
         ('/projects', 'All solutions'), ('/projects#strategy', 'Strategy'),
         ('/projects#campaigns', 'Campaigns'), ('/projects#digital', 'Digital'),
         ('/projects#sales', 'Sales'), ('/projects#execution', 'Execution'),
-        ('/projects#retention', 'Retention'),
+        ('/projects#retention', 'Retention'), ('/projects#field-work', 'Field work'),
     ],
     'Insights': [
         ('/insights/', 'All insights'), ('/insights/#sales', 'Sales'),

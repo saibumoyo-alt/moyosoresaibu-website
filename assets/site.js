@@ -264,14 +264,18 @@
   }
 
 
-  // Local Insights search and topic filters. All notes remain visible without JavaScript.
+  // Local search/topic filters, shared by Insights notes and the Field work
+  // gallery. Every item remains visible without JavaScript. `data-filter-list`
+  // lets a tools block point at a specific grid; it falls back to
+  // `.article-list` for the original Insights markup.
   document.querySelectorAll('[data-insight-tools]').forEach(tools=>{
     const search=tools.querySelector('[data-insight-search]');
     const buttons=[...tools.querySelectorAll('[data-insight-filter]')];
-    const list=tools.parentElement?.querySelector('.article-list');
+    const list=tools.parentElement?.querySelector('[data-filter-list]')||tools.parentElement?.querySelector('.article-list');
     const items=list?[...list.querySelectorAll('[data-insight-item]')]:[];
     const count=tools.querySelector('[data-insight-count]');
     const empty=tools.parentElement?.querySelector('[data-insight-empty]');
+    const noun=tools.dataset.insightNoun||'note';
     if(!search||!items.length) return;
     let filter='all';
     const apply=()=>{
@@ -285,7 +289,7 @@
         item.hidden=!show;
         if(show) shown++;
       });
-      if(count) count.textContent=`${shown} ${shown===1?'note':'notes'}`;
+      if(count) count.textContent=`${shown} ${shown===1?noun:noun+'s'}`;
       if(empty) empty.hidden=shown!==0;
     };
     search.addEventListener('input',apply);
