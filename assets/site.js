@@ -485,7 +485,7 @@
     function render(){
       const name=getName();
       document.querySelectorAll('[data-personalize="hero"]').forEach(el=>{
-        el.textContent=name?`${name}, growth stuck?`:'Growth stuck?';
+        el.textContent=name?`${name}, sales or customer growth stuck?`:'Sales or customer growth stuck?';
       });
       document.querySelectorAll('[data-personalize="plan-label"]').forEach(el=>{
         el.textContent=name?`${name}’s Growth Plan`:'Your growth path';
