@@ -27,6 +27,9 @@ PUBLIC = [
     'insights/route-discipline.html',
     'insights/sales-reviews-end-with-route-decision.html',
     'insights/trade-activation-must-change-behaviour.html',
+    'insights/why-customers-leave.html',
+    'insights/customer-retention-vs-loyalty.html',
+    'tools/retention-health-check.html',
 ]
 
 # Pages that carry the primary 6-item nav (case studies/insight articles do
@@ -76,6 +79,9 @@ CANON = {
     'insights/route-discipline.html': 'https://moyosoresaibu.com/insights/route-discipline',
     'insights/sales-reviews-end-with-route-decision.html': 'https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision',
     'insights/trade-activation-must-change-behaviour.html': 'https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour',
+    'insights/why-customers-leave.html': 'https://moyosoresaibu.com/insights/why-customers-leave',
+    'insights/customer-retention-vs-loyalty.html': 'https://moyosoresaibu.com/insights/customer-retention-vs-loyalty',
+    'tools/retention-health-check.html': 'https://moyosoresaibu.com/tools/retention-health-check',
 }
 
 errors = []
@@ -228,6 +234,9 @@ required_redirects = {
     '/case-studies/bold-loud-customer-development.html /case-studies/bold-loud-customer-development 301',
     '/case-studies/trade-activation-enugu.html /case-studies/trade-activation-enugu 301',
     '/case-studies/abacha-festival-activation.html /case-studies/abacha-festival-activation 301',
+    '/insights/why-customers-leave.html /insights/why-customers-leave 301',
+    '/insights/customer-retention-vs-loyalty.html /insights/customer-retention-vs-loyalty 301',
+    '/tools/retention-health-check.html /tools/retention-health-check 301',
 }
 missing = required_redirects - redirect_set
 if missing:
