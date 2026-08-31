@@ -1,0 +1,26 @@
+/* 8.16.0 — footer overlap, tap targets, breadcrumbs */
+@media(min-width:720px){
+  .footer-links{padding-right:10rem}
+  html[dir="rtl"] .footer-links{padding-right:0;padding-left:10rem}
+}
+.footer-links a,
+.footer-personalize-link,
+.metric-evidence,
+.card-link,
+.contact-micro-actions a,
+.growth-panel .proof-link{
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+}
+.crumbs{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:.82rem;
+  font-weight:650;
+  line-height:1.45;
+}
+.crumbs a{text-decoration:underline;text-underline-offset:3px}
+.crumbs a:hover,.crumbs a:focus-visible{color:var(--ink)}
+.start-problem-links{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:2px}
+.start-problem-links a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;text-underline-offset:4px}

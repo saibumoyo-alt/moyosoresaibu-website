@@ -6,6 +6,7 @@ Moyosore Saibu's website is positioned around solving commercial growth problems
 
 Main pages:
 - Home: https://moyosoresaibu.com/
+- Start: https://moyosoresaibu.com/start/
 - Solutions: https://moyosoresaibu.com/projects
 - Approach: https://moyosoresaibu.com/about
 - Proof: https://moyosoresaibu.com/experience
@@ -14,11 +15,24 @@ Main pages:
 - Insights: https://moyosoresaibu.com/insights/
 - Evidence: https://moyosoresaibu.com/evidence
 - Contact: https://moyosoresaibu.com/contact
+- Retention health check: https://moyosoresaibu.com/tools/retention-health-check
+- Privacy: https://moyosoresaibu.com/privacy
 
 The /start/ page is a fast, scan-first landing page for visitors arriving from social bio links. It is indexed and distinct from the homepage.
 
 Case studies:
 - Route remapping and retention: https://moyosoresaibu.com/case-studies/route-remapping-retention
 - Bold Loud customer development: https://moyosoresaibu.com/case-studies/bold-loud-customer-development
+- Trade activation Enugu: https://moyosoresaibu.com/case-studies/trade-activation-enugu
+- Abacha festival activation: https://moyosoresaibu.com/case-studies/abacha-festival-activation
+
+Insight articles:
+- Why customers leave: https://moyosoresaibu.com/insights/why-customers-leave
+- Customer retention vs loyalty: https://moyosoresaibu.com/insights/customer-retention-vs-loyalty
+- A sales review should end with a route decision: https://moyosoresaibu.com/insights/sales-reviews-end-with-route-decision
+- Trade activation must change behaviour: https://moyosoresaibu.com/insights/trade-activation-must-change-behaviour
+- Why follow-up wins: https://moyosoresaibu.com/insights/follow-up-wins
+- Availability beats intention: https://moyosoresaibu.com/insights/availability-beats-intention
+- Route discipline: https://moyosoresaibu.com/insights/route-discipline
 
 Core website language is visitor-first: identify the visitor's problem, show the practical solution, then show evidence.
