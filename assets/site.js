@@ -42,17 +42,16 @@
         form.reset(); setStarted(form);
       }catch(error){
         if(status){status.textContent=type==='field-notes'?'I could not complete the signup. Please use the email link below.':'I could not send the form. Please use the email link below.';status.className='form-status error';}
-      }finally{submit.disabled=false;submit.removeAttribute('aria-busy');}
+      }finally{submit.disabled=false;submit.removeAttribute('aria-busy');
+      }
     });
   }
 
   setupForm(document.querySelector('[data-contact-form]'),'contact');
   document.querySelectorAll('[data-newsletter-form]').forEach(form=>setupForm(form,'field-notes'));
 
-  // Current year is safe local data and never creates a placeholder state.
   document.querySelectorAll('[data-live-year]').forEach(el=>{el.textContent=String(new Date().getFullYear());});
 
-  // Progressive live site data. Static fallback is already real and readable.
   async function refreshLatestFromSite(){
     const cards=[...document.querySelectorAll('[data-live-site]')];
     if(!cards.length) return;
@@ -79,11 +78,9 @@
         if(linkEl) linkEl.setAttribute('href',href);
         card.classList.add('is-live');
       });
-    }catch(error){ /* fallback stays visible; no error UI needed */ }
+    }catch(error){ }
   }
   if('requestIdleCallback' in window) window.requestIdleCallback(refreshLatestFromSite,{timeout:1200}); else setTimeout(refreshLatestFromSite,450);
-
-
 
   async function refreshCurrentRole(){
     const targets=[...document.querySelectorAll('[data-live-role]')];
@@ -101,13 +98,10 @@
       if(!role) return;
       const clean=role.replace(/\s*·\s*Guinness Nigeria\s*$/i,'').replace(/\s*·\s*/g,', ');
       targets.forEach(el=>{el.textContent=clean;});
-    }catch(error){ /* static role fallback stays visible */ }
+    }catch(error){ }
   }
-
   if('requestIdleCallback' in window) window.requestIdleCallback(refreshCurrentRole,{timeout:1500}); else setTimeout(refreshCurrentRole,650);
 
-  // Shared ARIA-tabs helper: click activation, roving tabindex, Arrow/Home/End keys.
-  // Without JS every panel remains visible — this only runs once JS executes.
   const wireTabs=(container,tabSelector,panelSelector,tabKeyAttr,panelKeyAttr,onActivate)=>{
     const tabs=[...container.querySelectorAll(tabSelector)];
     const panels=[...container.querySelectorAll(panelSelector)];
@@ -145,7 +139,6 @@
     });
   };
 
-  // Interactive proof explorer. Without JS every proof panel remains visible.
   document.querySelectorAll('[data-proof-explorer]').forEach(explorer=>{
     wireTabs(explorer,'[data-proof-tab]','[data-proof-panel]','proofTab','proofPanel');
     explorer.querySelectorAll('[data-career-tip]').forEach(segment=>{
@@ -155,7 +148,6 @@
     });
   });
 
-  // Interactive growth-system diagram. Without JS every stage panel remains visible.
   document.querySelectorAll('[data-growth-diagram]').forEach(wrap=>{
     const tablist=wrap.querySelector('[role="tablist"]');
     wireTabs(wrap,'[data-growth-tab]','[data-growth-panel]','growthTab','growthPanel',index=>{
@@ -163,8 +155,6 @@
     });
   });
 
-  // Hash-driven category filter on /projects. Without JS or with an
-  // unknown/empty hash, all six category sections stay visible.
   const SOLUTION_CATEGORY_IDS=['strategy','campaigns','digital','sales','execution','retention'];
   const solutionCategorySections=SOLUTION_CATEGORY_IDS.map(id=>document.getElementById(id));
   if(solutionCategorySections.every(Boolean)){
@@ -183,7 +173,6 @@
     addEventListener('hashchange',applySolutionHash);
   }
 
-  // Calm reveal motion. No content is hidden without JS or when motion is reduced.
   if(!reducedMotion && 'IntersectionObserver' in window){
     document.documentElement.classList.add('motion-ready');
     const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method,.hero-content>.eyebrow,.hero-content>h1,.hero-content>.hero-copy,.hero-content>.scan-bullets,.hero-content>.actions,.page-hero .shell>.kicker,.page-hero .shell>h1,.page-hero .shell>p,.page-hero .shell>.actions')];
@@ -194,7 +183,6 @@
     targets.forEach(el=>reveal.observe(el));
   }
 
-  // Desktop-only glass spotlight. It is visual polish, not a dependency.
   if(pointerFine && !reducedMotion){
     document.querySelectorAll('[data-glass-spotlight]').forEach(el=>{
       el.addEventListener('pointermove',event=>{
@@ -266,7 +254,6 @@
     });
   }
 
-
   document.querySelectorAll('[data-insight-tools]').forEach(tools=>{
     const search=tools.querySelector('[data-insight-search]');
     const buttons=[...tools.querySelectorAll('[data-insight-filter]')];
@@ -298,13 +285,16 @@
       apply();
     }));
 
-    const topic=location.hash.replace('#','').toLowerCase();
-    const match=buttons.find(b=>b.dataset.insightFilter===topic);
-    if(match){
-      filter=topic;
-      buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===match)));
-    }
-    apply();
+    const applyFromHash=()=>{
+      const topic=location.hash.slice(1).toLowerCase();
+      const match=buttons.find(b=>b.dataset.insightFilter===topic);
+      filter=match?topic:'all';
+      buttons.forEach(b=>b.setAttribute('aria-pressed',String(match?b===match:b.dataset.insightFilter==='all')));
+      apply();
+      if(match) requestAnimationFrame(()=>tools.scrollIntoView({block:'start'}));
+    };
+    applyFromHash();
+    addEventListener('hashchange',applyFromHash);
   });
 
   const navDetails=[...document.querySelectorAll('header .nav-dropdown, header details.submenu')];
@@ -397,7 +387,7 @@
       for(const node of nodes){
         const text=originalText.get(node) ?? node.nodeValue; if(!text.trim()) continue;
         node.nodeValue=text;
-        try{node.nodeValue=await activeTranslator.translate(text);}catch(e){/* keep original node */}
+        try{node.nodeValue=await activeTranslator.translate(text);}catch(e){}
       }
       document.documentElement.lang=target;
       document.documentElement.dir=rtlLanguages.has(target.split('-')[0])?'rtl':'ltr';
@@ -451,15 +441,12 @@
     const DISMISSED_KEY='moyo:namePromptDismissed:v1';
     const CATEGORY_KEY='moyo:lastCategory:v1';
     const CATEGORY_LABELS={strategy:'Strategy',campaigns:'Campaigns',digital:'Digital',sales:'Sales',execution:'Execution',retention:'Retention'};
-
     const getName=getVisitorName;
-
     function sanitizeName(raw){
       let name=(raw||'').normalize('NFC').replace(/[<>]/g,'').replace(/\s+/g,' ').trim();
       if(name.length>40) name=name.slice(0,40).trim();
       return name;
     }
-
     function render(){
       const name=getName();
       document.querySelectorAll('[data-personalize="hero"]').forEach(el=>{
@@ -482,7 +469,6 @@
       });
       updateRecommendBadge(name);
     }
-
     function updateRecommendBadge(name){
       const el=document.querySelector('[data-personalize-recommend]');
       if(!el) return;
@@ -494,13 +480,10 @@
       el.href=`#${category}`;
       el.hidden=false;
     }
-
     document.querySelectorAll('[data-category]').forEach(card=>{
       card.addEventListener('click',()=>{ safeStorage.set(CATEGORY_KEY,card.dataset.category); });
     });
-
     let dialog=null, lastFocused=null;
-
     function buildDialog(){
       if(dialog) return dialog;
       dialog=document.createElement('dialog');
@@ -544,7 +527,6 @@
       dialog.addEventListener('click',event=>{ if(event.target===dialog) close(); });
       return dialog;
     }
-
     function openDialog(){
       lastFocused=document.activeElement;
       const d=buildDialog();
@@ -553,12 +535,10 @@
       d.showModal();
       d.querySelector('[data-name-input]').focus();
     }
-
     document.addEventListener('click',event=>{
       if(event.target.closest('[data-personalize-trigger]')){ openDialog(); return; }
       if(event.target.closest('[data-personalize-forget]')){ safeStorage.remove(NAME_KEY); render(); }
     });
-
     document.querySelectorAll('.footer-links').forEach(list=>{
       const trigger=document.createElement('button');
       trigger.type='button'; trigger.className='footer-personalize-link'; trigger.dataset.personalizeTrigger='';
@@ -566,10 +546,11 @@
       forget.type='button'; forget.className='footer-personalize-link'; forget.dataset.personalizeForget=''; forget.hidden=true; forget.textContent='Forget my name';
       list.append(trigger,forget);
     });
-
     render();
-
-    if(!getName() && !safeStorage.get(DISMISSED_KEY)){
+    const path=location.pathname.replace(/\/+$/,'')||'/';
+    const isHome=path==='/'||path==='/index.html';
+    const is404=!!document.querySelector('[data-404]')||document.title.startsWith('Page not found');
+    if(isHome && !is404 && !location.hash && !getName() && !safeStorage.get(DISMISSED_KEY)){
       const show=()=>openDialog();
       if('requestIdleCallback' in window) requestIdleCallback(show,{timeout:2500}); else setTimeout(show,1200);
     }
@@ -595,7 +576,7 @@
       if(summary) el.querySelector('[data-latest-insight-summary]').textContent=summary;
       if(date) el.querySelector('[data-latest-insight-date]').textContent=date;
       el.hidden=false;
-    }catch(e){ /* graceful: stays hidden */ }
+    }catch(e){ }
   }
   if('requestIdleCallback' in window) requestIdleCallback(loadLatestInsight,{timeout:2000});
   else setTimeout(loadLatestInsight,300);
