@@ -123,10 +123,6 @@
         const wasHidden=panel.hidden;
         panel.classList.toggle('is-active',active);
         panel.hidden=!active;
-        // Settle-in transition for a panel switching from hidden to active
-        // (never on first mount, where nothing was hidden yet). Confirms
-        // the interaction and gives the new content a subtle physical
-        // arrival instead of an instant swap.
         if(active&&wasHidden&&!reducedMotion){
           panel.classList.add('is-settling');
           requestAnimationFrame(()=>requestAnimationFrame(()=>panel.classList.remove('is-settling')));
@@ -167,12 +163,29 @@
     });
   });
 
+  // Hash-driven category filter on /projects. Without JS or with an
+  // unknown/empty hash, all six category sections stay visible.
+  const SOLUTION_CATEGORY_IDS=['strategy','campaigns','digital','sales','execution','retention'];
+  const solutionCategorySections=SOLUTION_CATEGORY_IDS.map(id=>document.getElementById(id));
+  if(solutionCategorySections.every(Boolean)){
+    const applySolutionHash=()=>{
+      const key=location.hash.slice(1);
+      const match=SOLUTION_CATEGORY_IDS.includes(key);
+      solutionCategorySections.forEach(section=>{
+        section.hidden=match&&section.id!==key;
+      });
+      if(match){
+        const target=document.getElementById(key);
+        if(target) requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
+      }
+    };
+    applySolutionHash();
+    addEventListener('hashchange',applySolutionHash);
+  }
+
   // Calm reveal motion. No content is hidden without JS or when motion is reduced.
   if(!reducedMotion && 'IntersectionObserver' in window){
     document.documentElement.classList.add('motion-ready');
-    // Hero/page-hero children are listed individually (instead of one
-    // '.page-hero .shell' block) so the CSS stagger rules above can reveal
-    // eyebrow → heading → copy → actions in sequence rather than as one unit.
     const targets=[...document.querySelectorAll('.section-head,.premium-card,.proof-explorer,.process-flow,.process-rail,.growth-diagram,.quote-panel,.live-site-card,.recruiter-panel,.cta-panel,.timeline-item,.evidence-item,.contact-card,.continuity-card,.public-profile-card,.choice-card,.scan-card,.scan-proof-strip>div,.growth-flow>div,.method-card,.signal-card,.sales-method,.hero-content>.eyebrow,.hero-content>h1,.hero-content>.hero-copy,.hero-content>.scan-bullets,.hero-content>.actions,.page-hero .shell>.kicker,.page-hero .shell>h1,.page-hero .shell>p,.page-hero .shell>.actions')];
     targets.forEach(el=>el.setAttribute('data-motion-reveal',''));
     const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>{
@@ -192,9 +205,6 @@
     });
   }
 
-  // Homepage hero parallax: portrait + its glass label only. Passive scroll
-  // listener, rAF-batched, transform-only, skipped under reduced motion and
-  // on narrow mobile where the shift isn't worth the extra scroll work.
   if(!reducedMotion && innerWidth>=720){
     const parallaxWrap=document.querySelector('.hero-photo');
     const parallaxFrame=parallaxWrap&&parallaxWrap.querySelector('.photo-frame');
@@ -204,7 +214,7 @@
       const update=()=>{
         ticking=false;
         const r=parallaxWrap.getBoundingClientRect();
-        if(r.bottom<0||r.top>innerHeight) return; // only touch elements near/in view
+        if(r.bottom<0||r.top>innerHeight) return;
         const shift=Math.max(-1,Math.min(1,(r.top+r.height/2-innerHeight/2)/innerHeight));
         parallaxFrame.style.transform=`translate3d(0,${(shift*10).toFixed(1)}px,0)`;
         if(parallaxLabel) parallaxLabel.style.transform=`translate3d(0,${(shift*5).toFixed(1)}px,0)`;
@@ -214,9 +224,6 @@
     }
   }
 
-  // Magnetic pull on the site's highest-intent buttons only — header CTA,
-  // the primary hero action and primary CTA-panel buttons. Pointer-fine
-  // desktop only; keyboard focus, tab order and layout are never touched.
   if(pointerFine && !reducedMotion){
     document.querySelectorAll('.header-cta,.hero-premium .actions>.btn:not(.secondary),.cta-panel .actions>.btn:not(.secondary):not(.ghost-on-dark)').forEach(btn=>{
       let raf=null;
@@ -239,10 +246,6 @@
     });
   }
 
-  // Restrained pointer tilt on the primary choice/scan cards. The card's
-  // existing Tier-2 CSS transition (transform, ~250ms) already smooths
-  // every update, so this only ever writes a transform — no extra timing
-  // logic needed here.
   if(pointerFine && !reducedMotion){
     document.querySelectorAll('.choice-card,.scan-card').forEach(card=>{
       let raf=null;
@@ -264,10 +267,6 @@
   }
 
 
-  // Local search/topic filters, shared by Insights notes and the Field work
-  // gallery. Every item remains visible without JavaScript. `data-filter-list`
-  // lets a tools block point at a specific grid; it falls back to
-  // `.article-list` for the original Insights markup.
   document.querySelectorAll('[data-insight-tools]').forEach(tools=>{
     const search=tools.querySelector('[data-insight-search]');
     const buttons=[...tools.querySelectorAll('[data-insight-filter]')];
@@ -299,7 +298,6 @@
       apply();
     }));
 
-    // Deep link from the header's Insights category dropdown, e.g. /insights/#sales.
     const topic=location.hash.replace('#','').toLowerCase();
     const match=buttons.find(b=>b.dataset.insightFilter===topic);
     if(match){
@@ -309,8 +307,6 @@
     apply();
   });
 
-  // Header category dropdowns (Solutions / Insights): only one open at a
-  // time, and close on an outside click or after a link is chosen.
   const navDetails=[...document.querySelectorAll('header .nav-dropdown, header details.submenu')];
   if(navDetails.length){
     navDetails.forEach(node=>{
@@ -327,9 +323,6 @@
     });
   }
 
-  // MOYO_TRANSLATOR_V1 — progressive multilingual reading.
-  // Chrome Translator API is used locally when available. A URL-based fallback
-  // keeps mobile and unsupported browsers functional without blocking first paint.
   const siteChannels={
     whatsapp:'2348134256221',
     telegram:'moyosoresaibu'
@@ -367,8 +360,6 @@
     set(key,value){try{localStorage.setItem(key,value);}catch(e){}},
     remove(key){try{localStorage.removeItem(key);}catch(e){}}
   };
-  // One key, one accessor, for the visitor's first name — used by the
-  // personalization module below.
   const VISITOR_NAME_KEY='moyo:firstName:v1';
   const getVisitorName=()=>safeStorage.get(VISITOR_NAME_KEY)||'';
 
@@ -403,10 +394,8 @@
         monitor(m){m.addEventListener('downloadprogress',e=>{if(Number.isFinite(e.loaded))status.textContent=`Preparing language… ${Math.round(e.loaded*100)}%`;});}
       });
       const nodes=collectTranslatableNodes(); rememberOriginal(nodes);
-      // Translate sequentially to avoid bursty model calls and preserve DOM stability.
       for(const node of nodes){
         const text=originalText.get(node) ?? node.nodeValue; if(!text.trim()) continue;
-        // Always translate from the saved English source so switching languages stays accurate.
         node.nodeValue=text;
         try{node.nodeValue=await activeTranslator.translate(text);}catch(e){/* keep original node */}
       }
@@ -457,13 +446,6 @@
   }
   createLanguageControl();
 
-  // ---------------------------------------------------------------------
-  // v8.6 — Privacy-safe visitor personalization. First name only, stored
-  // on this device only (via the safeStorage helper above), never sent to
-  // the contact form, the Worker, or any analytics. All personalized text
-  // is written with textContent, never innerHTML, so a stored value can
-  // only ever render as inert text, whatever characters it contains.
-  // ---------------------------------------------------------------------
   (function personalization(){
     const NAME_KEY=VISITOR_NAME_KEY;
     const DISMISSED_KEY='moyo:namePromptDismissed:v1';
@@ -472,10 +454,6 @@
 
     const getName=getVisitorName;
 
-    // Trim, collapse whitespace, cap length, strip angle brackets as
-    // defense-in-depth (textContent already makes HTML injection
-    // impossible either way). International names, apostrophes and
-    // hyphens all pass through untouched.
     function sanitizeName(raw){
       let name=(raw||'').normalize('NFC').replace(/[<>]/g,'').replace(/\s+/g,' ').trim();
       if(name.length>40) name=name.slice(0,40).trim();
@@ -505,9 +483,6 @@
       updateRecommendBadge(name);
     }
 
-    // Contextual recommendation: only shown when a real prior choice
-    // exists (a homepage problem route was actually clicked) and the
-    // matching section is actually present on this page — never invented.
     function updateRecommendBadge(name){
       const el=document.querySelector('[data-personalize-recommend]');
       if(!el) return;
@@ -520,14 +495,10 @@
       el.hidden=false;
     }
 
-    // Homepage problem routes: remember only the category key. No profile,
-    // no remote tracking — one string, on this device, used to open the
-    // right door on the very next page.
     document.querySelectorAll('[data-category]').forEach(card=>{
       card.addEventListener('click',()=>{ safeStorage.set(CATEGORY_KEY,card.dataset.category); });
     });
 
-    // --- Dialog -----------------------------------------------------------
     let dialog=null, lastFocused=null;
 
     function buildDialog(){
@@ -562,8 +533,6 @@
         if(!name){ close(); return; }
         safeStorage.set(NAME_KEY,name);
         render();
-        // Brief in-dialog confirmation, then close and return focus — not a
-        // toast, and it never repeats.
         form.hidden=true; welcome.hidden=false; welcome.textContent=`Welcome, ${name}.`;
         setTimeout(close,900);
       });
@@ -571,8 +540,8 @@
         form.hidden=false; welcome.hidden=true; input.value=getName();
         if(lastFocused&&document.contains(lastFocused)) lastFocused.focus();
       });
-      dialog.addEventListener('cancel',()=>{ safeStorage.set(DISMISSED_KEY,'1'); }); // Escape key
-      dialog.addEventListener('click',event=>{ if(event.target===dialog) close(); }); // backdrop click
+      dialog.addEventListener('cancel',()=>{ safeStorage.set(DISMISSED_KEY,'1'); });
+      dialog.addEventListener('click',event=>{ if(event.target===dialog) close(); });
       return dialog;
     }
 
@@ -580,7 +549,7 @@
       lastFocused=document.activeElement;
       const d=buildDialog();
       d.querySelector('[data-name-input]').value=getName();
-      if(!('showModal' in d)) return; // very old browser: control stays inert, never blocks the site
+      if(!('showModal' in d)) return;
       d.showModal();
       d.querySelector('[data-name-input]').focus();
     }
@@ -590,9 +559,6 @@
       if(event.target.closest('[data-personalize-forget]')){ safeStorage.remove(NAME_KEY); render(); }
     });
 
-    // Progressive footer control — "Personalize" / "Change name" plus
-    // "Forget my name" (shown only once a name is stored). Absent
-    // entirely with JS off; identical on every page.
     document.querySelectorAll('.footer-links').forEach(list=>{
       const trigger=document.createElement('button');
       trigger.type='button'; trigger.className='footer-personalize-link'; trigger.dataset.personalizeTrigger='';
@@ -603,19 +569,12 @@
 
     render();
 
-    // First-visit prompt: optional, skippable, shown at most once. A short
-    // idle delay keeps it off the critical first paint — this is a compact
-    // dialog the visitor can dismiss instantly, never a blocking gate.
     if(!getName() && !safeStorage.get(DISMISSED_KEY)){
       const show=()=>openDialog();
       if('requestIdleCallback' in window) requestIdleCallback(show,{timeout:2500}); else setTimeout(show,1200);
     }
   })();
 
-  // Latest Insight: the site's own /insights/ index is the only source of
-  // truth (no separate JSON to fall out of sync). One same-origin fetch,
-  // no polling, no external API. Stays hidden — never a loading state —
-  // until real content is ready; on any failure it just stays hidden.
   async function loadLatestInsight(){
     const el=document.querySelector('[data-latest-insight]');
     if(!el) return;
