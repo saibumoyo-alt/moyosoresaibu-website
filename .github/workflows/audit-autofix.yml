@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
 
       - name: Apply audited fixes
-        run: python audit_autofix.py
+        run: python audit_autofix2.py
 
       - name: Commit audited fixes
         run: |
