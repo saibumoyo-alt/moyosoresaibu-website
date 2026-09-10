@@ -1,0 +1,34 @@
+name: Post-audit fix
+
+on:
+  push:
+    branches:
+      - comprehensive-bug-audit-2026-09-10
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: comprehensive-bug-audit-2026-09-10
+          fetch-depth: 0
+      - name: Correct timeout scope
+        run: python post_audit_fix.py
+      - name: Syntax-check JavaScript
+        run: |
+          node --check assets/site.js
+          node --check assets/ux-816.js
+          node --check functions/api/event.js
+      - name: Commit correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Correct audited form timeout scope"
+          git push origin HEAD:comprehensive-bug-audit-2026-09-10
