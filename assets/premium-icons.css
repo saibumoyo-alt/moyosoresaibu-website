@@ -184,7 +184,7 @@
 [data-page="insights"] .insight-filter[data-insight-filter="routes"]{--pi-icon:var(--pi-route)}
 [data-page="insights"] .article-row{position:relative;padding-right:42px}
 [data-page="insights"] .article-row::after{content:"";position:absolute;right:14px;top:50%;width:16px;height:16px;transform:translateY(-50%);background-image:var(--pi-arrow);background-size:contain;background-repeat:no-repeat;opacity:.55;transition:transform .2s ease,opacity .2s ease}
-[data-page="insights"] .article-row:hover::after{transform:translate(2px,-2px);opacity:.9}
+[data-page="insights"] .article-row:hover::after{transform:translate(2px,calc(-50% - 2px));opacity:.9}
 
 /* Evidence and verification */
 [data-page="evidence"] .evidence-item#retention{--pi-icon:var(--pi-repeat)}
