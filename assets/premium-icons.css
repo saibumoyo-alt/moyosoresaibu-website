@@ -1,0 +1,234 @@
+/* Premium SVG icon system — lightweight, inline-vector, no external icon font. */
+:root{
+  --pi-search:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2211%22%20r%3D%226.5%22%2F%3E%3Cpath%20d%3D%22m16%2016%204.5%204.5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-users:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16%2021v-2a4%204%200%200%200-4-4H7a4%204%200%200%200-4%204v2%22%2F%3E%3Ccircle%20cx%3D%229.5%22%20cy%3D%227.5%22%20r%3D%223.5%22%2F%3E%3Cpath%20d%3D%22M18%208a3%203%200%200%201%200%206M21%2021v-2a4%204%200%200%200-3-3.87%22%2F%3E%3C%2Fsvg%3E");
+  --pi-route:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2218%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%226%22%20r%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%2018c6%200%202-10%208-10%22%2F%3E%3Cpath%20d%3D%22M10%206H5v5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-repeat:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m17%202%204%204-4%204%22%2F%3E%3Cpath%20d%3D%22M3%2011V9a3%203%200%200%201%203-3h15%22%2F%3E%3Cpath%20d%3D%22m7%2022-4-4%204-4%22%2F%3E%3Cpath%20d%3D%22M21%2013v2a3%203%200%200%201-3%203H3%22%2F%3E%3C%2Fsvg%3E");
+  --pi-trophy:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2021h8M12%2017v4%22%2F%3E%3Cpath%20d%3D%22M7%204h10v4a5%205%200%200%201-10%200V4Z%22%2F%3E%3Cpath%20d%3D%22M7%206H4v1a4%204%200%200%200%204%204M17%206h3v1a4%204%200%200%201-4%204%22%2F%3E%3C%2Fsvg%3E");
+  --pi-chart:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2020V10M10%2020V4M16%2020v-7M22%2020V8%22%2F%3E%3Cpath%20d%3D%22M3%2020h20%22%2F%3E%3C%2Fsvg%3E");
+  --pi-eye:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2.5%2012s3.5-6%209.5-6%209.5%206%209.5%206-3.5%206-9.5%206-9.5-6-9.5-6Z%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-filter:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%205h16l-6%207v6l-4%202v-8L4%205Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-arrow:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2019%2019%205%22%2F%3E%3Cpath%20d%3D%22M10%205h9v9%22%2F%3E%3C%2Fsvg%3E");
+  --pi-shieldcheck:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2022s8-3%208-10V5l-8-3-8%203v7c0%207%208%2010%208%2010Z%22%2F%3E%3Cpath%20d%3D%22m9%2012%202%202%204-5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-target:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%228%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22m14%2010%206-6%22%2F%3E%3C%2Fsvg%3E");
+  --pi-megaphone:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m3%2011%2014-6v14L3%2013v-2Z%22%2F%3E%3Cpath%20d%3D%22M7%2014v5a2%202%200%200%200%202%202h1v-5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-globe:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22M3%2012h18M12%203a14%2014%200%200%201%200%2018M12%203a14%2014%200%200%200%200%2018%22%2F%3E%3C%2Fsvg%3E");
+  --pi-sale:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%207h14l-1%2013H6L5%207Z%22%2F%3E%3Cpath%20d%3D%22M8%207a4%204%200%200%201%208%200%22%2F%3E%3Cpath%20d%3D%22m9%2013%202%202%204-4%22%2F%3E%3C%2Fsvg%3E");
+  --pi-workflow:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%226%22%20height%3D%225%22%20rx%3D%221.5%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2215%22%20width%3D%226%22%20height%3D%225%22%20rx%3D%221.5%22%2F%3E%3Cpath%20d%3D%22M9%206.5h4a4%204%200%200%201%204%204v4.5M15%2017.5h-4a4%204%200%200%201-4-4V9%22%2F%3E%3C%2Fsvg%3E");
+  --pi-heart:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20.8%204.6a5.4%205.4%200%200%200-7.6%200L12%205.8l-1.2-1.2a5.4%205.4%200%201%200-7.6%207.6L12%2021l8.8-8.8a5.4%205.4%200%200%200%200-7.6Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-clipboard:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%2214%22%20height%3D%2217%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M9%204V2h6v2M9%2010h6M9%2014h6%22%2F%3E%3C%2Fsvg%3E");
+  --pi-card:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M3%2010h18M7%2015h4%22%2F%3E%3C%2Fsvg%3E");
+  --pi-network:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%225%22%20cy%3D%2212%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%225%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%2219%22%20r%3D%222%22%2F%3E%3Cpath%20d%3D%22m7%2011%2010-5M7%2013l10%205%22%2F%3E%3C%2Fsvg%3E");
+  --pi-question:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22M9.5%209a2.7%202.7%200%201%201%204.4%202.1c-1.3%201-1.9%201.4-1.9%202.9M12%2018h.01%22%2F%3E%3C%2Fsvg%3E");
+  --pi-diamond:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%203%208%207-8%2011-8-11%208-7Z%22%2F%3E%3Cpath%20d%3D%22M4%2010h16M8%206l4%204%204-4%22%2F%3E%3C%2Fsvg%3E");
+  --pi-bolt:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%202%205%2014h7l-1%208%208-12h-7l1-8Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-message:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015a4%204%200%200%201-4%204H8l-5%203%201.5-5A7%207%200%200%201%203%2013V8a4%204%200%200%201%204-4h10a4%204%200%200%201%204%204v7Z%22%2F%3E%3Cpath%20d%3D%22M8%2010h8M8%2014h5%22%2F%3E%3C%2Fsvg%3E");
+  --pi-gift:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%229%22%20width%3D%2218%22%20height%3D%2212%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M12%209v12M3%2013h18%22%2F%3E%3Cpath%20d%3D%22M12%209H8.5A2.5%202.5%200%201%201%2011%206.5L12%209Zm0%200h3.5A2.5%202.5%200%201%200%2013%206.5L12%209Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-support:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22m5.6%205.6%204.3%204.3M14.1%2014.1l4.3%204.3M18.4%205.6l-4.3%204.3M9.9%2014.1l-4.3%204.3%22%2F%3E%3C%2Fsvg%3E");
+  --pi-spark:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%203%201.4%204.1L17.5%208.5l-4.1%201.4L12%2014l-1.4-4.1-4.1-1.4%204.1-1.4L12%203Z%22%2F%3E%3Cpath%20d%3D%22m19%2014%20.8%202.2L22%2017l-2.2.8L19%2020l-.8-2.2L16%2017l2.2-.8L19%2014Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-compass:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22m15.5%208.5-2.2%204.8-4.8%202.2%202.2-4.8%204.8-2.2Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-filecheck:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%202h8l4%204v16H6V2Z%22%2F%3E%3Cpath%20d%3D%22M14%202v5h5M9%2014l2%202%204-4%22%2F%3E%3C%2Fsvg%3E");
+  --pi-download:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v12%22%2F%3E%3Cpath%20d%3D%22m7%2010%205%205%205-5%22%2F%3E%3Cpath%20d%3D%22M5%2021h14%22%2F%3E%3C%2Fsvg%3E");
+  --pi-mail:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22m4%207%208%206%208-6%22%2F%3E%3C%2Fsvg%3E");
+  --pi-check:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23174B36%22%20stroke-width%3D%221.85%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22m8%2012%202.5%202.5L16%209%22%2F%3E%3C%2Fsvg%3E");
+  --pi-brand-whatsapp:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%2325D366%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M8.1%206.9c-.3-.7-.6-.7-.9-.7h-.7c-.3%200-.7.1-1.1.5-.4.4-1.4%201.4-1.4%203.4s1.5%204%201.7%204.3c.2.3%202.9%204.6%207.2%206.3%203.6%201.4%204.3%201.1%205.1%201%20.8-.1%202.6-1%202.9-2%20.4-1%20.4-1.9.3-2.1-.1-.2-.4-.3-.9-.5L15%2014.6c-.4-.2-.8-.3-1.1.2-.3.5-1.3%201.6-1.6%202-.3.4-.6.4-1.1.1-.5-.2-2-.8-3.8-2.3-1.4-1.3-2.4-2.8-2.7-3.3-.3-.5%200-.8.2-1%20.2-.2.5-.6.7-.9.2-.3.3-.5.4-.8.1-.3.1-.6%200-.8L8.1%206.9Z%22%20transform%3D%22scale%28.68%29%20translate%285%203%29%22%2F%3E%3C%2Fsvg%3E");
+  --pi-brand-telegram:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%23229ED9%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22m17.8%207-2.1%2010c-.2.7-.6.9-1.2.5l-3.2-2.4-1.5%201.5c-.2.2-.3.3-.7.3l.2-3.3%206-5.4c.3-.2-.1-.4-.4-.1l-7.4%204.7-3.2-1c-.7-.2-.7-.7.1-1l12.5-4.8c.6-.2%201.1.1.9%201Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-brand-linkedin:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%2220%22%20height%3D%2220%22%20rx%3D%225%22%20fill%3D%22%230A66C2%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M7%209.5h2.6V18H7V9.5Zm1.3-4.2a1.5%201.5%200%201%201%200%203%201.5%201.5%200%200%201%200-3ZM11.1%209.5h2.5v1.2h.04c.35-.67%201.2-1.38%202.48-1.38%202.66%200%203.15%201.75%203.15%204.04V18h-2.62v-4.1c0-.98-.02-2.23-1.36-2.23-1.36%200-1.57%201.07-1.57%202.16V18h-2.62V9.5Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-brand-facebook:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%231877F2%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M13.5%2020v-7h2.35l.35-2.72h-2.7V8.54c0-.79.22-1.32%201.35-1.32h1.44V4.79c-.25-.03-1.1-.11-2.1-.11-2.08%200-3.5%201.27-3.5%203.6v2h-2.35V13h2.35v7h2.81Z%22%2F%3E%3C%2Fsvg%3E");
+  --pi-brand-instagram:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%222%22%20y1%3D%2222%22%20x2%3D%2222%22%20y2%3D%222%22%3E%3Cstop%20stop-color%3D%22%23FFDC80%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%23F77737%22%2F%3E%3Cstop%20offset%3D%22.68%22%20stop-color%3D%22%23E1306C%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23833AB4%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%2220%22%20height%3D%2220%22%20rx%3D%226%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224.1%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2217.4%22%20cy%3D%226.6%22%20r%3D%221.1%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Shared premium icon badge language */
+[data-page="home"] .choice-card::before,
+[data-page="retention-system"] #retention-start .choice-card::before,
+[data-page="projects"] .service::before,
+[data-page="growth-system"] .method-card::before,
+[data-page="about"] .card-grid .card::before{
+  content:"";display:block;width:46px;height:46px;margin:0 0 18px;border-radius:15px;
+  border:1px solid rgba(23,75,54,.10);background-color:rgba(23,75,54,.065);
+  background-image:var(--pi-icon,var(--pi-spark));background-repeat:no-repeat;background-position:center;background-size:24px 24px;
+  box-shadow:0 10px 24px rgba(21,49,37,.07),inset 0 1px 0 rgba(255,255,255,.82);
+}
+
+/* Home: problem-first cards, proof and growth path */
+[data-page="home"] .choice-card[data-category="sales"]{--pi-icon:var(--pi-sale)}
+[data-page="home"] .choice-card[data-category="retention"]{--pi-icon:var(--pi-heart)}
+[data-page="home"] .choice-card[data-category="execution"]{--pi-icon:var(--pi-route)}
+[data-page="home"] .metric,[data-page="experience"] .metric,[data-page="retention-system"] .signal-card,[data-page="retention-system"] .retention-card,[data-page="evidence"] .evidence-item{position:relative}
+[data-page="home"] .metric::before,[data-page="experience"] .metric::before,[data-page="retention-system"] .signal-card::before,[data-page="retention-system"] .retention-card::before,[data-page="evidence"] .evidence-item::before{
+  content:"";position:absolute;top:15px;right:15px;width:34px;height:34px;border-radius:11px;
+  border:1px solid rgba(23,75,54,.09);background-color:rgba(23,75,54,.055);
+  background-image:var(--pi-icon,var(--pi-check));background-repeat:no-repeat;background-position:center;background-size:18px 18px;
+}
+[data-page="home"] .metric:nth-child(1),[data-page="experience"] .metric:nth-child(1){--pi-icon:var(--pi-repeat)}
+[data-page="home"] .metric:nth-child(2),[data-page="experience"] .metric:nth-child(2){--pi-icon:var(--pi-trophy)}
+[data-page="home"] .metric:nth-child(3),[data-page="experience"] .metric:nth-child(3){--pi-icon:var(--pi-chart)}
+[data-page="home"] .metric:nth-child(4){--pi-icon:var(--pi-users)}
+[data-page="experience"] .metric:nth-child(4){--pi-icon:var(--pi-chart)}
+
+[data-page="home"] .growth-flow>div::before,[data-page="retention-system"] .growth-flow>div::before,[data-page="about"] .process-rail>div::before{
+  content:"";display:block;width:38px;height:38px;margin:0 0 12px;border-radius:12px;border:1px solid rgba(23,75,54,.10);
+  background-color:rgba(23,75,54,.06);background-image:var(--pi-icon,var(--pi-spark));background-repeat:no-repeat;background-position:center;background-size:20px 20px;
+}
+[data-page="home"] .growth-flow>div:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="home"] .growth-flow>div:nth-child(2){--pi-icon:var(--pi-eye)}
+[data-page="home"] .growth-flow>div:nth-child(3){--pi-icon:var(--pi-target)}
+[data-page="home"] .growth-flow>div:nth-child(4){--pi-icon:var(--pi-bolt)}
+[data-page="home"] .growth-flow>div:nth-child(5){--pi-icon:var(--pi-chart)}
+[data-page="home"] .growth-flow>div:nth-child(6){--pi-icon:var(--pi-repeat)}
+
+/* Approach */
+[data-page="about"] .process-rail>div:nth-child(1){--pi-icon:var(--pi-eye)}
+[data-page="about"] .process-rail>div:nth-child(2){--pi-icon:var(--pi-filter)}
+[data-page="about"] .process-rail>div:nth-child(3){--pi-icon:var(--pi-arrow)}
+[data-page="about"] .process-rail>div:nth-child(4){--pi-icon:var(--pi-shieldcheck)}
+[data-page="about"] .card-grid .card:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="about"] .card-grid .card:nth-child(2){--pi-icon:var(--pi-target)}
+[data-page="about"] .card-grid .card:nth-child(3){--pi-icon:var(--pi-chart)}
+
+/* Solutions: six-stage system tabs */
+[data-page="projects"] .growth-diagram button::before{
+  content:"";display:inline-block;width:18px;height:18px;margin-right:8px;vertical-align:-4px;
+  background-image:var(--pi-icon,var(--pi-spark));background-repeat:no-repeat;background-position:center;background-size:18px 18px;
+}
+[data-page="projects"] [data-growth-tab="research"]{--pi-icon:var(--pi-search)}
+[data-page="projects"] [data-growth-tab="plan"]{--pi-icon:var(--pi-clipboard)}
+[data-page="projects"] [data-growth-tab="reach"]{--pi-icon:var(--pi-megaphone)}
+[data-page="projects"] [data-growth-tab="sell"]{--pi-icon:var(--pi-sale)}
+[data-page="projects"] [data-growth-tab="retain"]{--pi-icon:var(--pi-heart)}
+[data-page="projects"] [data-growth-tab="improve"]{--pi-icon:var(--pi-repeat)}
+[data-page="projects"] #strategy .service:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="projects"] #strategy .service:nth-child(2){--pi-icon:var(--pi-users)}
+[data-page="projects"] #strategy .service:nth-child(3){--pi-icon:var(--pi-clipboard)}
+[data-page="projects"] #campaigns .service:nth-child(1){--pi-icon:var(--pi-arrow)}
+[data-page="projects"] #campaigns .service:nth-child(2){--pi-icon:var(--pi-megaphone)}
+[data-page="projects"] #campaigns .service:nth-child(3){--pi-icon:var(--pi-network)}
+[data-page="projects"] #digital .service:nth-child(1){--pi-icon:var(--pi-globe)}
+[data-page="projects"] #digital .service:nth-child(2){--pi-icon:var(--pi-message)}
+[data-page="projects"] #digital .service:nth-child(3){--pi-icon:var(--pi-workflow)}
+[data-page="projects"] #sales .service:nth-child(1){--pi-icon:var(--pi-question)}
+[data-page="projects"] #sales .service:nth-child(2){--pi-icon:var(--pi-diamond)}
+[data-page="projects"] #sales .service:nth-child(3){--pi-icon:var(--pi-check)}
+[data-page="projects"] #execution .service:nth-child(1){--pi-icon:var(--pi-users)}
+[data-page="projects"] #execution .service:nth-child(2){--pi-icon:var(--pi-route)}
+[data-page="projects"] #execution .service:nth-child(3){--pi-icon:var(--pi-bolt)}
+[data-page="projects"] #retention .service:nth-child(1){--pi-icon:var(--pi-support)}
+[data-page="projects"] #retention .service:nth-child(2){--pi-icon:var(--pi-route)}
+[data-page="projects"] #retention .service:nth-child(3){--pi-icon:var(--pi-heart)}
+
+/* Growth System: semantic card icons by step */
+[data-page="growth-system"] main>section:nth-of-type(2) .method-card:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="growth-system"] main>section:nth-of-type(2) .method-card:nth-child(2){--pi-icon:var(--pi-users)}
+[data-page="growth-system"] main>section:nth-of-type(2) .method-card:nth-child(3){--pi-icon:var(--pi-target)}
+[data-page="growth-system"] main>section:nth-of-type(3) .method-card:nth-child(1){--pi-icon:var(--pi-target)}
+[data-page="growth-system"] main>section:nth-of-type(3) .method-card:nth-child(2){--pi-icon:var(--pi-card)}
+[data-page="growth-system"] main>section:nth-of-type(3) .method-card:nth-child(3){--pi-icon:var(--pi-route)}
+[data-page="growth-system"] main>section:nth-of-type(4) .method-card:nth-child(1){--pi-icon:var(--pi-arrow)}
+[data-page="growth-system"] main>section:nth-of-type(4) .method-card:nth-child(2){--pi-icon:var(--pi-megaphone)}
+[data-page="growth-system"] main>section:nth-of-type(4) .method-card:nth-child(3){--pi-icon:var(--pi-network)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(1){--pi-icon:var(--pi-users)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(2){--pi-icon:var(--pi-target)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(3){--pi-icon:var(--pi-route)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(4){--pi-icon:var(--pi-diamond)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(5){--pi-icon:var(--pi-bolt)}
+[data-page="growth-system"] main>section:nth-of-type(7) .method-card:nth-child(6){--pi-icon:var(--pi-workflow)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(1){--pi-icon:var(--pi-support)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(2){--pi-icon:var(--pi-route)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(3){--pi-icon:var(--pi-spark)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(4){--pi-icon:var(--pi-card)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(5){--pi-icon:var(--pi-gift)}
+[data-page="growth-system"] main>section:nth-of-type(8) .method-card:nth-child(6){--pi-icon:var(--pi-message)}
+[data-page="growth-system"] .sales-method>span::before{content:"";display:block;width:22px;height:22px;margin:0 auto 7px;background-image:var(--pi-icon,var(--pi-spark));background-repeat:no-repeat;background-position:center;background-size:22px 22px}
+[data-page="growth-system"] .sales-method:nth-child(1){--pi-icon:var(--pi-question)}
+[data-page="growth-system"] .sales-method:nth-child(2){--pi-icon:var(--pi-diamond)}
+[data-page="growth-system"] .sales-method:nth-child(3){--pi-icon:var(--pi-compass)}
+[data-page="growth-system"] .sales-method:nth-child(4){--pi-icon:var(--pi-spark)}
+[data-page="growth-system"] .sales-method:nth-child(5){--pi-icon:var(--pi-check)}
+
+/* Retention System */
+[data-page="retention-system"] #retention-start .choice-card:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="retention-system"] #retention-start .choice-card:nth-child(2){--pi-icon:var(--pi-compass)}
+[data-page="retention-system"] #retention-start .choice-card:nth-child(3){--pi-icon:var(--pi-check)}
+[data-page="retention-system"] .retention-signals .signal-card:nth-child(1){--pi-icon:var(--pi-repeat)}
+[data-page="retention-system"] .retention-signals .signal-card:nth-child(2){--pi-icon:var(--pi-heart)}
+[data-page="retention-system"] .retention-signals .signal-card:nth-child(3){--pi-icon:var(--pi-card)}
+[data-page="retention-system"] .retention-signals .signal-card:nth-child(4){--pi-icon:var(--pi-gift)}
+[data-page="retention-system"] .retention-card:nth-child(1){--pi-icon:var(--pi-support)}
+[data-page="retention-system"] .retention-card:nth-child(2){--pi-icon:var(--pi-heart)}
+[data-page="retention-system"] .retention-card:nth-child(3){--pi-icon:var(--pi-network)}
+[data-page="retention-system"] .retention-card:nth-child(4){--pi-icon:var(--pi-spark)}
+[data-page="retention-system"] .retention-card:nth-child(5){--pi-icon:var(--pi-card)}
+[data-page="retention-system"] .retention-card:nth-child(6){--pi-icon:var(--pi-gift)}
+[data-page="retention-system"] .retention-card:nth-child(7){--pi-icon:var(--pi-message)}
+[data-page="retention-system"] .retention-flow>div:nth-child(1){--pi-icon:var(--pi-search)}
+[data-page="retention-system"] .retention-flow>div:nth-child(2){--pi-icon:var(--pi-support)}
+[data-page="retention-system"] .retention-flow>div:nth-child(3){--pi-icon:var(--pi-clipboard)}
+[data-page="retention-system"] .retention-flow>div:nth-child(4){--pi-icon:var(--pi-shieldcheck)}
+[data-page="retention-system"] .retention-flow>div:nth-child(5){--pi-icon:var(--pi-gift)}
+[data-page="retention-system"] .retention-flow>div:nth-child(6){--pi-icon:var(--pi-chart)}
+[data-page="retention-system"] .scan-card-grid .scan-card{position:relative;padding-top:58px}
+[data-page="retention-system"] .scan-card-grid .scan-card::before{content:"";position:absolute;top:18px;left:18px;width:28px;height:28px;background-image:var(--pi-icon,var(--pi-chart));background-repeat:no-repeat;background-position:center;background-size:22px 22px}
+[data-page="retention-system"] .scan-card-grid .scan-card:nth-child(1){--pi-icon:var(--pi-repeat)}
+[data-page="retention-system"] .scan-card-grid .scan-card:nth-child(2){--pi-icon:var(--pi-route)}
+[data-page="retention-system"] .scan-card-grid .scan-card:nth-child(3){--pi-icon:var(--pi-support)}
+[data-page="retention-system"] .scan-card-grid .scan-card:nth-child(4){--pi-icon:var(--pi-chart)}
+
+/* Insights */
+[data-page="insights"] .featured-insight{position:relative;padding-right:58px}
+[data-page="insights"] .featured-insight::before{content:"";position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:11px;background-color:rgba(23,75,54,.06);background-image:var(--pi-filecheck);background-repeat:no-repeat;background-position:center;background-size:19px 19px}
+[data-page="insights"] .insight-search>span::before{content:"";display:inline-block;width:15px;height:15px;margin-right:6px;vertical-align:-2px;background-image:var(--pi-search);background-size:contain;background-repeat:no-repeat}
+[data-page="insights"] .insight-filter::before{content:"";display:inline-block;width:13px;height:13px;margin-right:5px;vertical-align:-2px;background-image:var(--pi-icon,var(--pi-filter));background-size:contain;background-repeat:no-repeat}
+[data-page="insights"] .insight-filter[data-insight-filter="sales"]{--pi-icon:var(--pi-sale)}
+[data-page="insights"] .insight-filter[data-insight-filter="customers"]{--pi-icon:var(--pi-users)}
+[data-page="insights"] .insight-filter[data-insight-filter="execution"]{--pi-icon:var(--pi-bolt)}
+[data-page="insights"] .insight-filter[data-insight-filter="routes"]{--pi-icon:var(--pi-route)}
+[data-page="insights"] .article-row{position:relative;padding-right:42px}
+[data-page="insights"] .article-row::after{content:"";position:absolute;right:14px;top:50%;width:16px;height:16px;transform:translateY(-50%);background-image:var(--pi-arrow);background-size:contain;background-repeat:no-repeat;opacity:.55;transition:transform .2s ease,opacity .2s ease}
+[data-page="insights"] .article-row:hover::after{transform:translate(2px,-2px);opacity:.9}
+
+/* Evidence and verification */
+[data-page="evidence"] .evidence-item#retention{--pi-icon:var(--pi-repeat)}
+[data-page="evidence"] .evidence-item#tenure{--pi-icon:var(--pi-chart)}
+[data-page="evidence"] .evidence-item#ranking{--pi-icon:var(--pi-trophy)}
+[data-page="evidence"] .evidence-item#recognition{--pi-icon:var(--pi-shieldcheck)}
+[data-page="evidence"] .evidence-item#festival{--pi-icon:var(--pi-users)}
+[data-page="evidence"] .evidence-item#creator{--pi-icon:var(--pi-chart)}
+[data-page="evidence"] .evidence-item#facebook-audience{--pi-icon:var(--pi-users)}
+[data-page="evidence"] .evidence-item#linkedin-recommendation{--pi-icon:var(--pi-shieldcheck)}
+[data-page="evidence"] a[download]::before{content:"";display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:-3px;background-image:var(--pi-download);background-size:contain;background-repeat:no-repeat}
+[data-page="evidence"] .actions a[href*="linkedin.com"]::before,[data-page="home"] .recommendation-meta a[href*="linkedin.com"]::before,[data-page="experience"] .recommendation-meta a[href*="linkedin.com"]::before{content:"";display:inline-block;width:16px;height:16px;margin-right:7px;vertical-align:-3px;background-image:var(--pi-brand-linkedin);background-size:contain;background-repeat:no-repeat}
+[data-page="home"] .source-badge::before,[data-page="experience"] .source-badge::before{content:"";display:inline-block;width:14px;height:14px;margin-right:5px;vertical-align:-2px;background-image:var(--pi-shieldcheck);background-size:contain;background-repeat:no-repeat}
+
+/* Retention health check */
+[data-page="retention-health-check"] .health-question legend::before{content:"";display:inline-block;width:22px;height:22px;margin-right:9px;vertical-align:-5px;background-image:var(--pi-icon,var(--pi-check));background-size:contain;background-repeat:no-repeat}
+[data-page="retention-health-check"] .health-question:nth-of-type(1){--pi-icon:var(--pi-repeat)}
+[data-page="retention-health-check"] .health-question:nth-of-type(2){--pi-icon:var(--pi-support)}
+[data-page="retention-health-check"] .health-question:nth-of-type(3){--pi-icon:var(--pi-eye)}
+[data-page="retention-health-check"] .health-question:nth-of-type(4){--pi-icon:var(--pi-message)}
+[data-page="retention-health-check"] .health-question:nth-of-type(5){--pi-icon:var(--pi-sale)}
+[data-page="retention-health-check"] .health-result-score::before{content:"";display:inline-block;width:18px;height:18px;margin-right:7px;vertical-align:-3px;background-image:var(--pi-chart);background-size:contain;background-repeat:no-repeat}
+
+/* Start page: three immediate problem routes */
+[data-page="start"] .start-problem-links a{display:inline-flex;align-items:center;gap:8px}
+[data-page="start"] .start-problem-links a::before{content:"";width:18px;height:18px;flex:0 0 18px;background-image:var(--pi-icon,var(--pi-arrow));background-size:contain;background-repeat:no-repeat;background-position:center}
+[data-page="start"] .start-problem-links li:nth-child(1){--pi-icon:var(--pi-sale)}
+[data-page="start"] .start-problem-links li:nth-child(2){--pi-icon:var(--pi-heart)}
+[data-page="start"] .start-problem-links li:nth-child(3){--pi-icon:var(--pi-route)}
+
+/* 404: one useful wayfinding symbol, no decorative clutter */
+[data-page="404"] h1::before{content:"";display:block;width:48px;height:48px;margin:0 0 18px;border-radius:15px;border:1px solid rgba(23,75,54,.1);background-color:rgba(23,75,54,.06);background-image:var(--pi-compass);background-position:center;background-repeat:no-repeat;background-size:25px 25px}
+
+/* Global social footer: official brand marks, small and consistent. */
+.footer-links a{display:inline-flex;align-items:center;gap:6px}
+.footer-links a[href*="wa.me"]::before,.footer-links a[href*="t.me"]::before,.footer-links a[href*="instagram.com"]::before,.footer-links a[href*="linkedin.com"]::before,.footer-links a[href*="facebook.com"]::before{content:"";width:16px;height:16px;flex:0 0 16px;background-position:center;background-repeat:no-repeat;background-size:contain}
+.footer-links a[href*="wa.me"]::before{background-image:var(--pi-brand-whatsapp)}
+.footer-links a[href*="t.me"]::before{background-image:var(--pi-brand-telegram)}
+.footer-links a[href*="instagram.com"]::before{background-image:var(--pi-brand-instagram)}
+.footer-links a[href*="linkedin.com"]::before{background-image:var(--pi-brand-linkedin)}
+.footer-links a[href*="facebook.com"]::before{background-image:var(--pi-brand-facebook)}
+
+@media (max-width:620px){
+  [data-page="home"] .choice-card::before,[data-page="retention-system"] #retention-start .choice-card::before,[data-page="projects"] .service::before,[data-page="growth-system"] .method-card::before,[data-page="about"] .card-grid .card::before{width:42px;height:42px;border-radius:13px;background-size:22px 22px;margin-bottom:14px}
+  [data-page="home"] .metric::before,[data-page="experience"] .metric::before,[data-page="retention-system"] .signal-card::before,[data-page="retention-system"] .retention-card::before,[data-page="evidence"] .evidence-item::before{width:30px;height:30px;top:12px;right:12px;background-size:16px 16px}
+}
+@media (prefers-reduced-motion:reduce){[data-page="insights"] .article-row::after{transition:none}}
