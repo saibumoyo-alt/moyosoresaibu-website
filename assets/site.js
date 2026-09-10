@@ -34,11 +34,12 @@
       data.started_at=data.started_at||String(Date.now()-2000);
       submit.disabled=true; submit.setAttribute('aria-busy','true');
       if(status){status.textContent=type==='field-notes'?'Joining…':'Sending your message…';status.className='form-status';}
+      let requestTimer=null;
       try{
         const controller=new AbortController();
-      requestTimer=setTimeout(()=>controller.abort(),12000);
-      const response=await fetch(worker,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data),signal:controller.signal});
-      clearTimeout(requestTimer); requestTimer=null;
+        requestTimer=setTimeout(()=>controller.abort(),12000);
+        const response=await fetch(worker,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data),signal:controller.signal});
+        clearTimeout(requestTimer); requestTimer=null;
         const result=await response.json().catch(()=>({}));
         if(!response.ok||!result.ok) throw new Error(result.error||'send_failed');
         if(status){status.textContent=type==='field-notes'?'Request received. You’re on the Field Notes list.':'Message sent. I aim to reply within two working days when a response is needed.';status.className='form-status success';}
@@ -58,7 +59,6 @@
   async function refreshLatestFromSite(){
     const cards=[...document.querySelectorAll('[data-live-site]')];
     if(!cards.length) return;
-    let requestTimer=null;
     try{
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),3500);

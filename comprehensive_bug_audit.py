@@ -276,6 +276,8 @@ setup_form_match = re.search(r'function setupForm\(form,type\)\{(.*?)\n\s*\}\n\n
 setup_form = setup_form_match.group(1) if setup_form_match else ''
 if 'fetch(worker' in setup_form and 'AbortController' not in setup_form:
     fail('functional', 'assets/site.js', 'contact/newsletter network request has no timeout; submit can remain busy indefinitely')
+if 'fetch(worker' in setup_form and 'let requestTimer=null;' not in setup_form:
+    fail('functional', 'assets/site.js', 'contact/newsletter timeout is not scoped to the submit handler')
 if 'email link below' in site_js:
     fail('functional', 'assets/site.js', 'form failure message uses a stale positional “email link below” instruction')
 
