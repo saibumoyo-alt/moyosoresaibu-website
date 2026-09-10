@@ -1,0 +1,45 @@
+name: Premium icon rollout
+
+on:
+  push:
+    branches:
+      - premium-svg-icon-rollout-2026-09-10
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout rollout branch
+        uses: actions/checkout@v4
+        with:
+          ref: premium-svg-icon-rollout-2026-09-10
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install QA dependency
+        run: python -m pip install beautifulsoup4
+
+      - name: Generate full-site premium SVG system
+        run: python scripts/apply_premium_icons.py
+
+      - name: Run existing and production QA gates
+        run: |
+          python qa_audit.py
+          python quality_gate.py
+
+      - name: Commit generated rollout
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Roll out premium SVG icon system across public website"
+          git push origin HEAD:premium-svg-icon-rollout-2026-09-10
