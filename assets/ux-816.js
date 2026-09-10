@@ -14,6 +14,7 @@ document.addEventListener('keydown',event=>{
     set(key,value){try{localStorage.setItem(key,value);}catch(e){}}
   };
   let pageViewSent=false;
+  let privacyReturnFocus=null;
 
   function preference(){
     if(dnt) return 'essential';
@@ -95,6 +96,8 @@ document.addEventListener('keydown',event=>{
     style.textContent=`
       .privacy-choice-panel{position:fixed;z-index:10000;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,calc(100% - 28px));background:rgba(250,249,245,.98);color:#161812;border:1px solid rgba(22,24,18,.16);border-radius:20px;box-shadow:0 18px 60px rgba(0,0,0,.18);padding:18px 20px;font:inherit}
       .privacy-choice-panel[hidden]{display:none}
+      .privacy-choice-close{position:absolute;right:13px;top:13px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(22,24,18,.07);color:#161812;font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
+      .privacy-choice-close:hover,.privacy-choice-close:focus-visible{background:rgba(22,24,18,.14);outline:2px solid #16351f;outline-offset:2px}
       .privacy-choice-panel h2{font-size:1.05rem;line-height:1.25;margin:0 0 7px}
       .privacy-choice-panel p{font-size:.92rem;line-height:1.55;margin:0;color:#4b4d46}
       .privacy-choice-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
@@ -122,6 +125,7 @@ document.addEventListener('keydown',event=>{
     panel.setAttribute('aria-describedby','privacy-choice-description');
     panel.hidden=true;
     panel.innerHTML=`
+      <button type="button" class="privacy-choice-close" data-privacy-close aria-label="Close privacy choices">×</button>
       <h2 id="privacy-choice-title">Your privacy choices</h2>
       <p id="privacy-choice-description">This site uses essential local storage for features such as language and personalization. Optional first-party analytics measure page visits and CTA use without sending contact-message text or email addresses.</p>
       <span class="privacy-choice-note">${dnt?'Do Not Track is enabled, so optional analytics will stay off.':'You can change this choice at any time.'}</span>
@@ -134,14 +138,23 @@ document.addEventListener('keydown',event=>{
     document.body.appendChild(panel);
     panel.querySelector('[data-privacy-accept]')?.addEventListener('click',()=>setChoice('analytics'));
     panel.querySelector('[data-privacy-essential]')?.addEventListener('click',()=>setChoice('essential'));
+    panel.querySelector('[data-privacy-close]')?.addEventListener('click',()=>closeChoices(true));
     return panel;
+  }
+
+  function closeChoices(restoreFocus=false){
+    const panel=buildPanel();
+    panel.hidden=true;
+    if(restoreFocus&&privacyReturnFocus&&document.contains(privacyReturnFocus)) privacyReturnFocus.focus();
+    privacyReturnFocus=null;
   }
 
   function openChoices(userInitiated=false){
     const panel=buildPanel();
+    if(userInitiated) privacyReturnFocus=document.activeElement;
     panel.hidden=false;
     if(userInitiated){
-      const first=panel.querySelector('button:not([disabled])');
+      const first=panel.querySelector('[data-privacy-essential]');
       if(first) first.focus();
     }
   }
@@ -149,14 +162,19 @@ document.addEventListener('keydown',event=>{
   function setChoice(choice){
     const resolved=dnt?'essential':choice==='analytics'?'analytics':'essential';
     safeStorage.set(PRIVACY_KEY,resolved);
-    const panel=buildPanel();
-    panel.hidden=true;
+    closeChoices(true);
     if(resolved==='analytics') sendPageView();
     document.dispatchEvent(new CustomEvent('moyo:privacy-change',{detail:{analytics:resolved==='analytics'}}));
   }
 
   addLegalFooterLinks();
   addPrivacyStyles();
+
+  document.addEventListener('keydown',event=>{
+    if(event.key!=='Escape') return;
+    const panel=document.querySelector('[data-privacy-panel]');
+    if(panel&&!panel.hidden){ event.preventDefault(); closeChoices(true); }
+  });
 
   document.addEventListener('click',event=>{
     const privacyButton=event.target.closest('[data-privacy-choices]');

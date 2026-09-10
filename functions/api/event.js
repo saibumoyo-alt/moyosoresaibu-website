@@ -20,10 +20,18 @@ export async function onRequestPost(context){
   if(request.headers.get('dnt')==='1') return new Response(null,{status:204,headers:{'cache-control':'no-store'}});
 
   const origin=request.headers.get('origin');
-  if(origin&&!ALLOWED_ORIGINS.has(origin)) return new Response(null,{status:403,headers:{'cache-control':'no-store'}});
+  if(!origin||!ALLOWED_ORIGINS.has(origin)) return new Response(null,{status:403,headers:{'cache-control':'no-store'}});
 
+  const contentType=(request.headers.get('content-type')||'').toLowerCase();
+  if(!contentType.startsWith('application/json')) return new Response(null,{status:415,headers:{'cache-control':'no-store'}});
+  const contentLength=Number(request.headers.get('content-length')||'0');
+  if(Number.isFinite(contentLength)&&contentLength>4096) return new Response(null,{status:413,headers:{'cache-control':'no-store'}});
+
+  let raw='';
+  try{ raw=await request.text(); }catch(e){ return new Response(null,{status:204,headers:{'cache-control':'no-store'}}); }
+  if(raw.length>4096) return new Response(null,{status:413,headers:{'cache-control':'no-store'}});
   let data={};
-  try{ data=await request.json(); }catch(e){ return new Response(null,{status:204,headers:{'cache-control':'no-store'}}); }
+  try{ data=JSON.parse(raw); }catch(e){ return new Response(null,{status:204,headers:{'cache-control':'no-store'}}); }
 
   const safe=(value,max=120)=>String(value??'').replace(/[\r\n\t]/g,' ').slice(0,max);
   const name=safe(data.name,40);

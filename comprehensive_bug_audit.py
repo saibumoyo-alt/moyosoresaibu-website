@@ -251,8 +251,7 @@ for path in html_files:
                     if isinstance(address, dict) and address.get('addressLocality'):
                         locality = str(address['addressLocality'])
                         person_localities.append((rel, locality))
-                        if locality.casefold() not in visible.casefold():
-                            fail('seo', rel, f'JSON-LD claims addressLocality={locality!r} but visible page does not state it')
+                        fail('seo', rel, f'Person JSON-LD contains city-level addressLocality={locality!r}; use country-level areaServed instead')
                 stack.extend(item.values())
             elif isinstance(item, list):
                 stack.extend(item)
@@ -278,9 +277,17 @@ setup_form = setup_form_match.group(1) if setup_form_match else ''
 if 'fetch(worker' in setup_form and 'AbortController' not in setup_form:
     fail('functional', 'assets/site.js', 'contact/newsletter network request has no timeout; submit can remain busy indefinitely')
 if 'email link below' in site_js:
-    contact_text = (ROOT / 'contact.html').read_text(encoding='utf-8') if (ROOT / 'contact.html').is_file() else ''
-    if 'mailto:' not in contact_text:
-        fail('functional', 'assets/site.js', 'form failure message says “email link below” but contact page has no mailto link')
+    fail('functional', 'assets/site.js', 'form failure message uses a stale positional “email link below” instruction')
+
+# Privacy control must be dismissible without granting consent and restore focus.
+ux_js = (ROOT / 'assets/ux-816.js').read_text(encoding='utf-8') if (ROOT / 'assets/ux-816.js').is_file() else ''
+for token, message in (
+    ('data-privacy-close', 'privacy choices panel has no explicit close control'),
+    ("event.key!=='Escape'", 'privacy choices panel has no Escape-key handling'),
+    ('privacyReturnFocus', 'privacy choices panel does not restore focus after a user-initiated close'),
+):
+    if token not in ux_js:
+        fail('accessibility', 'assets/ux-816.js', message)
 
 # Analytics endpoint abuse resistance.
 event_js = (ROOT / 'functions/api/event.js').read_text(encoding='utf-8') if (ROOT / 'functions/api/event.js').is_file() else ''
