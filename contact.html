@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Contact | Solve this with Moyosore Saibu</title>
-<meta name="description" content="Contact Moyosore Saibu through WhatsApp, Telegram or the website form."/>
+<meta name="description" content="Contact Moyosore Saibu through WhatsApp, Telegram, Gmail, LinkedIn or the secure website form."/>
 <link rel="canonical" href="https://moyosoresaibu.com/contact"/>
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"/>
 <meta name="theme-color" content="#f6f5ef"/>
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="Moyosore Saibu"/>
 <meta property="og:title" content="Contact | Solve this with Moyosore Saibu"/>
-<meta property="og:description" content="Contact Moyosore Saibu through WhatsApp, Telegram or the website form."/>
+<meta property="og:description" content="Contact Moyosore Saibu through WhatsApp, Telegram, Gmail, LinkedIn or the secure website form."/>
 <meta property="og:url" content="https://moyosoresaibu.com/contact"/>
 <meta property="og:image" content="https://moyosoresaibu.com/assets/og-moyosore-saibu.jpg"/>
 <meta property="og:image:width" content="1200"/>
@@ -21,13 +21,43 @@
 <meta property="og:image:alt" content="Portrait of Moyosore Saibu"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Contact | Solve this with Moyosore Saibu"/>
-<meta name="twitter:description" content="Contact Moyosore Saibu through WhatsApp, Telegram or the website form."/>
+<meta name="twitter:description" content="Contact Moyosore Saibu through WhatsApp, Telegram, Gmail, LinkedIn or the secure website form."/>
 <meta name="twitter:image" content="https://moyosoresaibu.com/assets/og-moyosore-saibu.jpg"/><meta name="twitter:image:alt" content="Portrait of Moyosore Saibu"/>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"/>
 <link rel="manifest" href="/site.webmanifest"/>
 <link rel="stylesheet" href="/assets/site.css?v=8.16.0"/>
 <link rel="stylesheet" href="/assets/ux-816.css?v=8.16.0"/>
+<style>
+.contact-channel-section{position:relative;isolation:isolate;padding:12px 0 76px;overflow:hidden}
+.contact-channel-section::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 20%,rgba(25,135,84,.08),transparent 32%),radial-gradient(circle at 88% 72%,rgba(190,151,108,.1),transparent 30%)}
+.contact-channel-shell{border:1px solid rgba(24,36,30,.08);border-radius:32px;padding:clamp(28px,5vw,58px);background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(249,248,243,.66));box-shadow:0 28px 70px rgba(22,31,26,.08),inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.contact-channel-head{max-width:760px;margin:0 auto 30px;text-align:center}
+.contact-channel-head .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--muted);margin-bottom:10px}
+.contact-channel-head h2{margin:0;font-size:clamp(2rem,4vw,3.4rem);line-height:1.02;letter-spacing:-.045em}
+.contact-channel-head p:last-child{max-width:620px;margin:14px auto 0;color:var(--muted);font-size:1rem;line-height:1.65}
+.contact-channel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:34px}
+.contact-channel{position:relative;display:flex;min-height:210px;flex-direction:column;justify-content:space-between;gap:24px;padding:22px;border:1px solid rgba(20,33,27,.09);border-radius:24px;color:var(--ink);text-decoration:none;background:rgba(255,255,255,.78);box-shadow:0 14px 34px rgba(22,31,26,.06),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease,background .28s ease}
+.contact-channel:hover{transform:translateY(-5px);border-color:rgba(20,90,61,.18);background:rgba(255,255,255,.94);box-shadow:0 22px 45px rgba(22,31,26,.11),inset 0 1px 0 rgba(255,255,255,.98)}
+.contact-channel:focus-visible{outline:3px solid rgba(18,119,76,.28);outline-offset:4px}
+.channel-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.channel-icon{display:grid;width:66px;height:66px;place-items:center;border-radius:19px;box-shadow:0 10px 24px rgba(24,32,28,.12),inset 0 1px 0 rgba(255,255,255,.3)}
+.channel-icon svg{display:block;width:42px;height:42px}
+.channel-arrow{display:grid;width:40px;height:40px;place-items:center;border-radius:999px;background:rgba(16,30,23,.055);font-size:1.2rem;line-height:1;transition:transform .28s ease,background .28s ease}
+.contact-channel:hover .channel-arrow{transform:translate(2px,-2px);background:rgba(16,30,23,.09)}
+.channel-copy{display:grid;gap:5px}
+.channel-copy strong{font-size:1.13rem;letter-spacing:-.02em}
+.channel-copy span{font-size:.9rem;color:var(--muted);line-height:1.45}
+.channel-icon.linkedin{background:linear-gradient(145deg,#2583df,#0a66c2);color:#fff}
+.channel-icon.whatsapp{background:linear-gradient(145deg,#39e975,#20bc59);color:#fff}
+.channel-icon.gmail{background:linear-gradient(145deg,#fff,#f6f6f3);border:1px solid rgba(20,30,25,.06)}
+.channel-icon.telegram{background:linear-gradient(145deg,#45b8f1,#229ed9);color:#fff}
+.channel-divider{display:flex;align-items:center;gap:16px;margin:28px auto 0;max-width:520px;color:var(--muted);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.channel-divider::before,.channel-divider::after{content:"";height:1px;flex:1;background:rgba(20,32,26,.12)}
+@media(max-width:920px){.contact-channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-channel{min-height:185px}}
+@media(max-width:620px){.contact-channel-section{padding:4px 0 52px}.contact-channel-shell{border-radius:24px;padding:26px 18px}.contact-channel-grid{grid-template-columns:1fr;gap:12px;margin-top:24px}.contact-channel{min-height:0;padding:18px;flex-direction:row;align-items:center;justify-content:flex-start;gap:16px}.channel-top{display:contents}.channel-icon{width:56px;height:56px;border-radius:16px;flex:0 0 auto}.channel-icon svg{width:35px;height:35px}.channel-copy{flex:1}.channel-arrow{order:3;flex:0 0 auto}.channel-divider{font-size:.6rem;letter-spacing:.12em}}
+@media(prefers-reduced-motion:reduce){.contact-channel,.channel-arrow{transition:none}.contact-channel:hover{transform:none}}
+</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://moyosoresaibu.com/#person","name":"Moyosore Saibu","url":"https://moyosoresaibu.com/","image":"https://moyosoresaibu.com/assets/og-moyosore-saibu.jpg","sameAs":["https://www.instagram.com/moyosoresaibu/","https://www.linkedin.com/in/moyosaibu","https://www.facebook.com/omobasaibu.moyo/","https://www.pinterest.com/saibumoyo/","https://www.youtube.com/@saibumoyo","https://t.me/moyosoresaibu"],"knowsAbout":["Sales execution","Customer retention","Field execution","Route-to-market"],"description":"Commercial growth and market-execution problem solver focused on sales, customer retention and field execution.","address":{"@type":"PostalAddress","addressLocality":"Enugu","addressCountry":"NG"},"areaServed":{"@type":"Country","name":"Nigeria"},"contactPoint":{"@type":"ContactPoint","contactType":"business inquiries","telephone":"+2348134256221","url":"https://wa.me/2348134256221","availableLanguage":["English","Yorùbá"]}},{"@type":"WebSite","url":"https://moyosoresaibu.com/","name":"Moyosore Saibu","publisher":{"@id":"https://moyosoresaibu.com/#person"}}]}</script>
 </head>
 <body class="premium-glass scan-ui">
@@ -36,20 +66,20 @@
   <div class="shell header-inner">
     <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">M</span><span class="brand-text">Moyosore Saibu</span></a>
     <nav class="desktop-nav" aria-label="Primary">
-      <a  href="/">Home</a>
+      <a href="/">Home</a>
       <details class="nav-dropdown"><summary>Solutions</summary><div class="nav-dropdown-panel"><a href="/projects">All solutions</a><a href="/projects#strategy">Strategy</a><a href="/projects#campaigns">Campaigns</a><a href="/projects#digital">Digital</a><a href="/projects#sales">Sales</a><a href="/projects#execution">Execution</a><a href="/projects#retention">Retention</a><a href="/projects#field-work">Field work</a></div></details>
-      <a  href="/about">Approach</a>
-      <a  href="/experience">Proof</a>
+      <a href="/about">Approach</a>
+      <a href="/experience">Proof</a>
       <details class="nav-dropdown"><summary>Insights</summary><div class="nav-dropdown-panel"><a href="/insights/">All insights</a><a href="/insights/#sales">Sales</a><a href="/insights/#customers">Customers</a><a href="/insights/#execution">Execution</a><a href="/insights/#routes">Routes</a></div></details>
       <a aria-current="page" href="/contact">Contact</a>
     </nav>
     <a class="header-cta" href="/contact?intent=challenge">Solve this</a>
     <details class="mobile-menu"><summary>Menu</summary>
       <nav aria-label="Mobile navigation">
-        <a  href="/">Home</a>
+        <a href="/">Home</a>
         <details class="submenu"><summary>Solutions</summary><a href="/projects">All solutions</a><a href="/projects#strategy">Strategy</a><a href="/projects#campaigns">Campaigns</a><a href="/projects#digital">Digital</a><a href="/projects#sales">Sales</a><a href="/projects#execution">Execution</a><a href="/projects#retention">Retention</a><a href="/projects#field-work">Field work</a></details>
-        <a  href="/about">Approach</a>
-        <a  href="/experience">Proof</a>
+        <a href="/about">Approach</a>
+        <a href="/experience">Proof</a>
         <details class="submenu"><summary>Insights</summary><a href="/insights/">All insights</a><a href="/insights/#sales">Sales</a><a href="/insights/#customers">Customers</a><a href="/insights/#execution">Execution</a><a href="/insights/#routes">Routes</a></details>
         <a class="menu-contact" aria-current="page" href="/contact">Solve this</a>
       </nav>
@@ -57,12 +87,64 @@
   </div>
 </header>
 <main id="main">
-
 <section class="page-hero scan-page-hero"><div class="shell"><p class="kicker">Contact</p><h1 class="hero-title-sm">What is stuck?</h1><p>Problem. Goal. Blocker. That is enough to start.</p></div></section>
-<section class="section"><div class="shell"><div class="social-grid compact-social"><a class="social-card premium-card direct-channel-card" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong><span>Fastest way to start</span></a><a class="social-card premium-card direct-channel-card" href="https://t.me/moyosoresaibu?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer"><strong>Telegram</strong><span>Simple direct chat</span></a><a class="social-card premium-card" href="mailto:saibumoyo@gmail.com"><strong>Email</strong><span>Formal note</span></a><a class="social-card premium-card" href="https://www.linkedin.com/in/moyosaibu" target="_blank" rel="noopener noreferrer"><strong>LinkedIn</strong><span>See profile</span></a></div></div></section>
+
+<section class="contact-channel-section" aria-labelledby="contact-channels-heading">
+  <div class="shell">
+    <div class="contact-channel-shell">
+      <div class="contact-channel-head">
+        <p class="eyebrow">Get in touch</p>
+        <h2 id="contact-channels-heading">Choose your channel.</h2>
+        <p>Start where you are most comfortable. Every option below goes directly to the right place.</p>
+      </div>
+      <div class="contact-channel-grid">
+        <a class="contact-channel" href="https://www.linkedin.com/in/moyosaibu" target="_blank" rel="noopener noreferrer" aria-label="Open Moyosore Saibu on LinkedIn">
+          <div class="channel-top">
+            <span class="channel-icon linkedin" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false"><rect x="5" y="5" width="38" height="38" rx="9" fill="currentColor" opacity="0"/><path fill="#fff" d="M14.3 18.2h5.1v16.4h-5.1V18.2Zm2.55-8.15a2.96 2.96 0 1 1 0 5.92 2.96 2.96 0 0 1 0-5.92ZM22.6 18.2h4.9v2.24h.07c.68-1.3 2.35-2.67 4.84-2.67 5.18 0 6.14 3.41 6.14 7.85v8.98h-5.1v-7.96c0-1.9-.04-4.34-2.65-4.34-2.65 0-3.05 2.07-3.05 4.2v8.1H22.6V18.2Z"/></svg>
+            </span>
+            <span class="channel-arrow" aria-hidden="true">↗</span>
+          </div>
+          <span class="channel-copy"><strong>LinkedIn</strong><span>Professional profile</span></span>
+        </a>
+
+        <a class="contact-channel" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer" aria-label="Start a WhatsApp chat with Moyosore Saibu">
+          <div class="channel-top">
+            <span class="channel-icon whatsapp" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false"><path fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" d="M39.2 23.7a15.1 15.1 0 0 1-22.4 13.2L9 39l2.2-7.5A15.1 15.1 0 1 1 39.2 23.7Z"/><path fill="#fff" d="M19.2 16.2c-.4-.9-.8-.9-1.2-.9h-1c-.4 0-1 .1-1.5.7-.5.6-2 1.9-2 4.7s2 5.5 2.3 5.9c.3.4 4 6.4 9.9 8.7 4.9 1.9 5.9 1.5 7 1.4 1.1-.1 3.5-1.4 4-2.8.5-1.4.5-2.6.4-2.8-.2-.3-.6-.4-1.3-.7l-4.6-2.2c-.6-.3-1.1-.4-1.6.3-.5.7-1.8 2.2-2.2 2.7-.4.5-.8.5-1.5.2-.7-.3-2.8-1-5.3-3.2-2-1.7-3.3-3.8-3.7-4.5-.4-.7 0-1 .3-1.4.3-.3.7-.8 1-1.2.3-.4.4-.7.6-1.1.2-.4.1-.8 0-1.1l-1.6-3.9Z" transform="scale(.75) translate(8 7)"/></svg>
+            </span>
+            <span class="channel-arrow" aria-hidden="true">↗</span>
+          </div>
+          <span class="channel-copy"><strong>WhatsApp</strong><span>Fastest way to start</span></span>
+        </a>
+
+        <a class="contact-channel" href="mailto:saibumoyo@gmail.com" aria-label="Email Moyosore Saibu using Gmail or your default mail app">
+          <div class="channel-top">
+            <span class="channel-icon gmail" aria-hidden="true">
+              <svg viewBox="0 0 64 48" focusable="false"><path fill="#4285F4" d="M5 12v29h10V19L5 12Z"/><path fill="#34A853" d="M49 19v22h10V12l-10 7Z"/><path fill="#EA4335" d="M5 12 10 7l22 16L54 7l5 5-27 20L5 12Z"/><path fill="#FBBC04" d="M15 19v10l17 12 17-12V19L32 32 15 19Z" opacity=".94"/></svg>
+            </span>
+            <span class="channel-arrow" aria-hidden="true">↗</span>
+          </div>
+          <span class="channel-copy"><strong>Gmail</strong><span>Formal email contact</span></span>
+        </a>
+
+        <a class="contact-channel" href="https://t.me/moyosoresaibu?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer" aria-label="Start a Telegram chat with Moyosore Saibu">
+          <div class="channel-top">
+            <span class="channel-icon telegram" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false"><path fill="#fff" d="M38.8 10.1 7.7 22.2c-2.1.8-2.1 2 0 2.7l8 2.5 3.1 9.7c.4 1.2.2 1.7 1.5 1.7 1 0 1.5-.5 2.1-1l3.9-3.8 8.2 6.1c1.5.8 2.6.4 3-1.4l5.4-25.4c.5-2.2-.9-3.2-2.1-2.7Zm-19 16.7 15.6-9.9c.8-.5 1.5-.2.9.3L23.4 28.9l-.5 5.2-3.1-7.3Z"/></svg>
+            </span>
+            <span class="channel-arrow" aria-hidden="true">↗</span>
+          </div>
+          <span class="channel-copy"><strong>Telegram</strong><span>Simple direct message</span></span>
+        </a>
+      </div>
+      <div class="channel-divider">Direct. Clear. Professional.</div>
+    </div>
+  </div>
+</section>
+
 <section class="section soft"><div class="shell"><div class="section-head scan-head"><p class="eyebrow">Send this</p><h2 data-personalize="contact-heading">Start with three things.</h2><p>Keep it short.</p></div><div class="process-rail"><div><span>First</span><strong>The problem</strong><p>What is stuck?</p></div><div><span>Second</span><strong>The goal</strong><p>What should change?</p></div><div><span>Third</span><strong>The blocker</strong><p>What is in the way?</p></div></div></div></section>
 <section class="section"><div class="shell"><div class="contact-layout"><div class="contact-card premium-card"><p class="problem-signal">Best for</p><h2>Sales. Customers. Routes. Systems.</h2><p>These are the strongest-fit problems.</p><div class="contact-micro-actions"><a href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a><a href="https://t.me/moyosoresaibu?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." target="_blank" rel="noopener noreferrer">Telegram ↗</a></div></div><form class="contact-card premium-card" data-contact-form action="https://moyosore-contact-mailer.saibumoyo.workers.dev/contact" method="post"><label>Name<input name="name" required type="text"/></label><label>Email<input name="email" required type="email"/></label><label>Reason<select name="intent"><option value="challenge">Growth / sales problem</option><option value="hiring">Hiring</option><option value="general">General</option></select></label><label>Message<textarea name="message" required rows="6" placeholder="Problem. Goal. Blocker."></textarea></label><label class="consent-row"><input name="consent" required type="checkbox" value="yes"/> <span>I agree.</span></label><input type="hidden" name="type" value="contact"/><input type="hidden" name="from" value="contact-page"/><input type="hidden" name="started_at" value=""/><button class="btn" type="submit">Send message</button><p class="form-status" data-form-status aria-live="polite"></p></form></div></div></section>
-
 </main>
 <footer class="site-footer"><div class="shell footer-inner"><div>© <span data-live-year="">2026</span> Moyosore Saibu. All rights reserved.</div><div class="footer-links"><a class="direct-footer-link" href="https://wa.me/2348134256221?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">WhatsApp</a><a class="direct-footer-link" href="https://t.me/moyosoresaibu?text=Hello%20Moyosore.%20I%20have%20a%20growth%20problem%20to%20solve." rel="noopener noreferrer" target="_blank">Telegram</a><a href="https://www.instagram.com/moyosoresaibu/" rel="noopener noreferrer" target="_blank">Instagram</a><a href="https://www.linkedin.com/in/moyosaibu" rel="noopener noreferrer" target="_blank">LinkedIn</a><a href="https://www.facebook.com/omobasaibu.moyo/" rel="noopener noreferrer" target="_blank">Facebook</a><a href="/privacy">Privacy</a><a href="/start/">Start page</a></div></div></footer>
 <script defer src="/assets/site.js?v=8.16.0"></script>
