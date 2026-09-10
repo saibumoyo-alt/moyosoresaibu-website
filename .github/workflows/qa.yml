@@ -33,3 +33,4 @@ jobs:
           python qa_audit.py
           python quality_gate.py
           python process_rail_guard.py
+          python comprehensive_bug_audit.py

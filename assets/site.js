@@ -34,15 +34,19 @@
       data.started_at=data.started_at||String(Date.now()-2000);
       submit.disabled=true; submit.setAttribute('aria-busy','true');
       if(status){status.textContent=type==='field-notes'?'Joining…':'Sending your message…';status.className='form-status';}
+      let requestTimer=null;
       try{
-        const response=await fetch(worker,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
+        const controller=new AbortController();
+        requestTimer=setTimeout(()=>controller.abort(),12000);
+        const response=await fetch(worker,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data),signal:controller.signal});
+        clearTimeout(requestTimer); requestTimer=null;
         const result=await response.json().catch(()=>({}));
         if(!response.ok||!result.ok) throw new Error(result.error||'send_failed');
         if(status){status.textContent=type==='field-notes'?'Request received. You’re on the Field Notes list.':'Message sent. I aim to reply within two working days when a response is needed.';status.className='form-status success';}
         form.reset(); setStarted(form);
       }catch(error){
-        if(status){status.textContent=type==='field-notes'?'I could not complete the signup. Please use the email link below.':'I could not send the form. Please use the email link below.';status.className='form-status error';}
-      }finally{submit.disabled=false;submit.removeAttribute('aria-busy');
+        if(status){status.textContent=type==='field-notes'?'I could not complete the signup. Please try again or contact me directly.':'I could not send the form. Please use WhatsApp, Telegram or Gmail above, or try again.';status.className='form-status error';}
+      }finally{if(requestTimer) clearTimeout(requestTimer); submit.disabled=false;submit.removeAttribute('aria-busy');
       }
     });
   }
