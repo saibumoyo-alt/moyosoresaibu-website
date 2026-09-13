@@ -40,10 +40,6 @@ EXPECTED_NAV = [
     ('/', 'Home'), ('/projects', 'Solutions'), ('/about', 'Approach'),
     ('/experience', 'Proof'), ('/insights/', 'Insights'), ('/contact', 'Contact'),
 ]
-# Solutions and Insights are category dropdowns (<details class="nav-dropdown">)
-# rather than plain links; each panel's first link is the "All X" catch-all
-# that stands in for the top-level href checked above, and the remaining
-# links are the categories a click should jump straight to.
 EXPECTED_DROPDOWN_LINKS = {
     'Solutions': [
         ('/projects', 'All solutions'), ('/projects#strategy', 'Strategy'),
@@ -87,8 +83,6 @@ CANON = {
 errors = []
 soups = {}
 
-# Cache-busting: /assets/* is served with a 7-day Cache-Control (_headers),
-# so every page's site.css/site.js query string MUST match VERSION exactly.
 current_version = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
 asset_version_re = re.compile(r'/assets/site\.(?:css|js)\?v=([0-9][0-9A-Za-z.\-]*)')
 for rel in PUBLIC:
@@ -106,7 +100,6 @@ for rel in PUBLIC:
     soup = BeautifulSoup(text, 'html.parser')
     soups[rel] = soup
 
-    # broken states / leftover feature leaks that must never resurface
     for bad in ['Checking…', 'Checking...', '--:--', 'Public pulse', 'Sound off',
                 'V9.1', 'V9.2', 'V9.3', 'v9-live-console',
                 'latest public website commit is checked live', 'public GitHub freshness']:
@@ -115,7 +108,6 @@ for rel in PUBLIC:
     if soup.find(class_='sound-control') or soup.find(id='ambient-score'):
         errors.append(f'{rel}: sound UI/audio element remains')
 
-    # nav — only enforced on pages that carry the primary nav
     if rel in NAV_PAGES:
         nav = soup.find('nav', attrs={'aria-label': 'Primary'})
         if not nav:
@@ -128,8 +120,7 @@ for rel in PUBLIC:
                     continue
                 summary = child.find('summary', recursive=False)
                 label = summary.get_text(' ', strip=True) if summary else None
-                panel_links = [(a.get('href'), a.get_text(' ', strip=True))
-                                for a in child.find_all('a')]
+                panel_links = [(a.get('href'), a.get_text(' ', strip=True)) for a in child.find_all('a')]
                 expected_links = EXPECTED_DROPDOWN_LINKS.get(label)
                 if expected_links is None:
                     errors.append(f'{rel}: unexpected nav dropdown {label!r}')
@@ -139,17 +130,14 @@ for rel in PUBLIC:
             if got != EXPECTED_NAV:
                 errors.append(f'{rel}: nav mismatch {got}')
 
-    # footer copyright
     footer = soup.find('footer')
     if not footer or '© 2026 Moyosore Saibu. All rights reserved.' not in footer.get_text(' ', strip=True):
         errors.append(f'{rel}: footer copyright mismatch')
 
-    # canonical
     c = soup.find('link', rel='canonical')
     if not c or c.get('href') != CANON[rel]:
         errors.append(f'{rel}: canonical {c.get("href") if c else None} != {CANON[rel]}')
 
-    # link hygiene: no internal .html hrefs, no from=/source= tracking params
     for a in soup.find_all('a', href=True):
         h = a['href']
         if h.startswith('/') and re.search(r'\.html(?:$|[?#])', h):
@@ -157,20 +145,17 @@ for rel in PUBLIC:
         if h.startswith('/') and re.search(r'[?&](from|source)=', h):
             errors.append(f'{rel}: tracking query href {h}')
 
-    # duplicate ids
     ids = [t.get('id') for t in soup.find_all(id=True)]
     dup = sorted({x for x in ids if ids.count(x) > 1})
     if dup:
         errors.append(f'{rel}: duplicate ids {dup}')
 
-    # JSON-LD must parse
     for s in soup.find_all('script', attrs={'type': 'application/ld+json'}):
         try:
             json.loads(s.string or s.get_text())
         except Exception as e:
             errors.append(f'{rel}: bad JSON-LD {e}')
 
-    # heading order: no level skipped going down (h1 -> h3 without an h2, etc.)
     levels = [int(h.name[1]) for h in soup.select('h1, h2, h3, h4, h5, h6')]
     prev = 0
     for lvl in levels:
@@ -178,8 +163,6 @@ for rel in PUBLIC:
             errors.append(f'{rel}: heading order skips to h{lvl} after h{prev}')
         prev = lvl
 
-# /start/ is a real, distinct, indexable page (not a noindex fallback) —
-# confirm it says so and stays consistent with llms.txt.
 ss = soups['start/index.html']
 robots = ss.find('meta', attrs={'name': 'robots'})
 if not robots or 'noindex' in robots.get('content', ''):
@@ -189,13 +172,13 @@ if 'not indexed' in llms_txt.lower() or 'noindex' in llms_txt.lower():
     if 'start' in llms_txt.lower():
         errors.append('llms.txt: still claims /start/ is not indexed, contradicting its live robots meta')
 
-# Trust policy: the high-visibility pages below deliberately avoid publishing
-# self-reported performance figures as independently verified proof. Keep the
-# retired figures/phrases out so a later copy change cannot quietly reintroduce
-# the credibility problem this release removed.
+# Trust policy: high-visibility pages deliberately avoid publishing self-reported
+# performance figures as independently verified proof. Keep retired claims and
+# overconfident proof language out so later copy changes cannot reintroduce them.
 TRUST_CLEAN_PAGES = [
-    'index.html', 'start/index.html', 'projects.html', 'evidence.html',
-    'experience.html', 'case-studies/route-remapping-retention.html',
+    'index.html', 'start/index.html', 'about.html', 'projects.html',
+    'evidence.html', 'experience.html',
+    'case-studies/route-remapping-retention.html',
     'case-studies/bold-loud-customer-development.html',
     'case-studies/trade-activation-enugu.html',
     'case-studies/abacha-festival-activation.html',
@@ -205,7 +188,8 @@ FORBIDDEN_TRUST_COPY = [
     'retention — verified', 'performance — verified', 'Verified record',
     'Trust, verified', 'Every number on this site links',
     'Every number here traces to evidence', 'Area, Division and Regional status',
-    'Top Performer of the Month',
+    'Top Performer of the Month', 'Real proof', 'Results stay linked to evidence',
+    'You can check the proof',
 ]
 for rel in TRUST_CLEAN_PAGES:
     visible = soups[rel].get_text(' ', strip=True)
@@ -215,6 +199,7 @@ for rel in TRUST_CLEAN_PAGES:
 
 TRUST_REQUIRED = {
     'index.html': 'separates public records, professional experience and opinion',
+    'about.html': 'Professional context, not performance proof',
     'experience.html': 'Performance claims that are not independently verifiable are not presented here as proof',
     'evidence.html': 'does not use self-published performance metrics as independent proof',
     'projects.html': 'without presenting confidential or self-reported performance figures as verified proof',
@@ -223,7 +208,6 @@ for rel, sentence in TRUST_REQUIRED.items():
     if sentence not in soups[rel].get_text(' ', strip=True):
         errors.append(f'{rel}: required trust-context sentence missing: {sentence!r}')
 
-# _redirects: assert the rules this site actually depends on are present.
 redirects = (ROOT / '_redirects').read_text(encoding='utf-8').splitlines()
 redirect_set = set(line.strip() for line in redirects if line.strip())
 required_redirects = {
@@ -248,7 +232,6 @@ for line in redirect_set:
     if 'abacha-festival-activation' in line and '/projects' in line:
         errors.append(f'_redirects: abacha-festival-activation should redirect to itself, not /projects: {line!r}')
 
-# sitemap: must parse, no .html locs, no duplicate locs
 try:
     tree = ET.parse(ROOT / 'sitemap.xml')
     locs = [el.text for el in tree.getroot().iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
