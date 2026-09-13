@@ -89,10 +89,6 @@ soups = {}
 
 # Cache-busting: /assets/* is served with a 7-day Cache-Control (_headers),
 # so every page's site.css/site.js query string MUST match VERSION exactly.
-# A page still requesting the old ?v= after a real asset change means
-# returning visitors can get stale CSS/JS for up to 7 days — this bit a
-# real release once (see the PR review that added this check), so it's
-# checked on every page in PUBLIC, not just spot-checked.
 current_version = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
 asset_version_re = re.compile(r'/assets/site\.(?:css|js)\?v=([0-9][0-9A-Za-z.\-]*)')
 for rel in PUBLIC:
@@ -139,8 +135,6 @@ for rel in PUBLIC:
                     errors.append(f'{rel}: unexpected nav dropdown {label!r}')
                 elif panel_links != expected_links:
                     errors.append(f'{rel}: {label} dropdown links mismatch {panel_links}')
-                # the dropdown's catch-all link stands in for the plain href
-                # EXPECTED_NAV would otherwise check for this label.
                 got.append((expected_links[0][0] if expected_links else None, label))
             if got != EXPECTED_NAV:
                 errors.append(f'{rel}: nav mismatch {got}')
@@ -195,34 +189,41 @@ if 'not indexed' in llms_txt.lower() or 'noindex' in llms_txt.lower():
     if 'start' in llms_txt.lower():
         errors.append('llms.txt: still claims /start/ is not indexed, contradicting its live robots meta')
 
-# Canonical claim numbers must appear on every page that cites them, and the
-# full sourced sentence (with context/limit) must live on evidence.html —
-# that's the one page where the exact wording matters, not a badge fragment.
-NUMBER_PAGES = {
-    '+22%': ['index.html', 'experience.html', 'evidence.html'],
-    '1,095': ['index.html', 'experience.html', 'evidence.html'],
-    '#1': ['index.html', 'experience.html', 'evidence.html'],
-    '4.8M+': ['index.html', 'experience.html', 'evidence.html'],
-}
-for number, pages in NUMBER_PAGES.items():
-    for rel in pages:
-        if number not in (ROOT / rel).read_text(encoding='utf-8'):
-            errors.append(f'{rel}: expected proof figure {number!r} not found')
-
-EVIDENCE_SENTENCES = [
-    '+22% customer retention improvement — publicly shared from the Enugu chapter and attributed to data-led route efficiency and remapping.',
-    '1,095 days in Trade Activation across Enugu market execution (2022–2025).',
-    '#1 Area, Division and Regional status — publicly shared from the Enugu chapter.',
-    '4.8M+ views on a customer-focused Instagram Reel.',
+# Trust policy: the high-visibility pages below deliberately avoid publishing
+# self-reported performance figures as independently verified proof. Keep the
+# retired figures/phrases out so a later copy change cannot quietly reintroduce
+# the credibility problem this release removed.
+TRUST_CLEAN_PAGES = [
+    'index.html', 'start/index.html', 'projects.html', 'evidence.html',
+    'experience.html', 'case-studies/route-remapping-retention.html',
+    'case-studies/bold-loud-customer-development.html',
+    'case-studies/trade-activation-enugu.html',
+    'case-studies/abacha-festival-activation.html',
 ]
-evidence_text = (ROOT / 'evidence.html').read_text(encoding='utf-8')
-for sentence in EVIDENCE_SENTENCES:
-    if sentence not in evidence_text:
-        errors.append(f'evidence.html: exact sourced sentence missing: {sentence!r}')
+FORBIDDEN_TRUST_COPY = [
+    '+22%', '1,095', '#1', '4.8M+', '6,000+',
+    'retention — verified', 'performance — verified', 'Verified record',
+    'Trust, verified', 'Every number on this site links',
+    'Every number here traces to evidence', 'Area, Division and Regional status',
+    'Top Performer of the Month',
+]
+for rel in TRUST_CLEAN_PAGES:
+    visible = soups[rel].get_text(' ', strip=True)
+    for bad in FORBIDDEN_TRUST_COPY:
+        if bad in visible:
+            errors.append(f'{rel}: trust-damaging retired claim remains: {bad!r}')
 
-# _redirects: assert the rules this site actually depends on are present
-# (legacy .html -> clean URL, and the two restored case studies redirecting
-# to themselves rather than away from themselves).
+TRUST_REQUIRED = {
+    'index.html': 'separates public records, professional experience and opinion',
+    'experience.html': 'Performance claims that are not independently verifiable are not presented here as proof',
+    'evidence.html': 'does not use self-published performance metrics as independent proof',
+    'projects.html': 'without presenting confidential or self-reported performance figures as verified proof',
+}
+for rel, sentence in TRUST_REQUIRED.items():
+    if sentence not in soups[rel].get_text(' ', strip=True):
+        errors.append(f'{rel}: required trust-context sentence missing: {sentence!r}')
+
+# _redirects: assert the rules this site actually depends on are present.
 redirects = (ROOT / '_redirects').read_text(encoding='utf-8').splitlines()
 redirect_set = set(line.strip() for line in redirects if line.strip())
 required_redirects = {
@@ -241,8 +242,6 @@ required_redirects = {
 missing = required_redirects - redirect_set
 if missing:
     errors.append(f'_redirects missing {sorted(missing)}')
-# these must NOT point at /projects any more — that was the contradictory
-# retired-case-study state this repo fixed; catch a regression back to it.
 for line in redirect_set:
     if 'trade-activation-enugu' in line and '/projects' in line:
         errors.append(f'_redirects: trade-activation-enugu should redirect to itself, not /projects: {line!r}')
@@ -269,4 +268,4 @@ if errors:
         print('-', e)
     raise SystemExit(1)
 print('PASS')
-print(f'Checked {len(PUBLIC)} audited pages + redirects + sitemap + canonical claims.')
+print(f'Checked {len(PUBLIC)} audited pages + redirects + sitemap + trust-safe claims.')
