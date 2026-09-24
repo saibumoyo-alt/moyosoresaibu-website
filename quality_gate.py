@@ -130,6 +130,14 @@ for loc,file in public:
         if not (script.has_attr('defer') or script.has_attr('async') or script.get('type')=='module'):
             fail(f'{rel}: render-blocking script without defer/async/module: {script.get("src")}')
 
+    if rel=='contact.html':
+        name=soup.find('input',attrs={'name':'name'})
+        email=soup.find('input',attrs={'name':'email'})
+        message=soup.find('textarea',attrs={'name':'message'})
+        if not name or name.get('autocomplete')!='name': fail('contact.html: name input must use autocomplete=name')
+        if not email or email.get('autocomplete')!='email': fail('contact.html: email input must use autocomplete=email')
+        if not message or not message.get('maxlength'): fail('contact.html: message textarea must have a maxlength')
+
 if (ROOT/'404.html').exists():
     soup=BeautifulSoup((ROOT/'404.html').read_text(encoding='utf-8'),'html.parser')
     rob=soup.find('meta',attrs={'name':'robots'})

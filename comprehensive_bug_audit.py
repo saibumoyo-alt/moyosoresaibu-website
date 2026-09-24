@@ -280,6 +280,12 @@ if 'fetch(worker' in setup_form and 'let requestTimer=null;' not in setup_form:
     fail('functional', 'assets/site.js', 'contact/newsletter timeout is not scoped to the submit handler')
 if 'email link below' in site_js:
     fail('functional', 'assets/site.js', 'form failure message uses a stale positional “email link below” instruction')
+if "querySelector('select[name=\"intent\"]')" in site_js:
+    fail('functional', 'assets/site.js', 'contact intent routing only supports a removed select control')
+if "moyo:form-success" not in site_js:
+    fail('analytics', 'assets/site.js', 'successful form completion does not emit a conversion-success event')
+if "if(isHome && !is404 && !location.hash && !getName()" in site_js:
+    fail('ux', 'assets/site.js', 'homepage still auto-opens the optional name-personalisation dialog')
 
 # Privacy control must be dismissible without granting consent and restore focus.
 ux_js = (ROOT / 'assets/ux-816.js').read_text(encoding='utf-8') if (ROOT / 'assets/ux-816.js').is_file() else ''
@@ -287,6 +293,7 @@ for token, message in (
     ('data-privacy-close', 'privacy choices panel has no explicit close control'),
     ("event.key!=='Escape'", 'privacy choices panel has no Escape-key handling'),
     ('privacyReturnFocus', 'privacy choices panel does not restore focus after a user-initiated close'),
+    ('moyo:form-success', 'analytics does not wait for confirmed form success'),
 ):
     if token not in ux_js:
         fail('accessibility', 'assets/ux-816.js', message)

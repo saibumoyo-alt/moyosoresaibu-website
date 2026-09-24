@@ -19,8 +19,15 @@
 
     if(type==='contact'){
       const intent=new URLSearchParams(location.search).get('intent');
-      const select=form.querySelector('select[name="intent"]');
-      if(intent&&select&&[...select.options].some(o=>o.value===intent)) select.value=intent;
+      const field=form.querySelector('[name="intent"]');
+      const allowed=new Set(['challenge','hiring','general']);
+      if(intent&&field&&allowed.has(intent)){
+        if(field.tagName==='SELECT'){
+          if([...field.options].some(o=>o.value===intent)) field.value=intent;
+        }else{
+          field.value=intent;
+        }
+      }
     }
 
     form.addEventListener('submit',async event=>{
@@ -43,6 +50,7 @@
         const result=await response.json().catch(()=>({}));
         if(!response.ok||!result.ok) throw new Error(result.error||'send_failed');
         if(status){status.textContent=type==='field-notes'?'Request received. You’re on the Field Notes list.':'Message sent. I aim to reply within two working days when a response is needed.';status.className='form-status success';}
+        document.dispatchEvent(new CustomEvent('moyo:form-success',{detail:{type,action:form.getAttribute('action')||location.pathname}}));
         form.reset(); setStarted(form);
       }catch(error){
         if(status){status.textContent=type==='field-notes'?'I could not complete the signup. Please try again or contact me directly.':'I could not send the form. Please use WhatsApp, Telegram or Gmail above, or try again.';status.className='form-status error';}
@@ -403,7 +411,9 @@
 
   function fallbackTranslate(target){
     const url=new URL('https://translate.google.com/translate');
-    url.searchParams.set('sl','auto'); url.searchParams.set('tl',target); url.searchParams.set('u',location.href);
+    const source=new URL(location.href);
+    source.search=''; source.hash='';
+    url.searchParams.set('sl','auto'); url.searchParams.set('tl',target); url.searchParams.set('u',source.href);
     location.href=url.toString();
   }
 
@@ -551,13 +561,6 @@
       list.append(trigger,forget);
     });
     render();
-    const path=location.pathname.replace(/\/+$/,'')||'/';
-    const isHome=path==='/'||path==='/index.html';
-    const is404=!!document.querySelector('[data-404]')||document.title.startsWith('Page not found');
-    if(isHome && !is404 && !location.hash && !getName() && !safeStorage.get(DISMISSED_KEY)){
-      const show=()=>openDialog();
-      if('requestIdleCallback' in window) requestIdleCallback(show,{timeout:2500}); else setTimeout(show,1200);
-    }
   })();
 
   async function loadLatestInsight(){

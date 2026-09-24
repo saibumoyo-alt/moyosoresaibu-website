@@ -96,7 +96,7 @@ document.addEventListener('keydown',event=>{
     style.textContent=`
       .privacy-choice-panel{position:fixed;z-index:10000;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,calc(100% - 28px));background:rgba(250,249,245,.98);color:#161812;border:1px solid rgba(22,24,18,.16);border-radius:20px;box-shadow:0 18px 60px rgba(0,0,0,.18);padding:18px 20px;font:inherit}
       .privacy-choice-panel[hidden]{display:none}
-      .privacy-choice-close{position:absolute;right:13px;top:13px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(22,24,18,.07);color:#161812;font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
+      .privacy-choice-close{position:absolute;right:13px;top:13px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(22,24,18,.07);color:#161812;font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
       .privacy-choice-close:hover,.privacy-choice-close:focus-visible{background:rgba(22,24,18,.14);outline:2px solid #16351f;outline-offset:2px}
       .privacy-choice-panel h2{font-size:1.05rem;line-height:1.25;margin:0 0 7px}
       .privacy-choice-panel p{font-size:.92rem;line-height:1.55;margin:0;color:#4b4d46}
@@ -194,12 +194,11 @@ document.addEventListener('keydown',event=>{
     if(isCTA) sendEvent('cta_click',href);
   },{capture:true});
 
-  document.addEventListener('submit',event=>{
-    const form=event.target;
-    if(form instanceof HTMLFormElement && analyticsAllowed()){
-      sendEvent('form_submit',form.getAttribute('action')||location.pathname);
-    }
-  },{capture:true});
+  document.addEventListener('moyo:form-success',event=>{
+    if(!analyticsAllowed()) return;
+    const action=event.detail&&event.detail.action ? event.detail.action : location.pathname;
+    sendEvent('form_submit',action);
+  });
 
   const current=preference();
   if(current==='unset'){

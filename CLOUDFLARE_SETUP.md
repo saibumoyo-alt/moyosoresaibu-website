@@ -60,7 +60,7 @@ Current protections include:
 - allowed-origin enforcement in the Worker
 - field validation
 - message/request size limits
-- honeypot field
+- form-start timing signal (`started_at`) sent by the website forms
 - no public API credential in browser code
 
 Cloudflare Turnstile is intentionally not forced into the form yet. If spam becomes meaningful, add Turnstile and validate every token server-side in the Worker before sending email.
