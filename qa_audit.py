@@ -32,13 +32,13 @@ PUBLIC = [
     'tools/retention-health-check.html',
 ]
 
-# Pages that carry the primary 6-item nav (case studies/insight articles do
+# Pages that carry the simplified primary 6-item nav (case studies/insight articles do
 # too). /start/ deliberately carries a minimal brand-only header instead —
 # it's a distinct, fast, single-CTA scan page, not a copy of the homepage.
 NAV_PAGES = [p for p in PUBLIC if p != 'start/index.html']
 EXPECTED_NAV = [
-    ('/', 'Home'), ('/projects', 'Solutions'), ('/about', 'Approach'),
-    ('/experience', 'Proof'), ('/insights/', 'Insights'), ('/contact', 'Contact'),
+    ('/', 'Home'), ('/projects', 'Solutions'), ('/experience', 'Proof'),
+    ('/insights/', 'Insights'), ('/about', 'About'), ('/contact', 'Contact'),
 ]
 EXPECTED_DROPDOWN_LINKS = {
     'Solutions': [
@@ -129,6 +129,8 @@ for rel in PUBLIC:
                 got.append((expected_links[0][0] if expected_links else None, label))
             if got != EXPECTED_NAV:
                 errors.append(f'{rel}: nav mismatch {got}')
+            if nav.find('details'):
+                errors.append(f'{rel}: primary nav should not contain dropdowns')
 
     footer = soup.find('footer')
     if not footer or '© 2026 Moyosore Saibu. All rights reserved.' not in footer.get_text(' ', strip=True):

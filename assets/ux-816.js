@@ -1,8 +1,3 @@
-document.querySelectorAll('header a[href="/experience"]').forEach(link=>{
-  link.textContent='Experience';
-  link.setAttribute('aria-label','Experience');
-});
-
 document.addEventListener('keydown',event=>{
   if(event.key!=='Escape') return;
   document.querySelectorAll('header .mobile-menu[open]').forEach(menu=>{
