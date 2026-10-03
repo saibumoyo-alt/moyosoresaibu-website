@@ -121,6 +121,21 @@ should reuse one of the four above rather than add a fifth variant.
 properties in media queries; the platform doesn't support that), but this
 is the fixed set. Don't introduce a new breakpoint value without a reason.
 
+## Count-aware grids
+
+Generic grid components may support many cards, but a fixed-count section must
+not reserve empty tracks. Use a semantic count modifier when the content count
+is part of the composition:
+
+- `.case-feature-grid.three-up` — three selected-work cards on the homepage.
+- `.mini-proof-grid` — the four compact homepage proof/context cards.
+- `.growth-flow.four-up` — the four-step homepage working process.
+
+At narrow widths these collapse to one comfortable column; tablets use two
+columns where useful; wide screens use the intended fixed count. Do not solve
+overflow by hiding it — grid children must be able to shrink (`min-width:0`)
+and the layout must reflow cleanly.
+
 ## Interactive states
 
 - Focus: `:focus-visible` outline, 3px solid, 4px offset — sitewide,

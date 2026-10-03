@@ -1310,3 +1310,61 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 .health-note{margin-top:18px;color:var(--muted);font-size:.84rem}
 @media(min-width:720px){.health-actions{position:static;background:none;padding:0}.health-actions .btn{width:auto}.health-options{grid-template-columns:repeat(3,minmax(0,1fr))}.health-option{grid-template-columns:22px 1fr}}
 @media(prefers-reduced-transparency:reduce){.health-question,.health-result{background:#fff}}
+
+
+/* Homepage count-aware layout + reflow — v8.19.0
+   Fixed-count sections should use all available space instead of inheriting
+   generic 5/6-column grids. These rules also keep cards comfortable at zoom
+   and on narrow mobile viewports. */
+.case-feature-grid.three-up>*,
+.mini-proof-grid>*,
+.growth-flow.four-up>*,
+.recommendation-grid-photo>*{min-width:0}
+
+.case-feature-grid.three-up .case-feature{display:flex;flex-direction:column}
+.case-feature-grid.three-up .case-link{margin-top:auto;padding-top:12px}
+
+.mini-proof-grid.proof-grid-flex{grid-template-columns:1fr!important}
+.premium-metrics.mini-proof-grid .metric{display:flex;min-height:0;flex-direction:column;padding:24px}
+.premium-metrics.mini-proof-grid .metric strong{
+  max-width:12ch;
+  font-size:clamp(1.9rem,8vw,2.65rem);
+  line-height:.96;
+  letter-spacing:-.045em;
+  overflow-wrap:break-word
+}
+.premium-metrics.mini-proof-grid .metric span{font-size:.9rem;line-height:1.5}
+.premium-metrics.mini-proof-grid .metric-evidence{margin-top:auto;padding-top:18px}
+
+.growth-flow.four-up{grid-template-columns:1fr}
+.growth-flow.four-up>div::after{display:none}
+
+@media(min-width:640px) and (max-width:959px){
+  .recommendation-grid-photo .verified-source{flex-direction:row}
+}
+
+@media(min-width:720px){
+  .case-feature-grid.three-up{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mini-proof-grid.proof-grid-flex{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media(min-width:720px) and (max-width:959px){
+  .growth-flow.four-up{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .growth-flow.four-up>div::after{display:none}
+  .growth-flow.four-up>div:nth-child(1)::after,
+  .growth-flow.four-up>div:nth-child(3)::after{display:grid}
+}
+
+@media(min-width:960px){
+  .case-feature-grid.three-up{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mini-proof-grid.proof-grid-flex{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .growth-flow.four-up{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .growth-flow.four-up>div:not(:last-child)::after{display:grid}
+  .premium-metrics.mini-proof-grid .metric{min-height:210px}
+  .premium-metrics.mini-proof-grid .metric strong{font-size:clamp(1.9rem,2.6vw,2.65rem)}
+}
+
+@media(max-width:480px){
+  .growth-flow:not(.four-up){grid-template-columns:1fr}
+  .growth-flow:not(.four-up)>div::after{display:none!important}
+}
