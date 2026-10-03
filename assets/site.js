@@ -53,7 +53,13 @@
         document.dispatchEvent(new CustomEvent('moyo:form-success',{detail:{type,action:form.getAttribute('action')||location.pathname}}));
         form.reset(); setStarted(form);
       }catch(error){
-        if(status){status.textContent=type==='field-notes'?'I could not complete the signup. Please try again or contact me directly.':'I could not send the form. Please use WhatsApp, Telegram or Gmail above, or try again.';status.className='form-status error';}
+        const timedOut=error&&error.name==='AbortError';
+        if(status){
+          status.textContent=type==='field-notes'
+            ? (timedOut?'The signup took too long to respond. Your email is still here — try again or contact me directly.':'I could not complete the signup. Please try again or contact me directly.')
+            : (timedOut?'Sending took too long. Your message is still here — try again or use WhatsApp, Telegram or email above.':'I could not send the form. Please use WhatsApp, Telegram or email above, or try again.');
+          status.className='form-status error';
+        }
       }finally{if(requestTimer) clearTimeout(requestTimer); submit.disabled=false;submit.removeAttribute('aria-busy');
       }
     });
@@ -563,29 +569,5 @@
     render();
   })();
 
-  async function loadLatestInsight(){
-    const el=document.querySelector('[data-latest-insight]');
-    if(!el) return;
-    try{
-      const res=await fetch('/insights/',{headers:{accept:'text/html'}});
-      if(!res.ok) return;
-      const doc=new DOMParser().parseFromString(await res.text(),'text/html');
-      const first=doc.querySelector('.article-row');
-      if(!first) return;
-      const href=first.getAttribute('href');
-      const title=first.querySelector('h3')?.textContent?.trim();
-      if(!href||!title) return;
-      const summary=first.querySelector('p')?.textContent?.trim();
-      const date=first.querySelector('.article-meta')?.textContent?.trim();
-      const link=el.querySelector('[data-latest-insight-link]');
-      link.href=href;
-      el.querySelector('[data-latest-insight-title]').textContent=title;
-      if(summary) el.querySelector('[data-latest-insight-summary]').textContent=summary;
-      if(date) el.querySelector('[data-latest-insight-date]').textContent=date;
-      el.hidden=false;
-    }catch(e){ }
-  }
-  if('requestIdleCallback' in window) requestIdleCallback(loadLatestInsight,{timeout:2000});
-  else setTimeout(loadLatestInsight,300);
 
 })();

@@ -164,6 +164,19 @@ headers=(ROOT/'_headers').read_text(encoding='utf-8') if (ROOT/'_headers').exist
 for token in ('Content-Security-Policy:','Strict-Transport-Security:','X-Content-Type-Options:','Referrer-Policy:','Permissions-Policy:','Cache-Control: public'):
     if token not in headers: fail(f'_headers: missing {token}')
 
+site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8') if (ROOT/'assets/site.js').exists() else ''
+site_css=(ROOT/'assets/site.css').read_text(encoding='utf-8') if (ROOT/'assets/site.css').exists() else ''
+home_html=(ROOT/'index.html').read_text(encoding='utf-8') if (ROOT/'index.html').exists() else ''
+contact_html=(ROOT/'contact.html').read_text(encoding='utf-8') if (ROOT/'contact.html').exists() else ''
+start_html=(ROOT/'start'/'index.html').read_text(encoding='utf-8') if (ROOT/'start'/'index.html').exists() else ''
+if 'data-latest-insight' in home_html: fail('index.html: latest insight must render without a client-side HTML fetch')
+if 'loadLatestInsight' in site_js: fail('assets/site.js: obsolete latest-insight HTML fetch must stay removed')
+if 'max-height:calc(100dvh - 90px)' not in site_css or 'overflow-y:auto' not in site_css:
+    fail('assets/site.css: mobile menu must remain scrollable on short viewports')
+if '<strong>Gmail</strong>' in contact_html: fail('contact.html: mailto contact must be labelled Email, not Gmail')
+if 'class="start-top-link"' not in start_html: fail('start/index.html: compact header contact path missing')
+if 'Your message is still here' not in site_js: fail('assets/site.js: contact timeout recovery copy missing')
+
 if warnings:
     print('WARNINGS')
     for item in warnings: print('-',item)
