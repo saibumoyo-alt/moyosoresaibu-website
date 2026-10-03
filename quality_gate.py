@@ -170,6 +170,21 @@ home_html=(ROOT/'index.html').read_text(encoding='utf-8') if (ROOT/'index.html')
 contact_html=(ROOT/'contact.html').read_text(encoding='utf-8') if (ROOT/'contact.html').exists() else ''
 start_html=(ROOT/'start'/'index.html').read_text(encoding='utf-8') if (ROOT/'start'/'index.html').exists() else ''
 if 'data-latest-insight' in home_html: fail('index.html: latest insight must render without a client-side HTML fetch')
+insights_html=(ROOT/'insights'/'index.html').read_text(encoding='utf-8') if (ROOT/'insights'/'index.html').exists() else ''
+if home_html and insights_html:
+    home_soup=BeautifulSoup(home_html,'html.parser')
+    insights_soup=BeautifulSoup(insights_html,'html.parser')
+    latest_home=home_soup.select_one('#latest-insight-home a[href]')
+    latest_index=insights_soup.select_one('.article-list .article-row[href]')
+    if not latest_home or not latest_index:
+        fail('latest insight consistency: homepage or Insights index card missing')
+    else:
+        if latest_home.get('href') != latest_index.get('href'):
+            fail('latest insight consistency: homepage href does not match first Insights item')
+        home_title=latest_home.find(['h2','h3'])
+        index_title=latest_index.find(['h2','h3'])
+        if not home_title or not index_title or home_title.get_text(' ',strip=True) != index_title.get_text(' ',strip=True):
+            fail('latest insight consistency: homepage title does not match first Insights item')
 if 'loadLatestInsight' in site_js: fail('assets/site.js: obsolete latest-insight HTML fetch must stay removed')
 if 'max-height:calc(100dvh - 90px)' not in site_css or 'overflow-y:auto' not in site_css:
     fail('assets/site.css: mobile menu must remain scrollable on short viewports')
