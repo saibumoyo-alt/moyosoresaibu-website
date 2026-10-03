@@ -148,6 +148,11 @@ button{color:inherit}
 .mobile-menu nav a{display:block;padding:12px 14px;border-radius:12px;text-decoration:none;font-weight:650}
 .mobile-menu nav a:hover,.mobile-menu nav a:focus-visible,.mobile-menu nav a[aria-current="page"]{background:var(--surface-soft)}
 .mobile-menu nav .menu-contact{margin-top:6px;background:var(--ink);color:white;text-align:center}
+@media(max-width:959px){
+  .mobile-menu nav{max-height:calc(100vh - 90px);max-height:calc(100dvh - 90px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .mobile-menu nav a,.mobile-menu nav details.submenu>summary{min-height:44px}
+}
+
 
 /* Mobile nav submenu — nested disclosure inside the main mobile-menu details,
    grouping Solutions / Insights sub-links instead of one flat list. */
