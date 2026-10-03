@@ -21,7 +21,7 @@ Accessibility checks were aligned with WCAG 2.2 target-size guidance and progres
 
 ## Changes in 8.18.0
 
-- Render the latest homepage insight directly in HTML and remove its runtime HTML fetch.
+- Render the latest homepage insight directly in HTML and remove its runtime HTML fetch; CI now verifies it still matches the first Insights item.
 - Make the mobile menu vertically scrollable with a dynamic-viewport height limit and preserve 44px minimum navigation targets.
 - Rename the generic mail channel to **Email** and set clearer expectations before form submission.
 - Distinguish timeouts from other send failures while explicitly telling visitors their typed content remains in place.
@@ -33,4 +33,4 @@ Accessibility checks were aligned with WCAG 2.2 target-size guidance and progres
 
 - The external contact-mailer Worker is not stored in this repository, so server-side spam controls, mail delivery telemetry, and Worker secrets cannot be independently inspected here.
 - The CSP still permits inline styles because several existing pages use inline style attributes/blocks. Removing `'unsafe-inline'` should be a separate migration, not a risky one-pass rewrite.
-- Visual viewport testing should still be run in a real browser/device matrix after deployment; repository CI covers structural, accessibility, routing, security-header, and static regression checks.
+- Visual viewport testing should still be run in a real browser/device matrix after deployment; repository CI covers structural, accessibility, routing, security-header, latest-content consistency, and static regression checks.
