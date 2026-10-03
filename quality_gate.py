@@ -194,17 +194,30 @@ if 'Your message is still here' not in site_js: fail('assets/site.js: contact ti
 
 if 'case-feature-grid three-up' not in home_html:
     fail('index.html: selected-work grid must declare three-up layout')
-if 'mini-proof-grid' not in home_html:
-    fail('index.html: home proof grid modifier missing')
+if 'mini-proof-grid four-up' not in home_html:
+    fail('index.html: home proof grid must declare four-up layout')
 if 'growth-flow four-up' not in home_html:
     fail('index.html: home process grid modifier missing')
 for selector,label in [
     ('.case-feature-grid.three-up','selected-work three-column layout'),
-    ('.mini-proof-grid.proof-grid-flex','home proof count-aware layout'),
-    ('.growth-flow.four-up','home four-step process layout'),
+    ('.card-grid.three-up','generic three-card layout'),
+    ('.mini-proof-grid.proof-grid-flex.three-up','three-item proof layout'),
+    ('.mini-proof-grid.proof-grid-flex.four-up','four-item proof layout'),
+    ('.growth-flow.four-up','four-step process layout'),
 ]:
     if selector not in site_css:
         fail(f'assets/site.css: {label} missing')
+if '--shell:1280px' not in site_css:
+    fail('assets/site.css: wide desktop shell token must remain 1280px')
+projects_html=(ROOT/'projects.html').read_text(encoding='utf-8') if (ROOT/'projects.html').exists() else ''
+experience_html=(ROOT/'experience.html').read_text(encoding='utf-8') if (ROOT/'experience.html').exists() else ''
+about_html=(ROOT/'about.html').read_text(encoding='utf-8') if (ROOT/'about.html').exists() else ''
+if 'case-feature-grid three-up' not in projects_html:
+    fail('projects.html: selected-work grid must declare three-up layout')
+if 'mini-proof-grid three-up work-area-grid' not in experience_html:
+    fail('experience.html: work-area grid must declare three-up layout')
+if 'card-grid three-up' not in about_html:
+    fail('about.html: better-decisions cards must declare three-up layout')
 if 'Gmail' in contact_html:
     fail('contact.html: generic mailto channel metadata must say email, not Gmail')
 
