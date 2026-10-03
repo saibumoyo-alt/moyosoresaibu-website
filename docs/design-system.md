@@ -127,14 +127,19 @@ Generic grid components may support many cards, but a fixed-count section must
 not reserve empty tracks. Use a semantic count modifier when the content count
 is part of the composition:
 
-- `.case-feature-grid.three-up` — three selected-work cards on the homepage.
-- `.mini-proof-grid` — the four compact homepage proof/context cards.
-- `.growth-flow.four-up` — the four-step homepage working process.
+- `.case-feature-grid.three-up` — three selected-work cards.
+- `.card-grid.three-up` — three standard cards that should not leave an orphan row.
+- `.mini-proof-grid.three-up` / `.mini-proof-grid.four-up` — proof/context grids whose track count matches the actual content count.
+- `.growth-flow.four-up` — four-step processes.
 
 At narrow widths these collapse to one comfortable column; tablets use two
-columns where useful; wide screens use the intended fixed count. Do not solve
+columns where useful; wide screens use the declared fixed count. Do not solve
 overflow by hiding it — grid children must be able to shrink (`min-width:0`)
 and the layout must reflow cleanly.
+
+The composition shell is 1280px on wide desktops, while reading-width tokens
+remain constrained. Large screens should gain better card composition, not
+longer paragraphs.
 
 ## Interactive states
 

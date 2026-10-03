@@ -14,7 +14,7 @@
   --lime-wash:rgba(200,247,74,.17);
 
   /* Layout widths */
-  --shell:1160px;
+  --shell:1280px;
   --content:760px;
 
   /* Typography scale — v9. Two families: display (headlines, always
@@ -1312,31 +1312,48 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 @media(prefers-reduced-transparency:reduce){.health-question,.health-result{background:#fff}}
 
 
-/* Homepage count-aware layout + reflow — v8.19.0
-   Fixed-count sections should use all available space instead of inheriting
-   generic 5/6-column grids. These rules also keep cards comfortable at zoom
-   and on narrow mobile viewports. */
+/* Count-aware grids + wide-desktop composition — v8.20.0
+   Text keeps its reading-width caps; only compositional shells and fixed-count
+   card groups get wider. Count modifiers prevent shared grids from reserving
+   empty tracks when different pages use different item counts. */
 .case-feature-grid.three-up>*,
+.card-grid.three-up>*,
 .mini-proof-grid>*,
 .growth-flow.four-up>*,
 .recommendation-grid-photo>*{min-width:0}
 
-.case-feature-grid.three-up .case-feature{display:flex;flex-direction:column}
-.case-feature-grid.three-up .case-link{margin-top:auto;padding-top:12px}
+.case-feature-grid.three-up,
+.card-grid.three-up,
+.mini-proof-grid.proof-grid-flex,
+.growth-flow.four-up{grid-template-columns:1fr}
+
+.case-feature-grid.three-up .case-feature,
+.card-grid.three-up .card{display:flex;flex-direction:column;min-height:0}
+.case-feature-grid.three-up .case-link,
+.card-grid.three-up .text-link{margin-top:auto;padding-top:12px}
 
 .mini-proof-grid.proof-grid-flex{grid-template-columns:1fr!important}
-.premium-metrics.mini-proof-grid .metric{display:flex;min-height:0;flex-direction:column;padding:24px}
-.premium-metrics.mini-proof-grid .metric strong{
+.premium-metrics.mini-proof-grid.four-up .metric{display:flex;min-height:0;flex-direction:column;padding:24px}
+.premium-metrics.mini-proof-grid.four-up .metric strong{
   max-width:12ch;
   font-size:clamp(1.9rem,8vw,2.65rem);
   line-height:.96;
   letter-spacing:-.045em;
   overflow-wrap:break-word
 }
-.premium-metrics.mini-proof-grid .metric span{font-size:.9rem;line-height:1.5}
-.premium-metrics.mini-proof-grid .metric-evidence{margin-top:auto;padding-top:18px}
+.premium-metrics.mini-proof-grid.four-up .metric span{font-size:.9rem;line-height:1.5}
+.premium-metrics.mini-proof-grid.four-up .metric-evidence{margin-top:auto;padding-top:18px}
 
-.growth-flow.four-up{grid-template-columns:1fr}
+.work-area-grid .metric{display:flex;min-height:0;flex-direction:column;padding:24px}
+.work-area-grid .metric strong{
+  max-width:12ch;
+  font-size:clamp(2rem,8vw,3.2rem);
+  line-height:.96;
+  letter-spacing:-.05em;
+  overflow-wrap:break-word
+}
+.work-area-grid .metric span{font-size:.94rem;line-height:1.55}
+
 .growth-flow.four-up>div::after{display:none}
 
 @media(min-width:640px) and (max-width:959px){
@@ -1344,8 +1361,10 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 }
 
 @media(min-width:720px){
-  .case-feature-grid.three-up{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .mini-proof-grid.proof-grid-flex{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .case-feature-grid.three-up,
+  .card-grid.three-up{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mini-proof-grid.proof-grid-flex.three-up,
+  .mini-proof-grid.proof-grid-flex.four-up{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 
 @media(min-width:720px) and (max-width:959px){
@@ -1356,12 +1375,16 @@ input,select,textarea{transition:border-color var(--motion-fast) var(--ease-stan
 }
 
 @media(min-width:960px){
-  .case-feature-grid.three-up{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .mini-proof-grid.proof-grid-flex{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .case-feature-grid.three-up,
+  .card-grid.three-up{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mini-proof-grid.proof-grid-flex.three-up{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .mini-proof-grid.proof-grid-flex.four-up{grid-template-columns:repeat(4,minmax(0,1fr))!important}
   .growth-flow.four-up{grid-template-columns:repeat(4,minmax(0,1fr))}
   .growth-flow.four-up>div:not(:last-child)::after{display:grid}
-  .premium-metrics.mini-proof-grid .metric{min-height:210px}
-  .premium-metrics.mini-proof-grid .metric strong{font-size:clamp(1.9rem,2.6vw,2.65rem)}
+  .premium-metrics.mini-proof-grid.four-up .metric{min-height:210px}
+  .premium-metrics.mini-proof-grid.four-up .metric strong{font-size:clamp(1.9rem,2.6vw,2.65rem)}
+  .work-area-grid .metric{min-height:210px}
+  .work-area-grid .metric strong{font-size:clamp(2rem,3.1vw,3.2rem)}
 }
 
 @media(max-width:480px){
