@@ -192,6 +192,22 @@ if '<strong>Gmail</strong>' in contact_html: fail('contact.html: mailto contact 
 if 'class="start-top-link"' not in start_html: fail('start/index.html: compact header contact path missing')
 if 'Your message is still here' not in site_js: fail('assets/site.js: contact timeout recovery copy missing')
 
+if 'case-feature-grid three-up' not in home_html:
+    fail('index.html: selected-work grid must declare three-up layout')
+if 'mini-proof-grid' not in home_html:
+    fail('index.html: home proof grid modifier missing')
+if 'growth-flow four-up' not in home_html:
+    fail('index.html: home process grid modifier missing')
+for selector,label in [
+    ('.case-feature-grid.three-up','selected-work three-column layout'),
+    ('.mini-proof-grid.proof-grid-flex','home proof count-aware layout'),
+    ('.growth-flow.four-up','home four-step process layout'),
+]:
+    if selector not in site_css:
+        fail(f'assets/site.css: {label} missing')
+if 'Gmail' in contact_html:
+    fail('contact.html: generic mailto channel metadata must say email, not Gmail')
+
 if warnings:
     print('WARNINGS')
     for item in warnings: print('-',item)
