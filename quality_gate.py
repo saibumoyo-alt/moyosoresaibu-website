@@ -154,7 +154,7 @@ for rule in ('/terms.html /terms 301','/faq.html /faq 301'):
     if rule not in redirects: fail(f'_redirects: missing {rule}')
 
 ux=(ROOT/'assets/ux-816.js').read_text(encoding='utf-8') if (ROOT/'assets/ux-816.js').exists() else ''
-for token in ('/terms','/faq','Privacy choices','/api/event','page_view','cta_click','Do Not Track'):
+for token in ('/terms','/faq','Privacy choices','/api/event','page_view','cta_click','Do Not Track','Global Privacy Control','globalPrivacyControl'):
     if token not in ux: fail(f'assets/ux-816.js: missing production hook {token!r}')
 event=(ROOT/'functions/api/event.js').read_text(encoding='utf-8') if (ROOT/'functions/api/event.js').exists() else ''
 for token in ('CRO_ANALYTICS','dnt','configured','writeDataPoint'):
@@ -189,6 +189,11 @@ if 'loadLatestInsight' in site_js: fail('assets/site.js: obsolete latest-insight
 if 'max-height:calc(100dvh - 90px)' not in site_css or 'overflow-y:auto' not in site_css:
     fail('assets/site.css: mobile menu must remain scrollable on short viewports')
 if '<strong>Gmail</strong>' in contact_html: fail('contact.html: mailto contact must be labelled Email, not Gmail')
+if 'channel-icon gmail' in contact_html: fail('contact.html: generic email action must not use Gmail branding')
+if 'channel-icon email' not in contact_html: fail('contact.html: neutral email icon hook missing')
+if 'setTimeout(openWhenClear,1400)' in ux: fail('assets/ux-816.js: first-visit privacy prompt opens too early')
+if 'setTimeout(openWhenClear,6000)' not in ux: fail('assets/ux-816.js: first-visit privacy prompt delay guard missing')
+if 'header .mobile-menu[open]' not in ux or '[contenteditable="true"]' not in ux: fail('assets/ux-816.js: privacy prompt must defer during active navigation/form interaction')
 if 'class="start-top-link"' not in start_html: fail('start/index.html: compact header contact path missing')
 if 'Your message is still here' not in site_js: fail('assets/site.js: contact timeout recovery copy missing')
 
