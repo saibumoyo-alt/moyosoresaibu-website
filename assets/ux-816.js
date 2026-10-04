@@ -9,6 +9,8 @@ document.addEventListener('keydown',event=>{
 (()=>{
   const PRIVACY_KEY='moyo:privacy:v1';
   const dnt=String(navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack||'')==='1';
+  const gpc=navigator.globalPrivacyControl===true;
+  const privacySignal=gpc?'Global Privacy Control is enabled, so optional analytics will stay off.':dnt?'Do Not Track is enabled, so optional analytics will stay off.':'You can change this choice at any time.';
   const safeStorage={
     get(key){try{return localStorage.getItem(key);}catch(e){return null;}},
     set(key,value){try{localStorage.setItem(key,value);}catch(e){}}
@@ -17,7 +19,7 @@ document.addEventListener('keydown',event=>{
   let privacyReturnFocus=null;
 
   function preference(){
-    if(dnt) return 'essential';
+    if(dnt||gpc) return 'essential';
     const value=safeStorage.get(PRIVACY_KEY);
     return value==='analytics'?'analytics':value==='essential'?'essential':'unset';
   }
@@ -128,9 +130,9 @@ document.addEventListener('keydown',event=>{
       <button type="button" class="privacy-choice-close" data-privacy-close aria-label="Close privacy choices">×</button>
       <h2 id="privacy-choice-title">Your privacy choices</h2>
       <p id="privacy-choice-description">This site uses essential local storage for features such as language and personalization. Optional first-party analytics measure page visits and CTA use without sending contact-message text or email addresses.</p>
-      <span class="privacy-choice-note">${dnt?'Do Not Track is enabled, so optional analytics will stay off.':'You can change this choice at any time.'}</span>
+      <span class="privacy-choice-note">${privacySignal}</span>
       <div class="privacy-choice-actions">
-        <button type="button" data-privacy-accept ${dnt?'disabled aria-disabled="true"':''}>Allow analytics</button>
+        <button type="button" data-privacy-accept ${(dnt||gpc)?'disabled aria-disabled="true"':''}>Allow analytics</button>
         <button type="button" class="secondary" data-privacy-essential>Essential only</button>
         <a href="/privacy">Read privacy policy</a>
       </div>
@@ -160,7 +162,7 @@ document.addEventListener('keydown',event=>{
   }
 
   function setChoice(choice){
-    const resolved=dnt?'essential':choice==='analytics'?'analytics':'essential';
+    const resolved=(dnt||gpc)?'essential':choice==='analytics'?'analytics':'essential';
     safeStorage.set(PRIVACY_KEY,resolved);
     closeChoices(true);
     if(resolved==='analytics') sendPageView();
@@ -202,11 +204,19 @@ document.addEventListener('keydown',event=>{
 
   const current=preference();
   if(current==='unset'){
+    const interactionInProgress=()=>{
+      const active=document.activeElement;
+      return Boolean(
+        document.hidden ||
+        document.querySelector('dialog[open],header .mobile-menu[open]') ||
+        (active&&active.matches('input,textarea,select,[contenteditable="true"]'))
+      );
+    };
     const openWhenClear=()=>{
-      if(document.querySelector('dialog[open]')){ setTimeout(openWhenClear,500); return; }
+      if(interactionInProgress()){ setTimeout(openWhenClear,1500); return; }
       openChoices(false);
     };
-    setTimeout(openWhenClear,1400);
+    setTimeout(openWhenClear,6000);
   }else if(current==='analytics'){
     if('requestIdleCallback' in window) requestIdleCallback(sendPageView,{timeout:1600});
     else setTimeout(sendPageView,500);

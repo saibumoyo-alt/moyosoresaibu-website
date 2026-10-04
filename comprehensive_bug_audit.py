@@ -294,9 +294,16 @@ for token, message in (
     ("event.key!=='Escape'", 'privacy choices panel has no Escape-key handling'),
     ('privacyReturnFocus', 'privacy choices panel does not restore focus after a user-initiated close'),
     ('moyo:form-success', 'analytics does not wait for confirmed form success'),
+    ('globalPrivacyControl', 'privacy controls do not honor Global Privacy Control'),
+    ('setTimeout(openWhenClear,6000)', 'first-visit privacy prompt is not sufficiently deferred'),
 ):
     if token not in ux_js:
         fail('accessibility', 'assets/ux-816.js', message)
+
+if 'setTimeout(openWhenClear,1400)' in ux_js:
+    fail('ux', 'assets/ux-816.js', 'privacy prompt still interrupts the initial reading window')
+if 'header .mobile-menu[open]' not in ux_js or '[contenteditable="true"]' not in ux_js:
+    fail('ux', 'assets/ux-816.js', 'privacy prompt can open during active navigation or form entry')
 
 # Analytics endpoint abuse resistance.
 event_js = (ROOT / 'functions/api/event.js').read_text(encoding='utf-8') if (ROOT / 'functions/api/event.js').is_file() else ''
