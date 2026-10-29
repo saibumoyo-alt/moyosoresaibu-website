@@ -426,8 +426,8 @@
   function createLanguageControl(){
     if(document.querySelector('[data-language-control]'))return;
     const wrap=document.createElement('div'); wrap.className='language-control'; wrap.dataset.languageControl=''; wrap.dataset.noTranslate='';
-    wrap.innerHTML=`<button class="language-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Choose reading language"><span aria-hidden="true">文</span><span>Language</span></button>
-      <div class="language-dialog" role="dialog" aria-modal="false" aria-label="Choose reading language" hidden>
+    wrap.innerHTML=`<button class="language-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Language: choose reading language"><span aria-hidden="true">文</span><span>Language</span></button>
+      <div class="language-dialog" role="dialog" aria-modal="false" aria-label="Language: choose reading language" hidden>
         <div class="language-dialog-head"><div><strong>Read in your language</strong><span>Fast, progressive translation</span></div><button type="button" class="language-close" aria-label="Close language menu">×</button></div>
         <div class="language-list"></div>
         <p class="language-status" role="status" aria-live="polite">English original</p>

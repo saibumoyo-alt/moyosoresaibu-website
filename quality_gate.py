@@ -197,12 +197,16 @@ if 'header .mobile-menu[open]' not in ux or '[contenteditable="true"]' not in ux
 if 'class="start-top-link"' not in start_html: fail('start/index.html: compact header contact path missing')
 if 'Your message is still here' not in site_js: fail('assets/site.js: contact timeout recovery copy missing')
 
-if 'case-feature-grid three-up' not in home_html:
-    fail('index.html: selected-work grid must declare three-up layout')
-if 'mini-proof-grid four-up' not in home_html:
-    fail('index.html: home proof grid must declare four-up layout')
-if 'growth-flow four-up' not in home_html:
-    fail('index.html: home process grid modifier missing')
+# v9 homepage: the process is told by the 3D story (five stages, one per
+# panel) and selected work is a three-row list, not the old card grids.
+_home=BeautifulSoup(home_html,'html.parser') if home_html else None
+if _home is not None:
+    if len(_home.select('[data-story] [data-stage]')) != 5:
+        fail('index.html: 3D story must have five stage panels (hero + diagnose/prioritise/execute/measure)')
+    if len(_home.select('#selected-work .work-list a.work-row[href]')) != 3:
+        fail('index.html: selected work must list exactly three case studies')
+    if not _home.select_one('[data-story] canvas[aria-hidden="true"], [data-story] [aria-hidden="true"] canvas'):
+        fail('index.html: story canvas must be aria-hidden (decorative; the text carries the story)')
 for selector,label in [
     ('.case-feature-grid.three-up','selected-work three-column layout'),
     ('.card-grid.three-up','generic three-card layout'),
