@@ -12,6 +12,15 @@ HTML/CSS/JS, no build step, deployed to Cloudflare Pages.
 - One stylesheet (`assets/site.css`) and one script (`assets/site.js`) serve
   every page, cache-busted with a `?v=X.Y.Z` query string that matches
   `VERSION`. There is no bundler — edit these files directly.
+- The homepage (v9) adds `assets/home-3d.css` + `assets/home-3d.js`: a
+  hand-written WebGL2 scene (no library) that tells the
+  diagnose → prioritise → execute → measure story as a sales territory, plus a
+  CSS-3D ring of real field photos (`assets/field/`). It is pure progressive
+  enhancement: the story text reads without JS, `assets/territory-poster*.webp`
+  stand in for the canvas, and WebGL only boots on the visitor's first
+  scroll/touch/pointer gesture so it costs nothing on load. Reduced-motion users
+  get a static camera and a plain photo row. To refresh the posters after
+  changing the scene, screenshot the canvas at t=0 (1280×800 and 480×1040).
 - `functions/api/event.js` is a Cloudflare Pages Function backing a small,
   DNT-respecting first-party analytics beacon (`POST /api/event`). It only
   writes if the `CRO_ANALYTICS` Analytics Engine binding is configured in

@@ -96,17 +96,17 @@ document.addEventListener('keydown',event=>{
     const style=document.createElement('style');
     style.id='privacy-choice-styles';
     style.textContent=`
-      .privacy-choice-panel{position:fixed;z-index:10000;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,calc(100% - 28px));background:rgba(250,249,245,.98);color:#161812;border:1px solid rgba(22,24,18,.16);border-radius:20px;box-shadow:0 18px 60px rgba(0,0,0,.18);padding:18px 20px;font:inherit}
+      .privacy-choice-panel{position:fixed;z-index:10000;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,calc(100% - 28px));background:rgba(255,255,255,.97);color:#191919;border:1px solid rgba(22,24,18,.16);border-radius:20px;box-shadow:0 18px 60px rgba(0,0,0,.18);padding:18px 20px;font:inherit}
       .privacy-choice-panel[hidden]{display:none}
-      .privacy-choice-close{position:absolute;right:13px;top:13px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(22,24,18,.07);color:#161812;font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
-      .privacy-choice-close:hover,.privacy-choice-close:focus-visible{background:rgba(22,24,18,.14);outline:2px solid #16351f;outline-offset:2px}
+      .privacy-choice-close{position:absolute;right:13px;top:13px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(22,24,18,.07);color:#191919;font:inherit;font-size:1.25rem;line-height:1;cursor:pointer}
+      .privacy-choice-close:hover,.privacy-choice-close:focus-visible{background:rgba(22,24,18,.14);outline:2px solid #0a66c2;outline-offset:2px}
       .privacy-choice-panel h2{font-size:1.05rem;line-height:1.25;margin:0 0 7px}
       .privacy-choice-panel p{font-size:.92rem;line-height:1.55;margin:0;color:#4b4d46}
       .privacy-choice-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
       .privacy-choice-actions button,.privacy-choice-actions a{min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:0 16px;font:inherit;font-weight:750;text-decoration:none;cursor:pointer}
-      .privacy-choice-actions button{border:1px solid #16351f;background:#16351f;color:#fff}
-      .privacy-choice-actions button.secondary{background:transparent;color:#16351f}
-      .privacy-choice-actions a{color:#16351f;text-decoration:underline;text-underline-offset:3px}
+      .privacy-choice-actions button{border:1px solid #0a66c2;background:#0a66c2;color:#fff}
+      .privacy-choice-actions button.secondary{background:transparent;color:#0a66c2}
+      .privacy-choice-actions a{color:#0a66c2;text-decoration:underline;text-underline-offset:3px}
       .privacy-choice-note{display:block;margin-top:8px;font-size:.78rem;color:#676a62}
       .privacy-choice-link{border:0;background:transparent;color:inherit;font:inherit;padding:0;cursor:pointer}
       @media(max-width:600px){.privacy-choice-panel{bottom:max(10px,env(safe-area-inset-bottom));padding:16px}.privacy-choice-actions>*{flex:1 1 145px}}
